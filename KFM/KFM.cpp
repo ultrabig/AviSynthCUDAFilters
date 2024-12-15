@@ -14,6 +14,10 @@
 #include "KMV.h"
 #include "KFM.h"
 #include "Copy.h"
+#ifndef _WIN32
+#include <filesystem>
+#include <math.h>
+#endif
 
 void OnCudaError(cudaError_t err) {
 #if 1 // デバッグ用（本番は取り除く）
@@ -44,7 +48,11 @@ class File
 {
 public:
   File(const std::string& path, const char* mode, IScriptEnvironment* env) {
+#ifdef _WIN32
     fp_ = _fsopen(path.c_str(), mode, _SH_DENYNO);
+#else
+    fp_ = fopen(path.c_str(), mode);
+#endif
     if (fp_ == NULL) {
       env->ThrowError("failed to open file %s", path.c_str());
     }
@@ -79,7 +87,11 @@ public:
     return v;
   }
   static bool exists(const std::string& path) {
+#ifdef _WIN32
     FILE* fp_ = _fsopen(path.c_str(), "rb", _SH_DENYNO);
+#else
+    FILE* fp_ = fopen(path.c_str(), "rb");
+#endif
     if (fp_) {
       fclose(fp_);
       return true;
@@ -880,8 +892,10 @@ void AddFuncFM(IScriptEnvironment* env)
   env->AddFunction("KFMDumpFM", "c[filepath]s", KFMDumpFM::Create, 0);
 }
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
+#endif
 
 void AddFuncFMKernel(IScriptEnvironment* env);
 void AddFuncMergeStatic(IScriptEnvironment* env);
@@ -917,15 +931,21 @@ extern "C" __declspec(dllexport) const char* __stdcall AvisynthPluginInit3(IScri
   return "K Field Matching Plugin";
 }
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
+#endif
 
 std::string GetFullPath(const std::string& path)
 {
+#ifdef _WIN32
   char buf[MAX_PATH];
   int sz = GetFullPathNameA(path.c_str(), sizeof(buf), buf, nullptr);
   if (sz == 0 || sz >= sizeof(buf)) {
     return path;
   }
   return buf;
+#else
+  return std::filesystem::absolute(path);
+#endif
 }

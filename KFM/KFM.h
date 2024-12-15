@@ -217,7 +217,11 @@ class TextFile
 public:
 	FILE* fp;
 	TextFile(const std::string& fname, const char* mode, IScriptEnvironment* env)
+#ifdef _WIN32
 		: fp(_fsopen(fname.c_str(), mode, _SH_DENYNO))
+#else
+    : fp(fopen(fname.c_str(), mode))
+#endif
 	{
 		if (fp == nullptr) {
 			env->ThrowError("Failed to open file ... %s", fname.c_str());

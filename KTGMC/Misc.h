@@ -2,6 +2,7 @@
 
 #include "avisynth.h"
 #include <deque>
+#include <memory>
 
 int GetDeviceTypes(const PClip& clip);
 

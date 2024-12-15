@@ -15,6 +15,10 @@
 #include "KFMFilterBase.cuh"
 #include "TextOut.h"
 
+#ifndef _WIN32
+#include "TypeCompat.h"
+#endif
+
 template <typename vpixel_t>
 void cpu_calc_field_diff(const vpixel_t* ptr, int nt, int width, int height, int pitch, unsigned long long int *sum)
 {
@@ -72,7 +76,7 @@ __global__ void kl_calculate_field_diff(const vpixel_t* ptr, int nt, int width, 
   dev_reduce<int, CALC_FIELD_DIFF_THREADS, AddReducer<int>>(tid, tmpsum, sbuf);
 
   if (tid == 0) {
-    atomicAdd(sum, tmpsum);
+    atomicAdd((unsigned long long int *)sum, tmpsum);
   }
 }
 
@@ -102,21 +106,22 @@ class KFieldDiff : public KFMFilterBase
     int heightUV = vi.height >> logUVy;
 
     if (IS_CUDA) {
+      uint64_t *sum64 = (uint64_t *)sum;
       dim3 threads(CALC_FIELD_DIFF_X, CALC_FIELD_DIFF_Y);
       dim3 blocks(nblocks(width4, threads.x), nblocks(vi.height, threads.y));
       dim3 blocksUV(nblocks(width4UV, threads.x), nblocks(heightUV, threads.y));
-      kl_init_uint64 << <1, 1, 0, stream >> > (sum);
+      kl_init_uint64 << <1, 1, 0, stream >> > (sum64);
       DEBUG_SYNC;
-      kl_calculate_field_diff << <blocks, threads, 0, stream >> > (srcY, nt6, width4, vi.height, pitchY, sum);
+      kl_calculate_field_diff << <blocks, threads, 0, stream >> > (srcY, nt6, width4, vi.height, pitchY, sum64);
       DEBUG_SYNC;
       if (chroma) {
-        kl_calculate_field_diff << <blocksUV, threads, 0, stream >> > (srcU, nt6, width4UV, heightUV, pitchUV, sum);
+        kl_calculate_field_diff << <blocksUV, threads, 0, stream >> > (srcU, nt6, width4UV, heightUV, pitchUV, sum64);
         DEBUG_SYNC;
-        kl_calculate_field_diff << <blocksUV, threads, 0, stream >> > (srcV, nt6, width4UV, heightUV, pitchUV, sum);
+        kl_calculate_field_diff << <blocksUV, threads, 0, stream >> > (srcV, nt6, width4UV, heightUV, pitchUV, sum64);
         DEBUG_SYNC;
       }
       long long int result;
-      CUDA_CHECK(cudaMemcpy(&result, sum, sizeof(*sum), cudaMemcpyDeviceToHost));
+      CUDA_CHECK(cudaMemcpy(&result, sum64, sizeof(*sum64), cudaMemcpyDeviceToHost));
       return result;
     }
     else {
@@ -749,10 +754,10 @@ __global__ void kl_analyze_noise(
   dev_reduceN<int, 4, CALC_FIELD_DIFF_THREADS, AddReducer<int>>(tid, sum, sbuf);
 
   if (tid == 0) {
-    atomicAdd(&result[0], sum[0]);
-    atomicAdd(&result[1], sum[1]);
-    atomicAdd(&result[2], sum[2]);
-    atomicAdd(&result[3], sum[3]);
+    atomicAdd((unsigned long long int *)&result[0], sum[0]);
+    atomicAdd((unsigned long long int *)&result[1], sum[1]);
+    atomicAdd((unsigned long long int *)&result[2], sum[2]);
+    atomicAdd((unsigned long long int *)&result[3], sum[3]);
   }
 }
 
@@ -849,8 +854,8 @@ __global__ void kl_analyze_diff(
   dev_reduceN<int, 2, CALC_FIELD_DIFF_THREADS, AddReducer<int>>(tid, sum, sbuf);
 
   if (tid == 0) {
-    atomicAdd(&result[0], sum[0]);
-    atomicAdd(&result[1], sum[1]);
+    atomicAdd((unsigned long long int *)&result[0], sum[0]);
+    atomicAdd((unsigned long long int *)&result[1], sum[1]);
   }
 }
 
@@ -1388,6 +1393,7 @@ DECOMB_UCF_RESULT CalcDecombUCF(
   if (message) {
     char debug1_n_t[64];
     char debug1_n_b[64];
+#ifdef _WIN32
     if (param->chroma == 0) {
       sprintf_s(debug1_n_t, " [Y : %7f]", noise_t_y);
       sprintf_s(debug1_n_b, " [Y : %7f]", noise_b_y);
@@ -1400,6 +1406,20 @@ DECOMB_UCF_RESULT CalcDecombUCF(
       sprintf_s(debug1_n_t, " [Y : %7f] [UV: %7f]", noise_t_y, noise_t_uv);
       sprintf_s(debug1_n_b, " [Y : %7f] [UV: %7f]", noise_b_y, noise_b_uv);
     }
+#else
+    if (param->chroma == 0) {
+      snprintf(debug1_n_t, sizeof(debug1_n_t), " [Y : %7f]", noise_t_y);
+      snprintf(debug1_n_b, sizeof(debug1_n_b), " [Y : %7f]", noise_b_y);
+    }
+    else if (param->chroma == 1) {
+      snprintf(debug1_n_t, sizeof(debug1_n_t), " [UV: %7f]", noise_t_uv);
+      snprintf(debug1_n_b, sizeof(debug1_n_b), " [UV: %7f]", noise_b_uv);
+    }
+    else {
+      snprintf(debug1_n_t, sizeof(debug1_n_t), " [Y : %7f] [UV: %7f]", noise_t_y, noise_t_uv);
+      snprintf(debug1_n_b, sizeof(debug1_n_b), " [Y : %7f] [UV: %7f]", noise_b_y, noise_b_uv);
+    }
+#endif
     char reschar = '-';
     char fdeq = '>';
     char noiseeq = '<';
@@ -1431,7 +1451,11 @@ DECOMB_UCF_RESULT CalcDecombUCF(
       extra = "Reversed";
     }
     char buf[512];
+#ifdef _WIN32
     sprintf_s(buf,
+#else
+    snprintf(buf, sizeof(buf),
+#endif
       "[%c] %-6s  //  Fdiff =  %8f (FieldDiff %c %8f)\n"
       "                diff =  %8f  (NoiseDiff %c %.2f)\n"
       " Noise // First %s / Second %s\n"
@@ -1722,7 +1746,11 @@ public:
       std::string* mesptr = nullptr;
       if (param->show) {
         char buf[64];
+#ifdef _WIN32
         sprintf_s(buf, "24p Field: %d-%d(0-%d)\n", i, i + 1, frameInfo.numFields - 1);
+#else
+        snprintf(buf, sizeof(buf), "24p Field: %d-%d(0-%d)\n", i, i + 1, frameInfo.numFields - 1);
+#endif
         message += buf;
         mesptr = &message;
       }
@@ -1926,8 +1954,13 @@ public:
             if (useFrame != n60) {
               res = "****** REPLACE FRAME WITH PREV ******";
             }
+#ifdef _WIN32
             sprintf_s(buf, "%s\nNEXT-SC: %7.2f %c %5.2f (%7.2f <= %7.2f, %7.2f)\n",
               res, sc, eq, dup_thresh, diff[3], diff[1], diff[0]);
+#else
+            snprintf(buf, sizeof(buf), "%s\nNEXT-SC: %7.2f %c %5.2f (%7.2f <= %7.2f, %7.2f)\n",
+              res, sc, eq, dup_thresh, diff[3], diff[1], diff[0]);
+#endif
             message += buf;
           }
         }
@@ -1946,8 +1979,13 @@ public:
             if (useFrame != n60) {
               res = "****** REPLACE FRAME WITH NEXT ******";
             }
+#ifdef _WIN32
             sprintf_s(buf, "%s\nPREV-SC: %7.2f %c %5.2f (%7.2f <= %7.2f, %7.2f)\n",
               res, sc, eq, dup_thresh, diff[0], diff[2], diff[3]);
+#else
+            snprintf(buf, sizeof(buf), "%s\nPREV-SC: %7.2f %c %5.2f (%7.2f <= %7.2f, %7.2f)\n",
+              res, sc, eq, dup_thresh, diff[0], diff[2], diff[3]);
+#endif
             message += buf;
           }
         }

@@ -1,8 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "avisynth.h"
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <windows.h>
+#else
+#include "TypeCompat.h"
+#include <stdio.h>
+#endif
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -398,6 +403,9 @@ public:
   template <int NPELL2>
   const pixel_t *GetAbsolutePointerPel(int nX, int nY) const
   {
+    if constexpr (NPELL2 == 0) {
+      return pPlane[0] + nX + nY * nPitch;
+    }
     enum { MASK = (1 << NPELL2) - 1 };
 
     int idx = (nX & MASK) | ((nY & MASK) << NPELL2);
@@ -406,12 +414,6 @@ public:
     nY >>= NPELL2;
 
     return pPlane[idx] + nX + nY * nPitch;
-  }
-
-  template <>
-  const pixel_t *GetAbsolutePointerPel <0>(int nX, int nY) const
-  {
-    return pPlane[0] + nX + nY * nPitch;
   }
 
   const pixel_t *GetAbsolutePointer(int nX, int nY) const
@@ -1137,23 +1139,23 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
   /* fetch the block in the reference frame, which is pointed by the vector (vx, vy) */
   const pixel_t *	GetRefBlock(int nVx, int nVy)
   {
-    return (p.nPel == 2) ? pRefYPlane->GetAbsolutePointerPel <1>((x[0] << 1) + nVx, (y[0] << 1) + nVy) :
-      (p.nPel == 1) ? pRefYPlane->GetAbsolutePointerPel <0>((x[0]) + nVx, (y[0]) + nVy) :
-      pRefYPlane->GetAbsolutePointerPel <2>((x[0] << 2) + nVx, (y[0] << 2) + nVy);
+    return (p.nPel == 2) ? pRefYPlane->template GetAbsolutePointerPel <1>((x[0] << 1) + nVx, (y[0] << 1) + nVy) :
+      (p.nPel == 1) ? pRefYPlane->template GetAbsolutePointerPel <0>((x[0]) + nVx, (y[0]) + nVy) :
+      pRefYPlane->template GetAbsolutePointerPel <2>((x[0] << 2) + nVx, (y[0] << 2) + nVy);
   }
 
   const pixel_t *	GetRefBlockU(int nVx, int nVy)
   {
-    return (p.nPel == 2) ? pRefUPlane->GetAbsolutePointerPel <1>((x[1] << 1) + (nVx >> p.nLogxRatioUV), (y[1] << 1) + (nVy >> p.nLogyRatioUV)) :
-      (p.nPel == 1) ? pRefUPlane->GetAbsolutePointerPel <0>((x[1]) + (nVx >> p.nLogxRatioUV), (y[1]) + (nVy >> p.nLogyRatioUV)) :
-      pRefUPlane->GetAbsolutePointerPel <2>((x[1] << 2) + (nVx >> p.nLogxRatioUV), (y[1] << 2) + (nVy >> p.nLogyRatioUV));
+    return (p.nPel == 2) ? pRefUPlane->template GetAbsolutePointerPel <1>((x[1] << 1) + (nVx >> p.nLogxRatioUV), (y[1] << 1) + (nVy >> p.nLogyRatioUV)) :
+      (p.nPel == 1) ? pRefUPlane->template GetAbsolutePointerPel <0>((x[1]) + (nVx >> p.nLogxRatioUV), (y[1]) + (nVy >> p.nLogyRatioUV)) :
+      pRefUPlane->template GetAbsolutePointerPel <2>((x[1] << 2) + (nVx >> p.nLogxRatioUV), (y[1] << 2) + (nVy >> p.nLogyRatioUV));
   }
 
   const pixel_t *	GetRefBlockV(int nVx, int nVy)
   {
-    return (p.nPel == 2) ? pRefVPlane->GetAbsolutePointerPel <1>((x[2] << 1) + (nVx >> p.nLogxRatioUV), (y[2] << 1) + (nVy >> p.nLogyRatioUV)) :
-      (p.nPel == 1) ? pRefVPlane->GetAbsolutePointerPel <0>((x[2]) + (nVx >> p.nLogxRatioUV), (y[2]) + (nVy >> p.nLogyRatioUV)) :
-      pRefVPlane->GetAbsolutePointerPel <2>((x[2] << 2) + (nVx >> p.nLogxRatioUV), (y[2] << 2) + (nVy >> p.nLogyRatioUV));
+    return (p.nPel == 2) ? pRefVPlane->template GetAbsolutePointerPel <1>((x[2] << 1) + (nVx >> p.nLogxRatioUV), (y[2] << 1) + (nVy >> p.nLogyRatioUV)) :
+      (p.nPel == 1) ? pRefVPlane->template GetAbsolutePointerPel <0>((x[2]) + (nVx >> p.nLogxRatioUV), (y[2]) + (nVy >> p.nLogyRatioUV)) :
+      pRefVPlane->template GetAbsolutePointerPel <2>((x[2] << 2) + (nVx >> p.nLogxRatioUV), (y[2] << 2) + (nVy >> p.nLogyRatioUV));
   }
 
   /* clip a vector to the horizontal boundaries */

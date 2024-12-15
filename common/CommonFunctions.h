@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cassert>
+#ifdef _WIN32
 #include <intrin.h>
+#endif
 
 #ifdef ENABLE_CUDA
 #include <cuda_runtime_api.h>
@@ -34,7 +36,11 @@ inline static int nlog2(int i)
 #else
   assert(i > 0);
   unsigned long result;
+#if _WIN32
   _BitScanReverse(&result, i);
+#else
+  result = 31 - __builtin_clz(i);
+#endif
   return result;
 #endif
 }

@@ -393,9 +393,18 @@ void cpu_store_slice_avx_tmpl(
     }
     if (x < width) {
       auto t = make_store_value_avx<shift>(&tmp[x + y * tmp_pitch], y, maxv);
+#ifdef _WIN32
       for (int i = 0; x < width; ++x, ++i) {
         dst[x + y * dst_pitch] = (pixel_t)t.m256i_u16[i];
       }
+#else
+      alignas(32) uint16_t buffer[16]; // Temporary storage for AVX vector
+      _mm256_storeu_si256((__m256i*)buffer, t); // Store the vector into memory
+
+      for (int i = 0; x < width; ++x, ++i) {
+        dst[x + y * dst_pitch] = (pixel_t)buffer[i];
+      }
+#endif
     }
   }
 }

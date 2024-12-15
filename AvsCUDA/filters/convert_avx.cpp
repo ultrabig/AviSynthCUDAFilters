@@ -34,7 +34,11 @@
 
 
 #include <avs/alignment.h>
+#ifdef _WIN32
 #include <avs/win.h>
+#else
+#define BYTE uint8_t
+#endif
 #include <emmintrin.h>
 #include <immintrin.h>
 

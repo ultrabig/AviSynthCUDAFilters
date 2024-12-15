@@ -4,6 +4,8 @@
 
 #include <cuda_runtime.h>
 
+#include <stdio.h>
+
 DeviceLocalBase::DeviceLocalBase(const void* init_data, size_t length, PNeoEnv env)
   : length(length)
 {

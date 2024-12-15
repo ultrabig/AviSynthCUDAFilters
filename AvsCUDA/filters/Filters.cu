@@ -10,6 +10,11 @@
 #include "ReduceKernel.cuh"
 #include "Copy.h"
 
+#ifndef _WIN32
+#include <emmintrin.h>
+#include "TypeCompat.h"
+#endif
+
 
 class Align : public GenericVideoFilter
 {
@@ -353,7 +358,7 @@ private:
   bool doB, doG, doR, doA;
   bool doY, doU, doV;
 
-  unsigned __int64 mask64;
+  uint64_t mask64;
   int pixelsize;
   int bits_per_pixel; // 8,10..16
 };

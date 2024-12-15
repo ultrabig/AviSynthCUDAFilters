@@ -1,11 +1,17 @@
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
+#endif
 #include "DebugWriter.h"
 
 #include <stdio.h>
 #include <string>
 #include <memory>
+
+#ifndef _WIN32
+#include "BitmapCompat.h"
+#endif
 
 bool FileExists(const char *fname)
 {

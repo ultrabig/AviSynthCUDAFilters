@@ -1,19 +1,39 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "avisynth.h"
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <windows.h>
+#endif
 
 #include <string>
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 #include "DebugWriter.h"
 
 static void init_console()
 {
+#if _WIN32
   AllocConsole();
   freopen("CONOUT$", "w", stdout);
   freopen("CONIN$", "r", stdin);
+#endif
 }
+
+// Timer class using std::chrono for cross-platform compatibility.
+class Timer {
+  std::chrono::high_resolution_clock::time_point start_time;
+
+public:
+  Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
+
+  double elapsed_seconds() const {
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+  }
+};
 
 class Time : public GenericVideoFilter {
   std::string name;
@@ -25,17 +45,15 @@ public:
 
   PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env)
   {
-    LARGE_INTEGER liBefore, liAfter, liFreq;
-
-    QueryPerformanceCounter(&liBefore);
+    Timer timer;
 
     PVideoFrame frame = child->GetFrame(n, env);
 
-    QueryPerformanceCounter(&liAfter);
-    QueryPerformanceFrequency(&liFreq);
+    double elapsed = timer.elapsed_seconds();
+    auto thread_id = std::this_thread::get_id();
 
-    double sec = (double)(liAfter.QuadPart - liBefore.QuadPart) / liFreq.QuadPart;
-    printf("[%5d] N:%5d %s: %.1f ms\n", GetCurrentThreadId(), n, name.c_str(), sec * 1000);
+    std::cout << "[" << thread_id << "] N:" << n 
+              << " " << name << ": " << elapsed * 1000 << " ms\n";
 
     return frame;
   }

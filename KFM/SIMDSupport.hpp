@@ -7,6 +7,7 @@
 constexpr __m256i const_mm256_setr_epi16(
 	short s0, short s1, short s2, short s3, short s4, short s5, short s6, short s7,
 	short s8, short s9, short s10, short s11, short s12, short s13, short s14, short s15) {
+#ifdef _WIN32
 	return{
 		(int8_t)s0, (int8_t)(s0 >> 8),
 		(int8_t)s1, (int8_t)(s1 >> 8),
@@ -25,4 +26,14 @@ constexpr __m256i const_mm256_setr_epi16(
 		(int8_t)s14, (int8_t)(s14 >> 8),
 		(int8_t)s15, (int8_t)(s15 >> 8)
 	};
+#else
+	return (__m256i)(__v16hi){
+		s0, s1, s2, s3, s4, s5, s6, s7,
+		s8, s9, s10, s11, s12, s13, s14, s15
+	};
+#endif
 }
+
+#ifndef _WIN32
+#include "TypeCompat.h"
+#endif

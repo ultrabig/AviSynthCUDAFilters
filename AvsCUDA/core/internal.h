@@ -45,6 +45,9 @@
 #include <emmintrin.h>
 #include <string>
 
+#ifndef _WIN32
+#include "TypeCompat.h"
+#endif
 
 //int RGB2YUV(int rgb);
 //const char *GetPixelTypeName(const int pixel_type); // in script.c
@@ -98,7 +101,7 @@ static __inline BYTE ScaledPixelClip(int i) {
 }
 
 static __inline uint16_t ScaledPixelClip(__int64 i) {
-    return (uint16_t)clamp((i + 32768) >> 16, 0LL, 65535LL);
+    return (uint16_t)clamp((i + 32768LL) >> 16, 0LL, 65535LL);
 }
 
 static __inline uint16_t ScaledPixelClipEx(__int64 i, int max_value) {

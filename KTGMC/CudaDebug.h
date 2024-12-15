@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef _WIN32
+#else
+#include <stdio.h>
+#endif
+
 template <typename T>
 class DataDebug
 {

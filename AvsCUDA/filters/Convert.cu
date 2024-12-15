@@ -35,7 +35,9 @@
 
 #include "../AvsCUDA.h"
 #include <avs/alignment.h>
+#ifdef _WIN32
 #include <avs/win.h>
+#endif
 #include <emmintrin.h>
 #include <immintrin.h>
 #include <tuple>

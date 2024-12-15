@@ -4,8 +4,10 @@
 
 #define AVS_UNUSED(x) (void)x
 
+#if _WIN32
 #if _MSC_VER <= 1900
 #define constexpr(expr) (expr)
+#endif
 #endif
 
 struct FuncDefinition {

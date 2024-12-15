@@ -104,26 +104,60 @@ struct CPUInfo {
 
 static CPUInfo g_cpuinfo;
 
+#ifdef _WIN32
+#include <intrin.h> // For __cpuid and _xgetbv (MSVC)
+
 static inline void InitCPUInfo() {
-    if (g_cpuinfo.initialized == false) {
+    if (!g_cpuinfo.initialized) {
         int cpuinfo[4];
         __cpuid(cpuinfo, 1);
-        g_cpuinfo.avx = cpuinfo[2] & (1 << 28) || false;
-        bool osxsaveSupported = cpuinfo[2] & (1 << 27) || false;
+
+        g_cpuinfo.avx = (cpuinfo[2] & (1 << 28)) != 0; // AVX bit
+        bool osxsaveSupported = (cpuinfo[2] & (1 << 27)) != 0; // OSXSAVE bit
         g_cpuinfo.avx2 = false;
-        if (osxsaveSupported && g_cpuinfo.avx)
-        {
-            // _XCR_XFEATURE_ENABLED_MASK = 0
-            unsigned long long xcrFeatureMask = _xgetbv(0);
+
+        if (osxsaveSupported && g_cpuinfo.avx) {
+            unsigned long long xcrFeatureMask = _xgetbv(0); // Get XCR feature mask
             g_cpuinfo.avx = (xcrFeatureMask & 0x6) == 0x6;
             if (g_cpuinfo.avx) {
                 __cpuid(cpuinfo, 7);
-                g_cpuinfo.avx2 = cpuinfo[1] & (1 << 5) || false;
+                g_cpuinfo.avx2 = (cpuinfo[1] & (1 << 5)) != 0; // AVX2 bit
             }
         }
         g_cpuinfo.initialized = true;
     }
 }
+
+#else // Non-Windows (Linux, macOS, etc.)
+#include <cpuid.h> // For __get_cpuid and __get_cpuid_count
+
+static inline void InitCPUInfo() {
+    if (!g_cpuinfo.initialized) {
+        unsigned int eax, ebx, ecx, edx;
+        // Get the standard feature flags (CPUID function 1)
+        __get_cpuid(1, &eax, &ebx, &ecx, &edx);
+
+        g_cpuinfo.avx = (ecx & (1 << 28)) != 0; // AVX bit
+        bool osxsaveSupported = (ecx & (1 << 27)) != 0; // OSXSAVE bit
+        g_cpuinfo.avx2 = false;
+
+        if (osxsaveSupported && g_cpuinfo.avx) {
+            uint64_t xcrFeatureMask = 0;
+            // Access XCR feature mask (requires xgetbv instruction)
+            asm volatile(".byte 0x0f, 0x01, 0xd0" : "=a"(eax), "=d"(edx) : "c"(0));
+            xcrFeatureMask = ((uint64_t)edx << 32) | eax;
+
+            g_cpuinfo.avx = (xcrFeatureMask & 0x6) == 0x6;
+            if (g_cpuinfo.avx) {
+                // Check for AVX2 support (CPUID function 7, leaf 0)
+                __get_cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+                g_cpuinfo.avx2 = (ebx & (1 << 5)) != 0; // AVX2 bit
+            }
+        }
+        g_cpuinfo.initialized = true;
+    }
+}
+#endif
 
 bool IsAVXAvailable() {
     InitCPUInfo();
@@ -1002,30 +1036,30 @@ class QPForDeblock : public KFMFilterBase
         return dst.frame;
     }
 
-	// QPテーブルのフレーム指定
-	PVideoFrame QPEntry(PVideoFrame& qp0, PVideoFrame& qp1, PNeoEnv env)
-	{
-    // avs+ frameprop style
-    int error;
-    auto avsmap = env->getFramePropsRO(qp0);
-    env->propGetInt(avsmap, "QP_Table_Non_B", 0, &error); // check existance only
-    if (error) {
-      // QPテーブルがない
-      Frame dst = env->NewVideoFrame(vi);
-      env->propSetInt(env->getFramePropsRW(dst.frame), "DEBLOCK_QP_FLAG", QP_TABLE_NONE, 0);
-      //dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
-      return dst.frame;
-    }
+    // QPテーブルのフレーム指定
+    PVideoFrame QPEntry(PVideoFrame& qp0, PVideoFrame& qp1, PNeoEnv env)
+    {
+        // avs+ frameprop style
+        int error;
+        auto avsmap = env->getFramePropsRO(qp0);
+        env->propGetInt(avsmap, "QP_Table_Non_B", 0, &error); // check existance only
+        if (error) {
+            // QPテーブルがない
+            Frame dst = env->NewVideoFrame(vi);
+            env->propSetInt(env->getFramePropsRW(dst.frame), "DEBLOCK_QP_FLAG", QP_TABLE_NONE, 0);
+            //dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
+            return dst.frame;
+        }
 
-      auto OptGetFrame = [](PVideoFrame value) {
-        return value ? value : nullptr;
-      };
+        auto OptGetFrame = [](PVideoFrame value) {
+            return value ? value : nullptr;
+        };
 
-      Frame qpTable0 = env->propGetFrame(avsmap, "QP_Table", 0, &error);
-      Frame qpTableNonB0 = env->propGetFrame(avsmap, "QP_Table_Non_B", 0, &error);
-      int qpStride = (int)env->propGetInt(avsmap, "QP_Stride", 0, &error);
-      int qpScaleType = (int)env->propGetInt(avsmap, "QP_ScaleType", 0, &error);
-      const PVideoFrame dc0 = b_adap ? env->propGetFrame(avsmap, "DC_Table", 0, &error) : nullptr;
+        Frame qpTable0 = env->propGetFrame(avsmap, "QP_Table", 0, &error);
+        Frame qpTableNonB0 = env->propGetFrame(avsmap, "QP_Table_Non_B", 0, &error);
+        int qpStride = (int)env->propGetInt(avsmap, "QP_Stride", 0, &error);
+        int qpScaleType = (int)env->propGetInt(avsmap, "QP_ScaleType", 0, &error);
+        const PVideoFrame dc0 = b_adap ? env->propGetFrame(avsmap, "DC_Table", 0, &error) : nullptr;
 
         if (!qp1) {
             return QPEntry(
@@ -1148,9 +1182,13 @@ public:
 
             PVideoFrame dst;
             if (num <= 1) {
-                dst = QPEntry(GetQPFrame(start, env), PVideoFrame(), env);
+                auto qp0 = GetQPFrame(start, env);
+                auto qp1 = PVideoFrame();
+                dst = QPEntry(qp0, qp1, env);
             } else {
-                dst = QPEntry(GetQPFrame(start, env), GetQPFrame(start + 1, env), env);
+                auto qp0 = GetQPFrame(start, env);
+                auto qp1 = GetQPFrame(start + 1, env);
+                dst = QPEntry(qp0, qp1, env);
             }
             return dst;
         }
@@ -1158,11 +1196,14 @@ public:
         if (qpclip) {
             // QPクリップ指定あり
             int qp_n = (int)(frameRateConv * n + 0.3f);
-            return QPEntry(GetQPFrame(qp_n, env), PVideoFrame(), env);
+            auto qp0 = GetQPFrame(qp_n, env);
+            auto qp1 = PVideoFrame();
+            return QPEntry(qp0, qp1, env);
         }
 
         // ソースフレームからQP取得
-        return QPEntry(src.frame, PVideoFrame(), env);
+        auto qp1 = PVideoFrame();
+        return QPEntry(src.frame, qp1, env);
     }
 
     int __stdcall SetCacheHints(int cachehints, int frame_range) {
@@ -1358,7 +1399,9 @@ void cpu_show_sharpen_coeff(pixel_t* dst, int width, int height, int pitch,
 
 template <typename T> struct TextureFormat { static cudaChannelFormatDesc desc; };
 
+template<>
 cudaChannelFormatDesc TextureFormat<uint8_t>::desc = { 8, 0, 0, 0, cudaChannelFormatKindUnsigned };
+template<>
 cudaChannelFormatDesc TextureFormat<uint16_t>::desc = { 16, 0, 0, 0, cudaChannelFormatKindUnsigned };
 
 template <typename pixel_t>
@@ -1705,7 +1748,11 @@ class KDeblock : public KFMFilterBase
             }
             };
         char buf[100];
+#ifdef _WIN32
         sprintf_s(buf, "KDeblock: %s", getMessage(flag));
+#else
+        snprintf(buf, sizeof(buf), "KDeblock: %s", getMessage(flag));
+#endif
         DrawText<pixel_t>(dst.frame, vi.BitsPerComponent(), 0, 0, buf, env);
     }
 

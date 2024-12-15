@@ -11,6 +11,12 @@
 #include "VectorFunctions.cuh"
 #include "ReduceKernel.cuh"
 
+#ifndef __WIN32
+#include <x86intrin.h>
+#include "TypeCompat.h"
+// #include <emmintrin.h>
+#endif
+
 #pragma region AveragePlane CUDA
 enum {
   SUM_TH_W = 16,
@@ -45,7 +51,7 @@ __global__ void kl_sum_of_pixels(const vpixel_t* __restrict__ src, int width, in
   dev_reduce<lsum_t, SUM_THREADS, AddReducer<lsum_t>>(tid, tmpsum, sbuf);
 
   if (tid == 0) {
-    atomicAdd(sum, (gsum_t)tmpsum);
+    atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
   }
 }
 
@@ -295,7 +301,7 @@ __global__ void kl_sad(
   dev_reduce<lsum_t, SUM_THREADS, AddReducer<lsum_t>>(tid, tmpsum, sbuf);
 
   if (tid == 0) {
-    atomicAdd(sum, (gsum_t)tmpsum);
+    atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
   }
 }
 

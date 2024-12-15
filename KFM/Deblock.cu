@@ -72,8 +72,10 @@ public:
     {
         PNeoEnv env = env_;
         PVideoFrame src = child->GetFrame(n, env);
-        PVideoFrame dst = env->NewVideoFrame(vi);
-        env->CopyFrameProps(src, dst);
+        PVideoFrame dst = env->NewVideoFrame(vi, &src);
+        // Old Neo
+        // PVideoFrame dst = env->NewVideoFrame(vi);
+        // env->CopyFrameProps(src, dst);
         return dst;
     }
 
@@ -989,31 +991,41 @@ class QPForDeblock : public KFMFilterBase
             qpTable0, qpTableNonB0, bmask0, qpTable1, qpTableNonB1, bmask1,
             qpStride, qpScaleType, 1 - logUVx, 1 - logUVy, env);
 
-        dst.SetProperty("DEBLOCK_QP_FLAG",
-            (int)(bmask0 ? QP_TABLE_USING_DC : qpTable0 ? QP_TABLE_ONLY : QP_TABLE_CONSTANT));
+        // avs+ frameprop style
+        env->propSetInt(env->getFramePropsRW(dst.frame), "DEBLOCK_QP_FLAG", (int)(bmask0 ? QP_TABLE_USING_DC : qpTable0 ? QP_TABLE_ONLY : QP_TABLE_CONSTANT), 0);
+        /*
+            dst.SetProperty("DEBLOCK_QP_FLAG", 
+                (int)(bmask0 ? QP_TABLE_USING_DC : qpTable0 ? QP_TABLE_ONLY : QP_TABLE_CONSTANT));
+
+        */
 
         return dst.frame;
     }
 
-    // QPテーブルのフレーム指定
-    PVideoFrame QPEntry(PVideoFrame& qp0, PVideoFrame& qp1, PNeoEnv env)
-    {
-        if (qp0->GetProperty("QP_Table_Non_B") == nullptr) {
-            // QPテーブルがない
-            Frame dst = env->NewVideoFrame(vi);
-            dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
-            return dst.frame;
-        }
+	// QPテーブルのフレーム指定
+	PVideoFrame QPEntry(PVideoFrame& qp0, PVideoFrame& qp1, PNeoEnv env)
+	{
+    // avs+ frameprop style
+    int error;
+    auto avsmap = env->getFramePropsRO(qp0);
+    env->propGetInt(avsmap, "QP_Table_Non_B", 0, &error); // check existance only
+    if (error) {
+      // QPテーブルがない
+      Frame dst = env->NewVideoFrame(vi);
+      env->propSetInt(env->getFramePropsRW(dst.frame), "DEBLOCK_QP_FLAG", QP_TABLE_NONE, 0);
+      //dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
+      return dst.frame;
+    }
 
-        auto OptGetFrame = [](const AVSMapValue* value) {
-            return value ? value->GetFrame() : nullptr;
-            };
+      auto OptGetFrame = [](PVideoFrame value) {
+        return value ? value : nullptr;
+      };
 
-        Frame qpTable0 = qp0->GetProperty("QP_Table")->GetFrame();
-        Frame qpTableNonB0 = qp0->GetProperty("QP_Table_Non_B")->GetFrame();
-        int qpStride = (int)qp0->GetProperty("QP_Stride")->GetInt();
-        int qpScaleType = (int)qp0->GetProperty("QP_ScaleType")->GetInt();
-        const AVSMapValue* dc0 = b_adap ? qp0->GetProperty("DC_Table") : nullptr;
+      Frame qpTable0 = env->propGetFrame(avsmap, "QP_Table", 0, &error);
+      Frame qpTableNonB0 = env->propGetFrame(avsmap, "QP_Table_Non_B", 0, &error);
+      int qpStride = (int)env->propGetInt(avsmap, "QP_Stride", 0, &error);
+      int qpScaleType = (int)env->propGetInt(avsmap, "QP_ScaleType", 0, &error);
+      const PVideoFrame dc0 = b_adap ? env->propGetFrame(avsmap, "DC_Table", 0, &error) : nullptr;
 
         if (!qp1) {
             return QPEntry(
@@ -1022,14 +1034,50 @@ class QPForDeblock : public KFMFilterBase
                 qpStride, qpScaleType, env);
         }
 
-        Frame qpTable1 = qp1->GetProperty("QP_Table")->GetFrame();
-        Frame qpTableNonB1 = qp1->GetProperty("QP_Table_Non_B")->GetFrame();
-        const AVSMapValue* dc1 = b_adap ? qp1->GetProperty("DC_Table") : nullptr;
+        auto avsmap1 = env->getFramePropsRO(qp1);
+        Frame qpTable1 = env->propGetFrame(avsmap1, "QP_Table", 0, &error);
+        Frame qpTableNonB1 = env->propGetFrame(avsmap1, "QP_Table_Non_B", 0, &error);
+        const PVideoFrame dc1 = b_adap ? env->propGetFrame(avsmap1, "DC_Table", 0, &error) : nullptr;
 
         return QPEntry(
             qpTable0.GetReadPtr<uint8_t>(), qpTableNonB0.GetReadPtr<uint8_t>(), OptGetFrame(dc0),
             qpTable1.GetReadPtr<uint8_t>(), qpTableNonB1.GetReadPtr<uint8_t>(), OptGetFrame(dc1),
             qpStride, qpScaleType, env);
+        /*
+            if (qp0->GetProperty("QP_Table_Non_B") == nullptr) {
+                // QPテーブルがない
+                Frame dst = env->NewVideoFrame(vi);
+                dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
+                return dst.frame;
+            }
+
+            auto OptGetFrame = [](const AVSMapValue* value) {
+                return value ? value->GetFrame() : nullptr;
+            };
+
+            Frame qpTable0 = qp0->GetProperty("QP_Table")->GetFrame();
+            Frame qpTableNonB0 = qp0->GetProperty("QP_Table_Non_B")->GetFrame();
+            int qpStride = (int)qp0->GetProperty("QP_Stride")->GetInt();
+            int qpScaleType = (int)qp0->GetProperty("QP_ScaleType")->GetInt();
+            const AVSMapValue* dc0 = b_adap ? qp0->GetProperty("DC_Table") : nullptr;
+
+            if (!qp1) {
+                return QPEntry(
+                    qpTable0.GetReadPtr<uint8_t>(), qpTableNonB0.GetReadPtr<uint8_t>(), OptGetFrame(dc0),
+                    nullptr, nullptr, nullptr,
+                    qpStride, qpScaleType, env);
+            }
+
+            Frame qpTable1 = qp1->GetProperty("QP_Table")->GetFrame();
+            Frame qpTableNonB1 = qp1->GetProperty("QP_Table_Non_B")->GetFrame();
+            const AVSMapValue* dc1 = b_adap ? qp1->GetProperty("DC_Table") : nullptr;
+
+            return QPEntry(
+                qpTable0.GetReadPtr<uint8_t>(), qpTableNonB0.GetReadPtr<uint8_t>(), OptGetFrame(dc0),
+                qpTable1.GetReadPtr<uint8_t>(), qpTableNonB1.GetReadPtr<uint8_t>(), OptGetFrame(dc1),
+                qpStride, qpScaleType, env);
+        */
+
     }
 
     PVideoFrame GetQPFrame(int n, PNeoEnv env)
@@ -1081,10 +1129,16 @@ public:
             return QPEntry(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0, env);
         }
 
-        if (src.GetProperty("KFM_SourceStart")) {
+        // avs+ frameprop style
+        int error;
+        auto avsmap = env->getFramePropsRO(src.frame);
+        env->propGetInt(avsmap, "KFM_SourceStart", 0, &error); // check existance only
+        if (!error) {
+            // Neo fp stlye
+            // if (src.GetProperty("KFM_SourceStart")) {
             // フレーム指定あり
-            int start = (int)src.GetProperty("KFM_SourceStart")->GetInt();
-            int num = (int)src.GetProperty("KFM_NumSourceFrames")->GetInt();
+            int start = (int)env->propGetInt(avsmap, "KFM_SourceStart", 0, &error);
+            int num = (int)env->propGetInt(avsmap, "KFM_NumSourceFrames", 0, &error);
 
             // 想定されるフレームと離れすぎてたらバグの可能性が高いので検出
             int qp_n = (int)(frameRateConv * n + 0.3f);
@@ -1658,7 +1712,11 @@ class KDeblock : public KFMFilterBase
     template <typename pixel_t>
     PVideoFrame DeblockEntry(Frame& src, Frame& qp, PNeoEnv env)
     {
-        int qpflag = (int)qp.GetProperty("DEBLOCK_QP_FLAG")->GetInt();
+        // avs+ frameprop style
+        int error;
+        int qpflag = (int)env->propGetInt(env->getFramePropsRO(qp.frame), "DEBLOCK_QP_FLAG", 0, &error); // (int)qp.GetProperty("DEBLOCK_QP_FLAG")->GetInt();
+        // Neo fp style
+        // int qpflag = (int)qp.GetProperty("DEBLOCK_QP_FLAG")->GetInt();
 
         if (qpflag == QP_TABLE_NONE) {
             // QPテーブルがない
@@ -1851,17 +1909,48 @@ public:
         Frame dst = env->NewVideoFrame(vi);
 
         if (dc) {
-            const AVSMapValue* prop = src.GetProperty("DC_Table");
-            if (prop == nullptr) {
+            // Avs+ style
+            int error;
+            PVideoFrame propFrame = env->propGetFrame(env->getFramePropsRO(src.frame), "DC_Table", 0, &error);
+            if (error || propFrame == nullptr) {
                 cpu_fill<uint8_t, 0>(dst.GetWritePtr<uint8_t>(), vi.width, vi.height, dst.GetPitch<uint8_t>());
                 DrawText<uint8_t>(dst.frame, 8, 0, 0, "No DC table ...", env);
             } else {
-                Frame dcTable = prop->GetFrame();
+                Frame dcTable = propFrame;
                 Copy<uint8_t>(dst.GetWritePtr<uint8_t>(), dst.GetPitch<uint8_t>(),
                     dcTable.GetReadPtr<uint8_t>(), dcTable.GetPitch<uint8_t>(), vi.width, vi.height, env);
             }
         } else {
-            const AVSMapValue* prop = src.GetProperty(nonB ? "QP_Table_Non_B" : "QP_Table");
+            // Avs+ style
+            int error;
+            auto avsmap = env->getFramePropsRO(src.frame);
+            PVideoFrame propFrame = env->propGetFrame(avsmap, nonB ? "QP_Table_Non_B" : "QP_Table", 0, &error);
+            if (error || propFrame == nullptr) {
+                    cpu_fill<uint8_t, 0>(dst.GetWritePtr<uint8_t>(), vi.width, vi.height, dst.GetPitch<uint8_t>());
+                    DrawText<uint8_t>(dst.frame, 8, 0, 0, "No QP table ...", env);
+            }
+            else {
+            Frame qpTable = propFrame;
+            int qpStride = (int)env->propGetInt(avsmap, "QP_Stride", 0, &error); // (int)src.GetProperty("QP_Stride")->GetInt();
+            int qpScaleType = (int)env->propGetInt(avsmap, "QP_ScaleType", 0, &error); // (int)src.GetProperty("QP_ScaleType")->GetInt();
+            if (IS_CUDA) {
+                cudaStream_t stream = static_cast<cudaStream_t>(env->GetDeviceStream());
+                dim3 threads(32, 8);
+                dim3 blocks(nblocks(vi.width, threads.x), nblocks(vi.height, threads.y));
+                kl_scale_qp << <blocks, threads, 0, stream >> > (vi.width, vi.height,
+                    dst.GetWritePtr<uint8_t>(), dst.GetPitch<uint8_t>(),
+                    qpTable.GetReadPtr<uint8_t>(), qpStride, qpScaleType);
+                DEBUG_SYNC;
+            }
+            else {
+                cpu_scale_qp(vi.width, vi.height,
+                    dst.GetWritePtr<uint8_t>(), dst.GetPitch<uint8_t>(),
+                    qpTable.GetReadPtr<uint8_t>(), qpStride, qpScaleType);
+            }
+        }
+        // Old Neo frameprop Style
+        /*
+        const AVSMapValue* prop = src.GetProperty(nonB ? "QP_Table_Non_B" : "QP_Table");
             if (prop == nullptr) {
                 cpu_fill<uint8_t, 0>(dst.GetWritePtr<uint8_t>(), vi.width, vi.height, dst.GetPitch<uint8_t>());
                 DrawText<uint8_t>(dst.frame, 8, 0, 0, "No QP table ...", env);
@@ -1883,6 +1972,7 @@ public:
                         qpTable.GetReadPtr<uint8_t>(), qpStride, qpScaleType);
                 }
             }
+        */
         }
 
 
@@ -1923,11 +2013,19 @@ static AVSValue __cdecl FrameType(AVSValue args, void* user_data, IScriptEnviron
     int n = cn.AsInt();
     n = min(max(n, 0), vi.num_frames - 1);
 
+    int error;
+    auto entry = env->propGetInt(env->getFramePropsRO(child->GetFrame(n, env)), "FrameType", 0, &error);
+    if (!error) {
+        return (int)entry;
+    }
+    /*
+    * Neo frameprop style
     auto entry = child->GetFrame(n, env)->GetProperty("FrameType");
     if (entry) {
         return (int)entry->GetInt();
     }
     return 0;
+    */
 }
 
 void AddFuncDeblock(IScriptEnvironment* env)

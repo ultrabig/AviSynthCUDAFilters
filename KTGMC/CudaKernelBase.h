@@ -6,7 +6,7 @@
 
 #include "CommonFunctions.h"
 
-// CUDAカーネル実装の共通処理
+// CUDAカ拏ネル実装の共通揶理
 class CudaKernelBase
 {
 protected:
@@ -25,6 +25,7 @@ public:
 #ifndef NDEBUG
     cudaPointerAttributes attr;
     CUDA_CHECK(cudaPointerGetAttributes(&attr, ptr));
+    // since 8.0 renamed field from `memoryType` to `type`.
     if (attr.type != cudaMemoryTypeDevice) {
       env->ThrowError("[CUDA Error] Not valid devicce pointer");
     }

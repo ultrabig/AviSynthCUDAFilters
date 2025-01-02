@@ -9,9 +9,10 @@ pkg_check_modules(AVISYNTH REQUIRED avisynth)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -mtune=native")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -march=native,-mtune=native")
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+# set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON) # Conflict with Visual Studio Code Intellisense on CUDA
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 
 add_subdirectory(AvsCUDA)
 add_subdirectory(KDebugTool)

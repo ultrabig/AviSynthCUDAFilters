@@ -1,6 +1,6 @@
 project(AvsCUDA LANGUAGES CXX CUDA)
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME} SHARED
     ${CMAKE_SOURCE_DIR}/common/Copy.h
     AvsCUDA.h
     AvsCUDAversion.h

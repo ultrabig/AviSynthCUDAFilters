@@ -1,6 +1,6 @@
 project(KTGMC LANGUAGES CXX CUDA)
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME} SHARED
     CudaDebug.h
     CudaKernelBase.h
     GenericImageFunctions.cuh

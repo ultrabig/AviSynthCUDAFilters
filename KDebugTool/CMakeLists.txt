@@ -1,6 +1,6 @@
 project(KDebugTool LANGUAGES CXX)
 
-add_library(${PROJECT_NAME} STATIC KDebugTool.cpp)
+add_library(${PROJECT_NAME} SHARED KDebugTool.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${AVISYNTH_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${AVISYNTH_INCLUDE_DIRS})

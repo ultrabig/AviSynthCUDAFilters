@@ -5,7 +5,8 @@
 
 typedef int64_t __int64;
 #define cos std::cos
-#define __forceinline __attribute__((always_inline))
+// #define __forceinline __attribute__((always_inline))
+#define __forceinline inline
 
 #endif
 

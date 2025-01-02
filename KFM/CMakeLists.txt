@@ -1,6 +1,6 @@
 project(KFM LANGUAGES CXX CUDA)
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME} SHARED
     DeblockAVX.cpp
     KFM.cpp
     ${CMAKE_SOURCE_DIR}/common/Copy.cu

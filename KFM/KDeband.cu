@@ -17,11 +17,6 @@
 
 int GetDeviceTypes(const PClip& clip);
 
-int scaleParam(float thresh, int pixelBits)
-{
-  return (int)(thresh * (1 << (pixelBits - 8)) + 0.5f);
-}
-
 class KDebandBase : public GenericVideoFilter {
 protected:
   int logUVx;

@@ -187,7 +187,7 @@ template <typename pixel_t>
 __global__ void kl_copy_border(pixel_t* dst,
   const pixel_t* __restrict__ src, int width, int height, int pitch, int vborder);
 
-// sref‚Íbase-1ƒ‰ƒCƒ“
+// srefã¯base-1ãƒ©ã‚¤ãƒ³
 template <typename vpixel_t>
 void cpu_analyze_frame(uchar4* dst, int dstPitch,
   const vpixel_t* base, const vpixel_t* sref, const vpixel_t* mref,

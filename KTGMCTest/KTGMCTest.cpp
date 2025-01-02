@@ -1,7 +1,7 @@
 
 #include "TestCommons.h"
 
-// ƒeƒXƒg‘ÎÛ‚Æ‚È‚éƒNƒ‰ƒX Foo ‚Ì‚½‚ß‚ÌƒtƒBƒNƒXƒ`ƒƒ
+// ãƒ†ã‚¹ãƒˆå¯¾è±¡ã¨ãªã‚‹ã‚¯ãƒ©ã‚¹ Foo ã®ãŸã‚ã®ãƒ•ã‚£ã‚¯ã‚¹ãƒãƒ£
 class KTGMCTest : public AvsTestBase {
 protected:
   KTGMCTest() { }
@@ -278,7 +278,7 @@ void KTGMCTest::DegrainTest(TEST_FRAMES tf, int N, int blksize, int pel)
 
     std::ofstream out(scriptpath);
 
-    // ƒV[ƒ“ƒ`ƒFƒ“ƒW”»’è‚³‚ê‚é‚ÆƒeƒXƒg‚Å‚«‚È‚¢‚Ì‚Å‚µ‚«‚¢’l‚Í10”{‚É‚µ‚Ä‚ ‚é
+    // ã‚·ãƒ¼ãƒ³ãƒã‚§ãƒ³ã‚¸åˆ¤å®šã•ã‚Œã‚‹ã¨ãƒ†ã‚¹ãƒˆã§ããªã„ã®ã§ã—ãã„å€¤ã¯10å€ã«ã—ã¦ã‚ã‚‹
 
     out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
@@ -294,7 +294,7 @@ void KTGMCTest::DegrainTest(TEST_FRAMES tf, int N, int blksize, int pel)
       out << "pmvf1 = s.KMPartialSuper().KMAnalyse(isb = false, delta = 2, chroma = false, blksize = " << blksize <<
         ", overlap = " << (blksize / 2) << ", lambda = 400, global = true, meander = false)" << std::endl;
     }
-    if (true) { // MV CUDA”Å
+    if (true) { // MV CUDAç‰ˆ
       out << "mvb = scuda.KMAnalyse(isb = true, delta = 1, chroma = false, blksize = " << blksize <<
         ", overlap = " << (blksize / 2) << ", lambda = 400, global = true, meander = false, partial = pmvb.OnCPU(0))" << std::endl;
       out << "mvf = scuda.KMAnalyse(isb = false, delta = 1, chroma = false, blksize = " << blksize <<
@@ -507,7 +507,7 @@ void KTGMCTest::CompensateTest(TEST_FRAMES tf, int blksize, int pel)
     out << "scuda = s.OnCPU(0)" << std::endl;
     out << "pmvb = s.KMPartialSuper().KMAnalyse(isb = true, delta = 1, chroma = false, blksize = " << blksize <<
       ", overlap = " << (blksize / 2) << ", lambda = 400, global = true, meander = false)" << std::endl;
-    if (true) { // MV CUDA”Å
+    if (true) { // MV CUDAç‰ˆ
       out << "mvb = scuda.KMAnalyse(isb = true, delta = 1, chroma = false, blksize = " << blksize <<
         ", overlap = " << (blksize / 2) << ", lambda = 400, global = true, meander = false, partial = pmvb.OnCPU(0))" << std::endl;
       out << "comref = src.KMCompensate(s, mvb" O_C(0) ",thSCD1=1800,thSCD2=980)" << std::endl;
@@ -1945,7 +1945,7 @@ void KTGMCTest::NNEDI3Test(TEST_FRAMES tf, bool chroma, int nsize, int nns, int 
     out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
-    // opt>1‚¾‚Æˆê’v‚µ‚È‚­‚È‚é‚Ì‚Åopt=1iSIMD‚È‚µj‚ğw’è
+    // opt>1ã ã¨ä¸€è‡´ã—ãªããªã‚‹ã®ã§opt=1ï¼ˆSIMDãªã—ï¼‰ã‚’æŒ‡å®š
     out <<
       "ref = src.KNNEDI3(field=-2,nsize=" << nsize << ",nns=" << nns << ",qual=" << qual << "," <<
       "pscrn=" << pscrn << ",opt=1,U=" << UV << ",V=" << UV << ")" << std::endl;
@@ -2028,7 +2028,7 @@ TEST_F(KTGMCTest, NNEDI3Test_NS0NN0Q2PS2)
   NNEDI3Test(TF_MID, true, 0, 0, 2, 2);
 }
 
-// «”\•]‰¿—p
+// æ€§èƒ½è©•ä¾¡ç”¨
 TEST_F(KTGMCTest, NNEDI3Test_NS1NN1Q1PS2)
 {
   NNEDI3Test(TF_MID, true, 1, 1, 1, 2);
@@ -2039,7 +2039,7 @@ TEST_F(KTGMCTest, NNEDI3Test_NoC)
   NNEDI3Test(TF_MID, false, 0, 0, 1, 2);
 }
 
-// «”\•]‰¿—p
+// æ€§èƒ½è©•ä¾¡ç”¨
 TEST_F(KTGMCTest, NNEDI3Test_Perf)
 {
   PEnv env;
@@ -2147,7 +2147,7 @@ TEST_F(KTGMCTest, StartupTime)
 
 #pragma endregion
 
-// «”\•]‰¿—p
+// æ€§èƒ½è©•ä¾¡ç”¨
 TEST_F(KTGMCTest, KTGMC_Perf)
 {
   PEnv env;

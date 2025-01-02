@@ -34,7 +34,7 @@ class KPatchCombe : public KFMFilterBase
     {
       Frame containsframe = env->GetFrame(containscombeclip, n, cpuDevice);
       if (*containsframe.GetReadPtr<int>() == 0) {
-        // ƒ_ƒ‚ÈƒuƒƒbƒN‚Í‚È‚¢‚Ì‚Å‚»‚Ì‚Ü‚Ü•Ô‚·
+        // ãƒ€ãƒ¡ãªãƒ–ãƒ­ãƒƒã‚¯ã¯ãªã„ã®ã§ãã®ã¾ã¾è¿”ã™
         return child->GetFrame(n, env);
       }
     }
@@ -47,9 +47,9 @@ class KPatchCombe : public KFMFilterBase
       Frame24Info frameInfo = patterns.GetFrame24(fm.pattern, n);
 
       int fieldIndex[] = { 1, 3, 6, 8 };
-      // •W€ˆÊ’u
+      // æ¨™æº–ä½ç½®
       n60 = fieldIndex[n % 4];
-      // ƒtƒB[ƒ‹ƒh‘ÎÛ”ÍˆÍ‚É•â³
+      // ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å¯¾è±¡ç¯„å›²ã«è£œæ­£
       n60 = clamp(n60, frameInfo.fieldStartIndex, frameInfo.fieldStartIndex + frameInfo.numFields - 1);
       n60 += cycleIndex * 10;
     }
@@ -61,7 +61,7 @@ class KPatchCombe : public KFMFilterBase
     Frame frame60 = clip60->GetFrame(n60, env);
     Frame mflag = combemaskclip->GetFrame(n, env);
 
-    // ƒ_ƒ‚ÈƒuƒƒbƒN‚ÍbobƒtƒŒ[ƒ€‚©‚çƒRƒs[
+    // ãƒ€ãƒ¡ãªãƒ–ãƒ­ãƒƒã‚¯ã¯bobãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã‚³ãƒ”ãƒ¼
     Frame dst = env->NewVideoFrame(vi);
     MergeBlock<pixel_t>(baseFrame, frame60, mflag, dst, env);
 
@@ -85,7 +85,7 @@ public:
     }
     is24 = (rate == 2.5);
 
-    // ƒ`ƒFƒbƒN
+    // ãƒã‚§ãƒƒã‚¯
     CycleAnalyzeInfo::GetParam(fmclip->GetVideoInfo(), env);
   }
 
@@ -162,8 +162,8 @@ class KFMSwitch : public KFMFilterBase
   PClip combemaskclip;
   PClip containscombeclip;
   PClip ucfclip;
-  float thswitch; // <0‚Å60fps–³Œø
-  int mode; // 0:’Êí 1:’Êí+timecode¶¬ 2:timecode¶¬‚Ì‚İ
+  float thswitch; // <0ã§60fpsç„¡åŠ¹
+  int mode; // 0:é€šå¸¸ 1:é€šå¸¸+timecodeç”Ÿæˆ 2:timecodeç”Ÿæˆã®ã¿
   bool show;
   bool showflag;
 
@@ -179,7 +179,7 @@ class KFMSwitch : public KFMFilterBase
 
   PulldownPatterns patterns;
 
-	// timecode¶¬—pƒeƒ“ƒ|ƒ‰ƒŠ
+	// timecodeç”Ÿæˆç”¨ãƒ†ãƒ³ãƒãƒ©ãƒª
 	std::string filepath;
 	std::vector<FrameDurationInfo> durations;
     std::mutex mtxGetFrameTop;
@@ -189,7 +189,7 @@ class KFMSwitch : public KFMFilterBase
   template <typename pixel_t>
   void VisualizeFlag(Frame& dst, Frame& flag, PNeoEnv env)
   {
-    // ”»’èŒ‹‰Ê‚ğ•\¦
+    // åˆ¤å®šçµæœã‚’è¡¨ç¤º
     int blue[] = { 73, 230, 111 };
 
     pixel_t* dstY = dst.GetWritePtr<pixel_t>(PLANAR_Y);
@@ -203,7 +203,7 @@ class KFMSwitch : public KFMFilterBase
     int fpitchY = flag.GetPitch<uint8_t>(PLANAR_Y);
     int fpitchUV = flag.GetPitch<uint8_t>(PLANAR_U);
 
-    // F‚ğ•t‚¯‚é
+    // è‰²ã‚’ä»˜ã‘ã‚‹
     for (int y = 0; y < srcvi.height; ++y) {
       for (int x = 0; x < srcvi.width; ++x) {
         int coefY = flagY[x + y * fpitchY];
@@ -267,11 +267,11 @@ class KFMSwitch : public KFMFilterBase
       return baseFrame;
     }
 
-    // ƒ_ƒ‚ÈƒuƒƒbƒN‚ÍbobƒtƒŒ[ƒ€‚©‚çƒRƒs[
+    // ãƒ€ãƒ¡ãªãƒ–ãƒ­ãƒƒã‚¯ã¯bobãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã‚³ãƒ”ãƒ¼
     Frame dst = env->NewVideoFrame(srcvi);
     MergeBlock<pixel_t>(baseFrame, frame60, mflag, dst, env);
 
-    // ƒvƒƒpƒeƒB‚ğƒRƒs[
+    // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’ã‚³ãƒ”ãƒ¼
     env->copyFrameProps(baseFrame.frame, dst.frame);
     // old Neo FrameProp style
     //env->CopyFrameProps(baseFrame.frame, dst.frame);
@@ -285,21 +285,21 @@ class KFMSwitch : public KFMFilterBase
     Frame baseFrame;
     FrameInfo info = { 0 };
 
-    // 60p”»’è‚Í 1ƒpƒX‚Ìê‡‚ÍƒRƒXƒg 2ƒpƒX‚Ìê‡‚ÍKFMCycleAnalyze‚ÌŒ‹‰Ê ‚ğg‚¤
+    // 60påˆ¤å®šã¯ 1ãƒ‘ã‚¹ã®å ´åˆã¯ã‚³ã‚¹ãƒˆ 2ãƒ‘ã‚¹ã®å ´åˆã¯KFMCycleAnalyzeã®çµæœ ã‚’ä½¿ã†
     if (thswitch >= 0 && ((analyzeMode == 0 && fm.cost > thswitch) || (analyzeMode != 0 && fm.is60p))) {
-      // ƒRƒXƒg‚ª‚‚¢‚Ì‚Å60p‚Æ”»’f
+      // ã‚³ã‚¹ãƒˆãŒé«˜ã„ã®ã§60pã¨åˆ¤æ–­
       info.baseType = ucfclip ? FRAME_UCF : FRAME_60;
 
       if (mode == ONLY_FRAME_DURATION) {
-        // FrameDuration‚Ì‚İ‚È‚çUCF‚Æ60‚ğ‹æ•Ê‚·‚é•K—v‚Í‚È‚¢‚Ì‚Å
-        // ƒtƒŒ[ƒ€‚Ì¶¬‚ğ”ğ‚¯‚é‚½‚ß‚±‚±‚Å‹A‚é
+        // FrameDurationã®ã¿ãªã‚‰UCFã¨60ã‚’åŒºåˆ¥ã™ã‚‹å¿…è¦ã¯ãªã„ã®ã§
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç”Ÿæˆã‚’é¿ã‘ã‚‹ãŸã‚ã“ã“ã§å¸°ã‚‹
         return info;
       }
 
       if (ucfclip) {
-        // ƒtƒŒ[ƒ€‚ÉƒAƒNƒZƒX‚ª”­¶‚·‚é‚Ì‚Å’ˆÓ
-        // ‚±‚±‚Å‚Í60fps‚ÉŒˆ’è‚µ‚Ä‚é‚Ì‚ÅA
-        // Ÿ‚ÌGetFrame‚Å‚±‚ÌƒtƒŒ[ƒ€‚ª•K—v‚È‚±‚Æ‚ÍŒˆ’è‚µ‚Ä‚¢‚é
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã‚¢ã‚¯ã‚»ã‚¹ãŒç™ºç”Ÿã™ã‚‹ã®ã§æ³¨æ„
+        // ã“ã“ã§ã¯60fpsã«æ±ºå®šã—ã¦ã‚‹ã®ã§ã€
+        // æ¬¡ã®GetFrameã§ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ãŒå¿…è¦ãªã“ã¨ã¯æ±ºå®šã—ã¦ã„ã‚‹
         baseFrame = ucfclip->GetFrame(n60, env);
         // avs+ frameprop style
         int error;
@@ -315,7 +315,7 @@ class KFMSwitch : public KFMFilterBase
         }
         auto flag = (DECOMB_UCF_FLAG)prop->GetInt();
         */
-        // ƒtƒŒ[ƒ€’uŠ·‚ª‚³‚ê‚½ê‡‚ÍA60p•”•ªƒ}[ƒWˆ—‚ğÀs‚·‚é
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ç½®æ›ãŒã•ã‚ŒãŸå ´åˆã¯ã€60péƒ¨åˆ†ãƒãƒ¼ã‚¸å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
         if (flag != DECOMB_UCF_NEXT && flag != DECOMB_UCF_PREV) {
           return info;
         }
@@ -325,7 +325,7 @@ class KFMSwitch : public KFMFilterBase
       }
     }
 
-    // ‚±‚±‚Å‚Ìtype‚Í 24 or 30 or UCF
+    // ã“ã“ã§ã®typeã¯ 24 or 30 or UCF
 
     if (PulldownPatterns::Is30p(fm.pattern)) {
       // 30p
@@ -339,27 +339,27 @@ class KFMSwitch : public KFMFilterBase
       info.maskType = *containsframe.GetReadPtr<int>() ? FRAME_30 : 0;
     }
     else {
-      // 24pƒtƒŒ[ƒ€”Ô†‚ğæ“¾
+      // 24pãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·ã‚’å–å¾—
       Frame24Info frameInfo = patterns.GetFrame60(fm.pattern, n60);
-      // fieldShift‚ÅƒTƒCƒNƒ‹‚ğ‚Ü‚½‚®‚±‚Æ‚à‚ ‚é‚Ì‚ÅAframeIndex‚ÍfieldShift‚ÅŒvZ
+      // fieldShiftã§ã‚µã‚¤ã‚¯ãƒ«ã‚’ã¾ãŸãã“ã¨ã‚‚ã‚ã‚‹ã®ã§ã€frameIndexã¯fieldShiftè¾¼ã§è¨ˆç®—
       int frameIndex = frameInfo.frameIndex + frameInfo.fieldShift;
       int n24 = frameInfo.cycleIndex * 4 + frameIndex;
 
       if (frameIndex < 0) {
-        // ‘O‚É‹ó‚«‚ª‚ ‚é‚Ì‚Å‘O‚ÌƒTƒCƒNƒ‹
+        // å‰ã«ç©ºããŒã‚ã‚‹ã®ã§å‰ã®ã‚µã‚¤ã‚¯ãƒ«
         n24 = frameInfo.cycleIndex * 4 - 1;
       }
       else if (frameIndex >= 4) {
-        // Œã‚ë‚ÌƒTƒCƒNƒ‹‚Ìƒpƒ^[ƒ“‚ğæ“¾
+        // å¾Œã‚ã®ã‚µã‚¤ã‚¯ãƒ«ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å–å¾—
         PDevice cpudev = env->GetDevice(DEV_TYPE_CPU, 0);
         auto nextfm = *(Frame(env->GetFrame(fmclip, cycleIndex + 1, cpudev)).GetReadPtr<KFMResult>());
         int fstart = patterns.GetFrame24(nextfm.pattern, 0).fieldStartIndex;
         if (fstart > 0) {
-          // ‘O‚É‹ó‚«‚ª‚ ‚é‚Ì‚Å‘O‚ÌƒTƒCƒNƒ‹
+          // å‰ã«ç©ºããŒã‚ã‚‹ã®ã§å‰ã®ã‚µã‚¤ã‚¯ãƒ«
           n24 = frameInfo.cycleIndex * 4 + 3;
         }
         else {
-          // ‘O‚É‹ó‚«‚ª‚È‚¢‚Ì‚ÅŒã‚ë‚ÌƒTƒCƒNƒ‹
+          // å‰ã«ç©ºããŒãªã„ã®ã§å¾Œã‚ã®ã‚µã‚¤ã‚¯ãƒ«
           n24 = frameInfo.cycleIndex * 4 + 4;
         }
       }
@@ -391,10 +391,10 @@ class KFMSwitch : public KFMFilterBase
   {
     int duration = 1;
     bool isFrame24 = false;
-    // 60fpsƒ}[ƒW•”•ª‚ª‚ ‚éê‡‚Í60fps
+    // 60fpsãƒãƒ¼ã‚¸éƒ¨åˆ†ãŒã‚ã‚‹å ´åˆã¯60fps
     if (thswitch < 0 || info.maskType == 0) {
       int source;
-      // Å‘åduration‚ğİ’è
+      // æœ€å¤§durationã‚’è¨­å®š
       switch (info.baseType) {
       case FRAME_60:
       case FRAME_UCF:
@@ -412,9 +412,9 @@ class KFMSwitch : public KFMFilterBase
       }
       PDevice cpudev = env->GetDevice(DEV_TYPE_CPU, 0);
       for (int i = 1; i < duration; ++i) {
-        // ‚±‚±‚Å‚Í FRAME_30 or FRAME_24
+        // ã“ã“ã§ã¯ FRAME_30 or FRAME_24
         if (n60 + i >= vi.num_frames) {
-          // ƒtƒŒ[ƒ€”‚ğ’´‚¦‚Ä‚é
+          // ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã‚’è¶…ãˆã¦ã‚‹
           duration = i;
           isFrame24 = info.baseType == FRAME_24;
           break;
@@ -423,7 +423,7 @@ class KFMSwitch : public KFMFilterBase
         KFMResult fm = *(Frame(env->GetFrame(fmclip, cycleIndex, cpudev)).GetReadPtr<KFMResult>());
         FrameInfo next = GetFrameInfo(n60 + i, fm, env);
         if (next.baseType != info.baseType) {
-          // ƒx[ƒXƒ^ƒCƒv‚ªˆá‚Á‚½‚ç“¯‚¶ƒtƒŒ[ƒ€‚Å‚È‚¢
+          // ãƒ™ãƒ¼ã‚¹ã‚¿ã‚¤ãƒ—ãŒé•ã£ãŸã‚‰åŒã˜ãƒ•ãƒ¬ãƒ¼ãƒ ã§ãªã„
           duration = i;
           isFrame24 = info.baseType == FRAME_24;
           break;
@@ -439,7 +439,7 @@ class KFMSwitch : public KFMFilterBase
             break;
           }
           if (nextsource != source) {
-            // ƒ\[ƒXƒtƒŒ[ƒ€‚ªˆá‚Á‚½‚ç“¯‚¶ƒtƒŒ[ƒ€‚Å‚È‚¢
+            // ã‚½ãƒ¼ã‚¹ãƒ•ãƒ¬ãƒ¼ãƒ ãŒé•ã£ãŸã‚‰åŒã˜ãƒ•ãƒ¬ãƒ¼ãƒ ã§ãªã„
             duration = i;
             isFrame24 = info.baseType == FRAME_24;
             break;
@@ -461,7 +461,7 @@ class KFMSwitch : public KFMFilterBase
 
   void WriteToFile(PNeoEnv env)
   {
-    std::vector<FrameDurationInfo> frame_list; // 120fps—p‚ÌdurationƒŠƒXƒg
+    std::vector<FrameDurationInfo> frame_list; // 120fpsç”¨ã®durationãƒªã‚¹ãƒˆ
     frame_list.reserve(durations.size());
 
   	auto file = std::unique_ptr<TextFile>(new TextFile(filepath + ".duration.txt", "w", env));
@@ -512,7 +512,7 @@ class KFMSwitch : public KFMFilterBase
       if(error) {
       // Neo fp stlye
       //if (dst.GetProperty("KFM_SourceStart") == nullptr) {
-        // ƒvƒƒpƒeƒB‚ª‚È‚¢ê‡‚Í‚±‚±‚Å’Ç‰Á‚·‚é
+        // ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒãªã„å ´åˆã¯ã“ã“ã§è¿½åŠ ã™ã‚‹
         int start, end;
         switch (info.baseType) {
         case FRAME_60:
@@ -554,7 +554,7 @@ class KFMSwitch : public KFMFilterBase
 	  	current += durations.back().duration;
 	  }
 	  if (current >= vi.num_frames && complete == false) {
-	  	// ƒtƒ@ƒCƒ‹‚É‘‚«‚Ş
+	  	// ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
 	  	WriteToFile(env);
 	  	complete = true;
 	  }
@@ -594,7 +594,7 @@ public:
     , showflag(showflag)
     , logUVx(vi.GetPlaneWidthSubsampling(PLANAR_U))
     , logUVy(vi.GetPlaneHeightSubsampling(PLANAR_U))
-		, filepath(GetFullPath(filepath)) // GetFrame‚ÆƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ªˆá‚¤‚Ì‚Åƒtƒ‹ƒpƒX‚É‚µ‚Ä‚¨‚­
+		, filepath(GetFullPath(filepath)) // GetFrameæ™‚ã¨ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒé•ã†ã®ã§ãƒ•ãƒ«ãƒ‘ã‚¹ã«ã—ã¦ãŠã
 		, current(0)
 		, complete(false)
   {
@@ -639,7 +639,7 @@ public:
       env->ThrowError("[KFMSwitch]: ucfclip device unmatch");
     }
 
-    // VideoInfoƒ`ƒFƒbƒN
+    // VideoInfoãƒã‚§ãƒƒã‚¯
     VideoInfo vi60 = clip60->GetVideoInfo();
     VideoInfo vifm = fmclip->GetVideoInfo();
     VideoInfo vi24 = clip24->GetVideoInfo();
@@ -650,11 +650,11 @@ public:
     VideoInfo vicc30 = cc30->GetVideoInfo();
     VideoInfo viucf = ucfclip ? ucfclip->GetVideoInfo() : VideoInfo();
 
-    // 24/30ƒNƒŠƒbƒv‚Í•âŠÔ‚³‚ê‚½60fps‚©Œ©‚é
+    // 24/30ã‚¯ãƒªãƒƒãƒ—ã¯è£œé–“ã•ã‚ŒãŸ60fpsã‹è¦‹ã‚‹
     is24_60 = (vi24.fps_numerator == vi60.fps_numerator) && (vi24.fps_denominator == vi60.fps_denominator);
     is30_60 = (vi30.fps_numerator == vi60.fps_numerator) && (vi30.fps_denominator == vi60.fps_denominator);
 
-    // fpsƒ`ƒFƒbƒN
+    // fpsãƒã‚§ãƒƒã‚¯
     if (is24_60 == false) {
       if (vi24.fps_denominator != vimask24.fps_denominator)
         env->ThrowError("[KFMSwitch]: vi24.fps_denominator != vimask24.fps_denominator");
@@ -682,7 +682,7 @@ public:
         env->ThrowError("[KFMSwitch]: vi60.fps_numerator != viucf.fps_numerator");
     }
 
-    // ƒTƒCƒYƒ`ƒFƒbƒN
+    // ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
     if (vi60.width != vi24.width)
       env->ThrowError("[KFMSwitch]: vi60.width != vi24.width");
     if (vi60.height != vi24.height)
@@ -706,7 +706,7 @@ public:
         env->ThrowError("[KFMSwitch]: vi60.height != viucf.height");
     }
 
-    // UCFƒNƒŠƒbƒvƒ`ƒFƒbƒN
+    // UCFã‚¯ãƒªãƒƒãƒ—ãƒã‚§ãƒƒã‚¯
     if (ucfclip) {
       if (DecombUCFInfo::GetParam(viucf, env)->fpsType != 60)
         env->ThrowError("[KFMSwitch]: Invalid UCF clip (KDecombUCF60 clip is required)");

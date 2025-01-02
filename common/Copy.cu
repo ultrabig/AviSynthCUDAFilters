@@ -21,7 +21,7 @@ void Copy_(BYTE* dstp, int dst_pitch, const BYTE* srcp, int src_pitch, int row_s
   if (IS_CUDA) {
 		cudaStream_t stream = static_cast<cudaStream_t>(env->GetDeviceStream());
     if (((uintptr_t)dstp | (uintptr_t)srcp | dst_pitch | src_pitch) & 3) {
-      // alignmentÇ»Çµ
+      // alignment„Å™„Åó
       dim3 threads(32, 8);
       dim3 blocks(nblocks(row_size, threads.x), nblocks(height, threads.y));
       kl_copy << <blocks, threads, 0, stream >> > (dstp, dst_pitch, srcp, src_pitch, row_size, height);

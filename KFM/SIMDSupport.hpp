@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <immintrin.h>
 
-// _mm256_set_epi16��constexpr�ɂȂ�Ȃ��̂ŁAconstexpr�ɂȂ�֐����`
+// _mm256_set_epi16はconstexprにならないので、constexprになる関数を定義
 constexpr __m256i const_mm256_setr_epi16(
 	short s0, short s1, short s2, short s3, short s4, short s5, short s6, short s7,
 	short s8, short s9, short s10, short s11, short s12, short s13, short s14, short s15) {

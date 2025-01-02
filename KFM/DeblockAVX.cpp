@@ -195,7 +195,7 @@ inline void hardthresh_avx(float threshold_,
   row6 = hardthresh_ps(row6, threshold);
   row7 = hardthresh_ps(row7, threshold);
 
-  // [0]‚¾‚¯‚à‚Æ‚Ì’l‚É–ß‚·
+  // [0]ã ã‘ã‚‚ã¨ã®å€¤ã«æˆ»ã™
   row0 = _mm256_blend_ps(row0, row0orig, 1);
 }
 
@@ -225,7 +225,7 @@ inline void softthresh_avx(float threshold_,
   row6 = softthresh_ps(row6, threshold);
   row7 = softthresh_ps(row7, threshold);
 
-  // [0]‚¾‚¯‚à‚Æ‚Ì’l‚É–ß‚·
+  // [0]ã ã‘ã‚‚ã¨ã®å€¤ã«æˆ»ã™
   row0 = _mm256_blend_ps(row0, row0orig, 1);
 }
 
@@ -276,8 +276,8 @@ __forceinline void cpu_deblock_kernel_avx(uint16_t* dst, int dst_pitch, float th
 {
   if (thresh <= 0) {
     //if(false) {
-      // •Ï‰»‚µ‚È‚¢‚Ì‚Å‚»‚Ì‚Ü‚Ü“ü‚ê‚é
-      // ‚Æ‚¢‚Á‚Ä‚àdct->idct‚Å8”{‚³‚ê‚é‚Ì‚Å8”{
+      // å¤‰åŒ–ã—ãªã„ã®ã§ãã®ã¾ã¾å…¥ã‚Œã‚‹
+      // ã¨ã„ã£ã¦ã‚‚dct->idctã§8å€ã•ã‚Œã‚‹ã®ã§8å€
     mult8(row0, row1, row2, row3, row4, row5, row6, row7);
   }
   else {
@@ -286,7 +286,7 @@ __forceinline void cpu_deblock_kernel_avx(uint16_t* dst, int dst_pitch, float th
     transpose8_ps(row0, row1, row2, row3, row4, row5, row6, row7);
     dct_ps(row0, row1, row2, row3, row4, row5, row6, row7);
 
-    // “]’u‚³‚ê‚½ó‘Ô‚¾‚¯‚Ç[0]‚ÌˆÊ’u‚Í“¯‚¶‚È‚Ì‚Å–â‘è‚È‚¢
+    // è»¢ç½®ã•ã‚ŒãŸçŠ¶æ…‹ã ã‘ã©[0]ã®ä½ç½®ã¯åŒã˜ãªã®ã§å•é¡Œãªã„
 
     // requantize
     // softthresh_avx(thresh, row0, row1, row2, row3, row4, row5, row6, row7);
@@ -338,7 +338,7 @@ template void cpu_deblock_kernel_avx<uint8_t>(const uint8_t* src, int src_pitch,
 template void cpu_deblock_kernel_avx<uint16_t>(const uint16_t* src, int src_pitch,
   uint16_t* dst, int dst_pitch, float thresh, float half, int shift, int maxv);
 
-// ƒOƒ[ƒoƒ‹•Ï”‚Íconstexpr‚É‚Å‚«‚È‚¢‚ÆAVX”ñ‘Î‰ŠÂ‹«‚ÅDLL‚ªƒ[ƒh‚Å‚«‚È‚­‚È‚é‚±‚Æ‚É’ˆÓ
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã¯constexprã«ã§ããªã„ã¨AVXéå¯¾å¿œç’°å¢ƒã§DLLãŒãƒ­ãƒ¼ãƒ‰ã§ããªããªã‚‹ã“ã¨ã«æ³¨æ„
 constexpr __m256i g_lditherv[8] = {
 	const_mm256_setr_epi16(0,  48,  12,  60,   3,  51,  15,  63,  0,  48,  12,  60,   3,  51,  15,  63),
 	const_mm256_setr_epi16(32,  16,  44,  28,  35,  19,  47,  31, 32,  16,  44,  28,  35,  19,  47,  31),

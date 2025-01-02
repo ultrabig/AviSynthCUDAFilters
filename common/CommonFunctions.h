@@ -45,7 +45,7 @@ inline static int nlog2(int i)
 #endif
 }
 
-// CUDA‚Ìê‡‚ÍŠù‚É’è‹`‚³‚ê‚Ä‚¢‚éŠÖ”‚ªintrinsic‚ğŒÄ‚ñ‚Å‚­‚ê‚é‚Ì‚Å•K—v‚È‚¢
+// CUDAã®å ´åˆã¯æ—¢ã«å®šç¾©ã•ã‚Œã¦ã„ã‚‹é–¢æ•°ãŒintrinsicã‚’å‘¼ã‚“ã§ãã‚Œã‚‹ã®ã§å¿…è¦ãªã„
 #ifndef __CUDA_ARCH__
 template<typename T>
 __host__ __device__ T min(T v1, T v2)

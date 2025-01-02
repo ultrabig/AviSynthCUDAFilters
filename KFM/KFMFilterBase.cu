@@ -59,7 +59,7 @@ KFMCudaPlaneEventsPool::~KFMCudaPlaneEventsPool() { }
 
 KFMCudaEventPlanes *KFMCudaPlaneEventsPool::PlaneStreamStart(cudaStream_t sMain, cudaStream_t sU, cudaStream_t sV) {
     KFMCudaEventPlanes *ptr = nullptr;
-    // events ‚Ì’†g‚ğæ“ª‚©‚çŒ©‚ÄAcudaEventQuery‚ÅcudaSuccess‚ğ•Ô‚é‚à‚Ì‚ª‚ ‚ê‚ÎA‚»‚ê‚ğ––”ö‚ÉˆÚ“®‚·‚é
+    // events ã®ä¸­èº«ã‚’å…ˆé ­ã‹ã‚‰è¦‹ã¦ã€cudaEventQueryã§cudaSuccessã‚’è¿”ã‚‹ã‚‚ã®ãŒã‚ã‚Œã°ã€ãã‚Œã‚’æœ«å°¾ã«ç§»å‹•ã™ã‚‹
     auto it = events.begin();
     if (it != events.end()) {
         if ((*it)->planeUFin() && (*it)->planeVFin()) {
@@ -130,7 +130,7 @@ int Get8BitType(const VideoInfo& vi) {
   if (vi.Is420()) return VideoInfo::CS_YV12;
   else if (vi.Is422()) return VideoInfo::CS_YV16;
   else if (vi.Is444()) return VideoInfo::CS_YV24;
-  // ‚±‚êˆÈŠO‚Í’m‚ç‚ñ
+  // ã“ã‚Œä»¥å¤–ã¯çŸ¥ã‚‰ã‚“
   return VideoInfo::CS_BGR24;
 }
 
@@ -138,7 +138,7 @@ int Get16BitType(const VideoInfo& vi) {
   if (vi.Is420()) return VideoInfo::CS_YUV420P16;
   else if (vi.Is422()) return VideoInfo::CS_YUV422P16;
   else if (vi.Is444()) return VideoInfo::CS_YUV444P16;
-  // ‚±‚êˆÈŠO‚Í’m‚ç‚ñ
+  // ã“ã‚Œä»¥å¤–ã¯çŸ¥ã‚‰ã‚“
   return VideoInfo::CS_BGR48;
 }
 
@@ -151,7 +151,7 @@ int GetYType(const VideoInfo& vi) {
 	case 16: return VideoInfo::CS_Y16;
 	case 32: return VideoInfo::CS_Y32;
 	}
-	// ‚±‚êˆÈŠO‚Í’m‚ç‚ñ
+	// ã“ã‚Œä»¥å¤–ã¯çŸ¥ã‚‰ã‚“
 	return VideoInfo::CS_Y8;
 }
 
@@ -164,7 +164,7 @@ int Get444Type(const VideoInfo& vi) {
 	case 16: return VideoInfo::CS_YUV444P16;
 	case 32: return VideoInfo::CS_YUV444PS;
 	}
-	// ‚±‚êˆÈŠO‚Í’m‚ç‚ñ
+	// ã“ã‚Œä»¥å¤–ã¯çŸ¥ã‚‰ã‚“
 	return VideoInfo::CS_YV24;
 }
 
@@ -175,7 +175,7 @@ Frame NewSwitchFlagFrame(VideoInfo vi, PNeoEnv env)
 
   Frame frame = env->NewVideoFrame(vi);
 
-  // ƒ[ƒ‰Šú‰»
+  // ã‚¼ãƒ­åˆæœŸåŒ–
   vpixel_t* flagp = frame.GetWritePtr<vpixel_t>();
   int pitch = frame.GetPitch<vpixel_t>();
   int width = frame.GetPitch<vpixel_t>();
@@ -306,11 +306,11 @@ template <typename T> __device__ void inline swap(T& a, T& b) {
 
 template <typename vpixel_t>
 __global__ void kl_copy_pad(
-    vpixel_t *dst, const int dstpitch4, // 2s•ª‚ğ‘z’è
-    const vpixel_t *src, const int srcpitch4, // 2s•ª‚ğ‘z’è
+    vpixel_t *dst, const int dstpitch4, // 2è¡Œåˆ†ã‚’æƒ³å®š
+    const vpixel_t *src, const int srcpitch4, // 2è¡Œåˆ†ã‚’æƒ³å®š
     const int width4, const int height,
     const int hpad4, const int vpad) {
-    const int x = threadIdx.x + blockIdx.x * blockDim.x - hpad4; // 1ƒXƒŒƒbƒh4pixel
+    const int x = threadIdx.x + blockIdx.x * blockDim.x - hpad4; // 1ã‚¹ãƒ¬ãƒƒãƒ‰4pixel
     const int y = threadIdx.y + blockIdx.y * blockDim.y - vpad;
 
     if (x < width4 + hpad4 && y < height + vpad) {
@@ -435,7 +435,7 @@ __device__ __host__ uint8_t MakeDiffFlag(int t, int diff, int threshM, int thres
   return flag;
 }
 
-// sref‚Íbase-1ƒ‰ƒCƒ“
+// srefã¯base-1ãƒ©ã‚¤ãƒ³
 template <typename vpixel_t>
 void cpu_analyze_frame(uchar4* dst, int dstPitch,
   const vpixel_t* base, const vpixel_t* sref, const vpixel_t* mref,
@@ -456,7 +456,7 @@ void cpu_analyze_frame(uchar4* dst, int dstPitch,
         MakeDiffFlag(t.z, diff.z, threshM, threshS, threshLS),
         MakeDiffFlag(t.w, diff.w, threshM, threshS, threshLS),
       };
-      // ƒtƒ‰ƒOŠi”[
+      // ãƒ•ãƒ©ã‚°æ ¼ç´
       dst[x + y * dstPitch] = flags;
     }
   }
@@ -486,7 +486,7 @@ __global__ void kl_analyze_frame(uchar4* dst, int dstPitch,
       MakeDiffFlag(t.z, diff.z, threshM, threshS, threshLS),
       MakeDiffFlag(t.w, diff.w, threshM, threshS, threshLS),
     };
-    // ƒtƒ‰ƒOŠi”[
+    // ãƒ•ãƒ©ã‚°æ ¼ç´
     dst[x + y * dstPitch] = flags;
   }
 }
@@ -818,7 +818,7 @@ void KFMFilterBase::AnalyzeFrame(Frame& f0, Frame& f1, Frame& flag,
 
   int planes[] = { PLANAR_Y, PLANAR_U, PLANAR_V };
 
-  // ŠeƒvƒŒ[ƒ“‚ğ”»’è
+  // å„ãƒ—ãƒ¬ãƒ¼ãƒ³ã‚’åˆ¤å®š
   for (int pi = 0; pi < 3; ++pi) {
     int p = planes[pi];
 
@@ -1047,7 +1047,7 @@ __global__ void kl_max_extend_blocks_h(pixel_t* dstp, const pixel_t* srcp, int p
 
   if (bx < nBlkX && by < nBlkY) {
     if (bx == nBlkX - 1) {
-      // ‘‚«‚Ş—\’è‚ª‚È‚¢‚Æ‚±‚ë‚Éƒ\[ƒX‚ğƒRƒs[‚·‚é
+      // æ›¸ãè¾¼ã‚€äºˆå®šãŒãªã„ã¨ã“ã‚ã«ã‚½ãƒ¼ã‚¹ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
       dstp[bx + by * pitch] = srcp[bx + by * pitch];
     }
     else if (bx == 0) {
@@ -1068,7 +1068,7 @@ __global__ void kl_max_extend_blocks_v(pixel_t* dstp, const pixel_t* srcp, int p
 
   if (bx < nBlkX && by < nBlkY) {
     if (by == nBlkY - 1) {
-      // ‘‚«‚Ş—\’è‚ª‚È‚¢‚Æ‚±‚ë‚Éƒ\[ƒX‚ğƒRƒs[‚·‚é
+      // æ›¸ãè¾¼ã‚€äºˆå®šãŒãªã„ã¨ã“ã‚ã«ã‚½ãƒ¼ã‚¹ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
       dstp[bx + by * pitch] = srcp[bx + by * pitch];
     }
     else if (by == 0) {

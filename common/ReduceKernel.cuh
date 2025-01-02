@@ -36,12 +36,12 @@ struct MaxIndexReducer {
   }
 };
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <typename T, int MAX, typename REDUCER, bool fullmask>
 __device__ void dev_reduce_warp_mask(int tid, T& value, const unsigned int argmaskvalue) {
     const unsigned int mask = (fullmask) ? FULL_MASK : argmaskvalue;
     REDUCER red;
-    // warp shuffle‚Åreduce
+    // warp shuffleã§reduce
 #if CUDART_VERSION >= 9000
     if (MAX >= 32) red(value, __shfl_down_sync(mask, value, 16));
     if (MAX >= 16) red(value, __shfl_down_sync(mask, value, 8));
@@ -57,12 +57,12 @@ __device__ void dev_reduce_warp_mask(int tid, T& value, const unsigned int argma
 #endif
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <int MAX, typename REDUCER, bool fullmask>
 __device__ void dev_reduce_warp_mask<int>(int tid, int& value, const unsigned int argmaskvalue) {
     const unsigned int mask = (fullmask) ? FULL_MASK : argmaskvalue;
     REDUCER red;
-    // warp shuffle‚Åreduce
+    // warp shuffleã§reduce
 #if __CUDA_ARCH__ >= 800
     if (red.type == REDUCE_ADD) {
         value = __reduce_add_sync(mask, value);
@@ -88,12 +88,12 @@ __device__ void dev_reduce_warp_mask<int>(int tid, int& value, const unsigned in
 #endif
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <int MAX, typename REDUCER, bool fullmask>
 __device__ void dev_reduce_warp_mask<unsigned int>(int tid, unsigned int& value, const unsigned int argmaskvalue) {
     const unsigned int mask = (fullmask) ? FULL_MASK : argmaskvalue;
     REDUCER red;
-    // warp shuffle‚Åreduce
+    // warp shuffleã§reduce
 #if __CUDA_ARCH__ >= 800
     if (red.type == REDUCE_ADD) {
         value = __reduce_add_sync(mask, value);
@@ -119,14 +119,14 @@ __device__ void dev_reduce_warp_mask<unsigned int>(int tid, unsigned int& value,
 #endif
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <typename T, int MAX, typename REDUCER>
 __device__ void dev_reduce_warp(int tid, T& value) {
     dev_reduce_warp_mask<T, MAX, REDUCER, true>(tid, value, FULL_MASK);
 }
 
-// MAX‚Í2‚×‚«‚Ì‚İ‘Î‰
-// buf‚Íshared memory„§
+// MAXã¯2ã¹ãã®ã¿å¯¾å¿œ
+// bufã¯shared memoryæ¨å¥¨
 template <typename T, int MAX, typename REDUCER>
 __device__ void dev_reduce(int tid, T& value, T* buf)
 {
@@ -171,12 +171,12 @@ __device__ void dev_reduce(int tid, T& value, T* buf)
   }
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <typename T, int N, int MAX, typename REDUCER>
 __device__ void dev_reduceN_warp(int tid, T value[N])
 {
   REDUCER red;
-  // warp shuffle‚Åreduce
+  // warp shuffleã§reduce
 #if CUDART_VERSION >= 9000
   if (MAX >= 32) for(int i = 0; i < N; ++i) red(value[i], __shfl_down_sync(FULL_MASK, value[i], 16));
   if (MAX >= 16) for (int i = 0; i < N; ++i) red(value[i], __shfl_down_sync(FULL_MASK, value[i], 8));
@@ -196,7 +196,7 @@ template <int N, int MAX, typename REDUCER>
 __device__ void dev_reduceN_warp<int>(int tid, int value[N])
 {
     REDUCER red;
-    // warp shuffle‚Åreduce
+    // warp shuffleã§reduce
 #if __CUDA_ARCH__ >= 800
     if (red.type == REDUCE_ADD) {
         for (int i = 0; i < N; i++) value[i] = __reduce_add_sync(mask, value[i]);
@@ -226,7 +226,7 @@ template <int N, int MAX, typename REDUCER>
 __device__ void dev_reduceN_warp<unsigned int>(int tid, unsigned int value[N])
 {
     REDUCER red;
-    // warp shuffle‚Åreduce
+    // warp shuffleã§reduce
 #if __CUDA_ARCH__ >= 800
     if (red.type == REDUCE_ADD) {
         for (int i = 0; i < N; i++) value[i] = __reduce_add_sync(mask, value[i]);
@@ -252,8 +252,8 @@ __device__ void dev_reduceN_warp<unsigned int>(int tid, unsigned int value[N])
 #endif
 }
 
-// MAX‚Í2‚×‚«‚Ì‚İ‘Î‰
-// buf‚Íshared memory„§
+// MAXã¯2ã¹ãã®ã¿å¯¾å¿œ
+// bufã¯shared memoryæ¨å¥¨
 template <typename T, int N, int MAX, typename REDUCER>
 __device__ void dev_reduceN(int tid, T value[N], T* buf)
 {
@@ -298,7 +298,7 @@ __device__ void dev_reduceN(int tid, T value[N], T* buf)
   }
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <typename K, typename V, int MAX, typename REDUCER>
 __device__ void dev_reduce2_warp(int tid, K& key, V& value)
 {
@@ -355,7 +355,7 @@ __device__ void dev_reduce2_warp(int tid, K& key, V& value)
   }
 }
 
-// MAX‚Í2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯2ã¹ãã®ã¿å¯¾å¿œ
 template <typename K, typename V, int MAX, typename REDUCER>
 __device__ void dev_reduce2(int tid, K& key, V& value, K* kbuf, V* vbuf)
 {
@@ -402,12 +402,12 @@ __device__ void dev_reduce2(int tid, K& key, V& value, K* kbuf, V* vbuf)
   }
 }
 
-// MAX‚Í<=32‚©‚Â2‚×‚«‚Ì‚İ‘Î‰
+// MAXã¯<=32ã‹ã¤2ã¹ãã®ã¿å¯¾å¿œ
 template <typename T, int MAX, typename REDUCER>
 __device__ void dev_scan_warp(int tid, T& value, const unsigned mask)
 {
   REDUCER red;
-  // warp shuffle‚Åscan
+  // warp shuffleã§scan
   if (MAX >= 2) {
 #if CUDART_VERSION >= 9000
     T tmp = __shfl_up_sync(mask, value, 1);
@@ -450,29 +450,29 @@ __device__ void dev_scan_warp(int tid, T& value, const unsigned mask)
   }
 }
 
-// MAX‚Í2‚×‚«‚Ì‚İ‘Î‰
-// buf‚Íshared memory„§ ’·‚³: MAX/32
+// MAXã¯2ã¹ãã®ã¿å¯¾å¿œ
+// bufã¯shared memoryæ¨å¥¨ é•·ã•: MAX/32
 template <typename T, int MAX, typename REDUCER>
 __device__ void dev_scan(int tid, T& value, T* buf)
 {
   REDUCER red;
   int wid = tid & 31;
-  // ‚Ü‚¸warp“à‚Åscan
+  // ã¾ãšwarpå†…ã§scan
   dev_scan_warp<T, MAX, REDUCER>(wid, value, FULL_MASK);
   if (MAX >= 64) {
-    // warp‚²‚Æ‚ÌŒ‹‰Ê‚ğsharedƒƒ‚ƒŠ‚ğ‰î‚µ‚ÄW–ñ
+    // warpã”ã¨ã®çµæœã‚’sharedãƒ¡ãƒ¢ãƒªã‚’ä»‹ã—ã¦é›†ç´„
     if (wid == 31) buf[tid >> 5] = value;
     __syncthreads();
     const unsigned mask = __ballot_sync(FULL_MASK, tid < MAX / 32);
     if (tid < MAX / 32) {
-      // warp‚²‚Æ‚ÌŒ‹‰Ê‚ğwarp“à‚Å‚³‚ç‚Éscan
+      // warpã”ã¨ã®çµæœã‚’warpå†…ã§ã•ã‚‰ã«scan
       T v2 = buf[tid];
       dev_scan_warp<T, MAX / 32, REDUCER>(wid, v2, mask);
-      // sharedƒƒ‚ƒŠ‚ğ‰î‚µ‚Ä•ª”z
+      // sharedãƒ¡ãƒ¢ãƒªã‚’ä»‹ã—ã¦åˆ†é…
       buf[tid] = v2;
     }
     __syncthreads();
-    // warp‚²‚Æ‚ÌscanŒ‹‰Ê‚ğ‘«‚·
+    // warpã”ã¨ã®scançµæœã‚’è¶³ã™
     if(tid >= 32) red(value, buf[(tid >> 5) - 1]);
     __syncthreads();
   }

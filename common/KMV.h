@@ -38,7 +38,7 @@ struct KMVParam
   /*! \brief Height of the frame */
   int nHeight;
 
-  // ГXБ[ГpБ[ГtГМБ[ГАВ╠ПcЙбВ╞О└Н█В╠ПcЙбВкИ┘В╚ВщПъНЗВ╠В▌0И╚КOВ╠ТlВкУ№Вщ
+  // уВ╣уГ╝уГСуГ╝уГХуГмуГ╝уГауБоч╕жцикуБихоЯщЪЫуБоч╕жцикуБМчХ░уБкуВЛха┤хРИуБоуБ┐0ф╗ехдЦуБохАдуБМхЕеуВЛ
   int nActualWidth;
   int nActualHeight;
 

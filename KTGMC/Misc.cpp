@@ -15,7 +15,7 @@
 #include <thread>
 #include <iostream>
 
-// common‚Ìcpp‚ğæ‚è“ü‚ê‚é
+// commonã®cppã‚’å–ã‚Šå…¥ã‚Œã‚‹
 #include "DebugWriter.cpp"
 #include "DeviceLocalData.cpp"
 
@@ -32,7 +32,7 @@ static void init_console()
 }
 
 void OnCudaError(cudaError_t err) {
-#if 1 // ƒfƒoƒbƒO—pi–{”Ô‚Íæ‚èœ‚­j
+#if 1 // ãƒ‡ãƒãƒƒã‚°ç”¨ï¼ˆæœ¬ç•ªã¯å–ã‚Šé™¤ãï¼‰
   printf("[CUDA Error] %s (code: %d)\n", cudaGetErrorString(err), err);
 #endif
 }

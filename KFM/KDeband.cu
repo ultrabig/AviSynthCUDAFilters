@@ -64,8 +64,8 @@ template<typename vpixel_t>
 __host__ __device__ void average_pixel(int4 sum, int4 cnt, vpixel_t& out)
 {
 #ifdef __CUDA_ARCH__
-  // CUDA”Å‚Í __fdividef ‚ğg‚¤
-//#if 0 // ‚ ‚Ü‚è•Ï‚í‚ç‚È‚¢‚Ì‚ÅCPU”Å‚Æ“¯‚¶‚É‚·‚é
+  // CUDAç‰ˆã¯ __fdividef ã‚’ä½¿ã†
+//#if 0 // ã‚ã¾ã‚Šå¤‰ã‚ã‚‰ãªã„ã®ã§CPUç‰ˆã¨åŒã˜ã«ã™ã‚‹
   out.x = (int)(__fdividef(sum.x, cnt.x) + 0.5f);
   out.y = (int)(__fdividef(sum.y, cnt.y) + 0.5f);
   out.z = (int)(__fdividef(sum.z, cnt.z) + 0.5f);
@@ -188,7 +188,7 @@ class KTemporalNR : public KDebandBase
         &dptrs[2], nframes, mid, width4UV, heightUV, pitchUV, thresh);
       DEBUG_SYNC;
 
-      // I‚í‚Á‚½‚ç‰ğ•ú‚·‚éƒR[ƒ‹ƒoƒbƒN‚ğ’Ç‰Á
+      // çµ‚ã‚ã£ãŸã‚‰è§£æ”¾ã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’è¿½åŠ 
       env->DeviceAddCallback([](void* arg) {
         delete[]((TemporalNRPtrs<vpixel_t>*)arg);
       }, ptrs);
@@ -250,8 +250,8 @@ public:
   }
 };
 
-// ƒ‰ƒ“ƒ_ƒ€‚È128bit—ñ‚ğƒ‰ƒ“ƒ_ƒ€‚È -range ` range ‚É‚µ‚Ä•Ô‚·
-// range ‚Í0`127ˆÈ‰º
+// ãƒ©ãƒ³ãƒ€ãƒ ãª128bitåˆ—ã‚’ãƒ©ãƒ³ãƒ€ãƒ ãª -range ï½ range ã«ã—ã¦è¿”ã™
+// range ã¯0ï½127ä»¥ä¸‹
 static __device__ __host__ int random_range(uint8_t random, char range) {
   return ((((range << 1) + 1) * (int)random) >> 8) - range;
 }
@@ -672,11 +672,11 @@ void cpu_edgelevel(
 
 				float rdiff = hdiffmax / (float)(hmax - hmin);
 
-				// `0.25: ƒGƒbƒW‚Å‚È‚¢‰Â”\«‚ª‚‚¢‚Ì‚Å‚È‚µ
-				// 0.25`0.35: ƒ{[ƒ_[
-				// 0.35`0.45: ŠÃ‚¢ƒGƒbƒW‚È‚Ì‚Å‹­‰»
-				// 0.45`0.55: ƒ{[ƒ_[
-				// 0.55`: \•ªƒGƒbƒW‚È‚Ì‚Å‚È‚µ
+				// ï½0.25: ã‚¨ãƒƒã‚¸ã§ãªã„å¯èƒ½æ€§ãŒé«˜ã„ã®ã§ãªã—
+				// 0.25ï½0.35: ãƒœãƒ¼ãƒ€ãƒ¼
+				// 0.35ï½0.45: ç”˜ã„ã‚¨ãƒƒã‚¸ãªã®ã§å¼·åŒ–
+				// 0.45ï½0.55: ãƒœãƒ¼ãƒ€ãƒ¼
+				// 0.55ï½: ååˆ†ã‚¨ãƒƒã‚¸ãªã®ã§ãªã—
 				float factor = selective ? (clamp((0.55f - rdiff) * 10.0f, 0.0f, 1.0f) - clamp((0.35f - rdiff) * 10.0f, 0.0f, 1.0f)) : 1.0f;
 
 				int minU, maxU;
@@ -809,11 +809,11 @@ __global__ void kl_edgelevel(
 
 		float rdiff = hdiffmax / (float)(hmax - hmin);
 
-		// `0.25: ƒGƒbƒW‚Å‚È‚¢‰Â”\«‚ª‚‚¢‚Ì‚Å‚È‚µ
-		// 0.25`0.35: ƒ{[ƒ_[
-		// 0.35`0.45: ŠÃ‚¢ƒGƒbƒW‚È‚Ì‚Å‹­‰»
-		// 0.45`0.55: ƒ{[ƒ_[
-		// 0.55`: \•ªƒGƒbƒW‚È‚Ì‚Å‚È‚µ
+		// ï½0.25: ã‚¨ãƒƒã‚¸ã§ãªã„å¯èƒ½æ€§ãŒé«˜ã„ã®ã§ãªã—
+		// 0.25ï½0.35: ãƒœãƒ¼ãƒ€ãƒ¼
+		// 0.35ï½0.45: ç”˜ã„ã‚¨ãƒƒã‚¸ãªã®ã§å¼·åŒ–
+		// 0.45ï½0.55: ãƒœãƒ¼ãƒ€ãƒ¼
+		// 0.55ï½: ååˆ†ã‚¨ãƒƒã‚¸ãªã®ã§ãªã—
 		float factor = selective ? (clamp((0.55f - rdiff) * 10.0f, 0.0f, 1.0f) - clamp((0.35f - rdiff) * 10.0f, 0.0f, 1.0f)) : 1.0f;
 
 		int srcvY = *srcY;
@@ -897,7 +897,7 @@ __device__ __host__ void dev_sort_8elem(T& a0, T& a1, T& a2, T& a3, T& a4, T& a5
   CompareAndSwap cas;
 
   // Batcher's odd-even mergesort
-  // 8—v‘f‚È‚ç19comparison‚È‚Ì‚ÅÅ¬‚Ìƒ\[ƒeƒBƒ“ƒOƒlƒbƒgƒ[ƒN‚É‚È‚é‚Á‚Û‚¢
+  // 8è¦ç´ ãªã‚‰19comparisonãªã®ã§æœ€å°ã®ã‚½ãƒ¼ãƒ†ã‚£ãƒ³ã‚°ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã«ãªã‚‹ã£ã½ã„
   cas(a0, a1);
   cas(a2, a3);
   cas(a4, a5);
@@ -939,9 +939,9 @@ void cpu_edgelevel_repair(
 {
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
-      // el‚Íedgelevel‚Ìo—Í‚Å‚ ‚é‚±‚Æ‘O’ñ‚Åƒ{[ƒ_[ˆ—‚Í“ü‚ê‚È‚¢
-      // •K‚¸ƒ{[ƒ_[•t‹ß‚Íel==src‚Å‚ ‚é‚±‚Æ
-      // ‚»‚¤‚Å‚È‚¢‚Æƒƒ‚ƒŠƒGƒ‰[‚ª”­¶‚·‚é
+      // elã¯edgelevelã®å‡ºåŠ›ã§ã‚ã‚‹ã“ã¨å‰æã§ãƒœãƒ¼ãƒ€ãƒ¼å‡¦ç†ã¯å…¥ã‚Œãªã„
+      // å¿…ãšãƒœãƒ¼ãƒ€ãƒ¼ä»˜è¿‘ã¯el==srcã§ã‚ã‚‹ã“ã¨
+      // ãã†ã§ãªã„ã¨ãƒ¡ãƒ¢ãƒªã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹
 
       int srcv = src[x + y * pitch];
       int elv = el[x + y * pitch];
@@ -989,9 +989,9 @@ __global__ void kl_edgelevel_repair(
   int y = blockIdx.y * blockDim.y + threadIdx.y;
 
   if (x < width && y < height) {
-    // el‚Íedgelevel‚Ìo—Í‚Å‚ ‚é‚±‚Æ‘O’ñ‚Åƒ{[ƒ_[ˆ—‚Í“ü‚ê‚È‚¢
-    // •K‚¸ƒ{[ƒ_[•t‹ß‚Íel==src‚Å‚ ‚é‚±‚Æ
-    // ‚»‚¤‚Å‚È‚¢‚Æƒƒ‚ƒŠƒGƒ‰[‚ª”­¶‚·‚é
+    // elã¯edgelevelã®å‡ºåŠ›ã§ã‚ã‚‹ã“ã¨å‰æã§ãƒœãƒ¼ãƒ€ãƒ¼å‡¦ç†ã¯å…¥ã‚Œãªã„
+    // å¿…ãšãƒœãƒ¼ãƒ€ãƒ¼ä»˜è¿‘ã¯el==srcã§ã‚ã‚‹ã“ã¨
+    // ãã†ã§ãªã„ã¨ãƒ¡ãƒ¢ãƒªã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹
 
     int srcv = src[x + y * pitch];
     int elv = el[x + y * pitch];
@@ -1041,7 +1041,7 @@ void launch_edgelevel_repair(
     dsttop, eltop, srctop, width, height, pitch);
 }
 
-// ƒXƒŒƒbƒh”=(width,height)=src‚ÌƒTƒCƒY
+// ã‚¹ãƒ¬ãƒƒãƒ‰æ•°=(width,height)=srcã®ã‚µã‚¤ã‚º
 template <typename pixel_t, int logUVx, int logUVy>
 void cpu_el_to444(
 	pixel_t* dst, const pixel_t* src,
@@ -1158,7 +1158,7 @@ void launch_el_to444(
 		dst, src, width, height, dstPitch, srcPitch);
 }
 
-// ƒXƒŒƒbƒh”=(width,height)=dst‚ÌƒTƒCƒY
+// ã‚¹ãƒ¬ãƒƒãƒ‰æ•°=(width,height)=dstã®ã‚µã‚¤ã‚º
 template <typename pixel_t, int logUVx, int logUVy>
 void cpu_el_from444(
 	pixel_t* dst, const pixel_t* src,
@@ -1450,10 +1450,10 @@ class KEdgeLevel : public KDebandBase
     }
     else {
       if (repair > 0) {
-        // ƒŠƒyƒA‚·‚é
-        // dst‚ğel‚É“ü‚ê‚ÄAel‚ğƒŠƒyƒA‚Å“K—p‚·‚é
-        // dst‚Ætmp‚ğswap‚µ‚È‚ª‚çel‚ğQÆ‚µ‚Ä“K—p‚µ‚Ä‚¢‚­
-        // el‚ÍQÆ‚Ì‚İ‚Å•ÏX‚µ‚È‚¢
+        // ãƒªãƒšã‚¢ã™ã‚‹
+        // dstã‚’elã«å…¥ã‚Œã¦ã€elã‚’ãƒªãƒšã‚¢ã§é©ç”¨ã™ã‚‹
+        // dstã¨tmpã‚’swapã—ãªãŒã‚‰elã‚’å‚ç…§ã—ã¦é©ç”¨ã—ã¦ã„ã
+        // elã¯å‚ç…§ã®ã¿ã§å¤‰æ›´ã—ãªã„
         std::swap(dst, el);
         std::swap(dstY, elY);
         std::swap(dstU, elU);
@@ -1539,14 +1539,14 @@ public:
 
   static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env_)
   {
-		/* uv‚ª—LŒø‚È‚Æ‚«‚ÍˆÈ‰º‚Ì‚æ‚¤‚ÈƒXƒNƒŠƒvƒg‚ğÀs
-		  ƒ|ƒCƒ“ƒg‚ÍBilinearResize->PointResize‚ª–³—ò‰»A‚Â‚Ü‚èA
-			“r’†‚Å•ÏX‚³‚ê‚È‚¯‚ê‚Î“ü—Í‚Æ“¯ˆê‚ÌŒ‹‰Ê‚ªo—Í‚³‚ê‚é‚±‚Æ
-			‚±‚ê‚ğÀŒ»‚·‚é‚½‚ß‚ÉƒTƒ“ƒvƒ‹ƒ|ƒCƒ“ƒg‚ÍMPEG2‚Ìƒ|ƒWƒVƒ‡ƒ“‚Å‚Í‚È‚­A­‚µƒYƒŒ‚Ä‚¢‚é
-			‹ï‘Ì“I‚É‚ÍAMPEG2‚Å‚Í¶‘¤‚Ì’†ŠÔ‚¾‚ªA‚±‚ÌƒXƒNƒŠƒvƒg‚Å‚Í¶ã‚ğƒTƒ“ƒvƒ‹ƒ|ƒCƒ“ƒg‚Æ‚µ‚Ä‚¢‚é
-			KEdgeLevel‚É“ü—Í‚³‚ê‚éUV‚Í0.5ƒsƒNƒZƒ‹‚¾‚¯ã‚ÉƒYƒŒ‚é‚±‚Æ‚É‚È‚é‚ªA
-			KEdgeLevel‚Ìˆ—‚É‰e‹¿‚·‚é‚¾‚¯‚ÅA‚·‚®‚ÉŒ³‚É–ß‚éA‚©‚ÂAKEdgeLevel‚Å‚Ì0.5ƒsƒNƒZƒ‹‚ÌƒYƒŒ‚Í
-			‚³‚Ù‚Ç‰e‹¿‚È‚¢‚Æv‚¤‚Ì‚ÅA‘åä•v‚È‚Í‚¸
+		/* uvãŒæœ‰åŠ¹ãªã¨ãã¯ä»¥ä¸‹ã®ã‚ˆã†ãªã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’å®Ÿè¡Œ
+		  ãƒã‚¤ãƒ³ãƒˆã¯BilinearResize->PointResizeãŒç„¡åŠ£åŒ–ã€ã¤ã¾ã‚Šã€
+			é€”ä¸­ã§å¤‰æ›´ã•ã‚Œãªã‘ã‚Œã°å…¥åŠ›ã¨åŒä¸€ã®çµæœãŒå‡ºåŠ›ã•ã‚Œã‚‹ã“ã¨
+			ã“ã‚Œã‚’å®Ÿç¾ã™ã‚‹ãŸã‚ã«ã‚µãƒ³ãƒ—ãƒ«ãƒã‚¤ãƒ³ãƒˆã¯MPEG2ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã§ã¯ãªãã€å°‘ã—ã‚ºãƒ¬ã¦ã„ã‚‹
+			å…·ä½“çš„ã«ã¯ã€MPEG2ã§ã¯å·¦å´ã®ä¸­é–“ã ãŒã€ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã§ã¯å·¦ä¸Šã‚’ã‚µãƒ³ãƒ—ãƒ«ãƒã‚¤ãƒ³ãƒˆã¨ã—ã¦ã„ã‚‹
+			KEdgeLevelã«å…¥åŠ›ã•ã‚Œã‚‹UVã¯0.5ãƒ”ã‚¯ã‚»ãƒ«ã ã‘ä¸Šã«ã‚ºãƒ¬ã‚‹ã“ã¨ã«ãªã‚‹ãŒã€
+			KEdgeLevelã®å‡¦ç†ã«å½±éŸ¿ã™ã‚‹ã ã‘ã§ã€ã™ãã«å…ƒã«æˆ»ã‚‹ã€ã‹ã¤ã€KEdgeLevelã§ã®0.5ãƒ”ã‚¯ã‚»ãƒ«ã®ã‚ºãƒ¬ã¯
+			ã•ã»ã©å½±éŸ¿ãªã„ã¨æ€ã†ã®ã§ã€å¤§ä¸ˆå¤«ãªã¯ãš
 		  # -----------------------
 			u = src.UToY()
 			v = src.VToY()

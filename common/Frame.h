@@ -4,10 +4,10 @@
 #include <avisynth.h>
 
 
-// ROI‚ğ‚Á‚½PVideoFrame‚Ìƒ‰ƒbƒp
+// ROIã‚’æŒã£ãŸPVideoFrameã®ãƒ©ãƒƒãƒ‘
 struct Frame {
   PVideoFrame frame;
-  // ‘S‚ÄƒoƒCƒg’PˆÊ
+  // å…¨ã¦ãƒã‚¤ãƒˆå˜ä½
   int offsetX, offsetY, offsetUVx, offsetUVy;
   int width, height, widthUV, heightUV;
   Frame() { }
@@ -138,7 +138,7 @@ private:
       height = frame->GetHeight() - offsetY;
     }
     if (frame->GetRowSize(PLANAR_U) < frame->GetRowSize()) {
-      // UV‚Í‰¡”¼•ª
+      // UVã¯æ¨ªåŠåˆ†
       widthUV = width / 2;
       offsetUVx = offsetX / 2;
     }
@@ -147,7 +147,7 @@ private:
       offsetUVx = offsetX;
     }
     if (frame->GetHeight(PLANAR_U) < frame->GetHeight()) {
-      // UV‚Íc”¼•ª
+      // UVã¯ç¸¦åŠåˆ†
       heightUV = height / 2;
       offsetUVy = offsetY / 2;
     }

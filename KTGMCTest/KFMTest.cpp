@@ -1,7 +1,7 @@
 
 #include "TestCommons.h"
 
-// ƒeƒXƒg‘ÎÛ‚Æ‚È‚éƒNƒ‰ƒX Foo ‚Ì‚½‚ß‚ÌƒtƒBƒNƒXƒ`ƒƒ
+// ãƒ†ã‚¹ãƒˆå¯¾è±¡ã¨ãªã‚‹ã‚¯ãƒ©ã‚¹ Foo ã®ãŸã‚ã®ãƒ•ã‚£ã‚¯ã‚¹ãƒãƒ£
 class KFMTest : public AvsTestBase {
 protected:
   KFMTest() { }
@@ -196,7 +196,7 @@ TEST_F(KFMTest, KFMSuperTest)
     out << "ref = src.KFMSuper(pad)" << std::endl;
     out << "cuda = src.KFMSuper(pad)" O_C(0) "" << std::endl;
 
-    // ƒf[ƒ^‚Ì‚È‚¢•”•ªœŠO
+    // ãƒ‡ãƒ¼ã‚¿ã®ãªã„éƒ¨åˆ†é™¤å¤–
     out << "ImageCompare(ref, cuda, 1, offX=2, offY=1)" << std::endl;
 
     out.close();
@@ -346,7 +346,7 @@ TEST_F(KFMTest, SwitchFlagTest)
     out << "ref = super.KSwitchFlag()" << std::endl;
     out << "cuda = super.KSwitchFlag()" O_C(0) "" << std::endl;
 
-    // —]”’‚Íœ‚­
+    // ä½™ç™½ã¯é™¤ã
     out << "ImageCompare(ref.Crop(4,2,-4,-2), cuda.Crop(4,2,-4,-2), 1)" << std::endl;
 
     out.close();
@@ -384,7 +384,7 @@ TEST_F(KFMTest, CombeMaskTest)
     out << "ref = src.KCombeMask(flag)" << std::endl;
     out << "cuda = src.KCombeMask(flag)" O_C(0) "" << std::endl;
 
-    // ƒf[ƒ^‚ÍY‚ÆU‚Ì‚İ
+    // ãƒ‡ãƒ¼ã‚¿ã¯Yã¨Uã®ã¿
     out << "ImageCompare(ref, cuda, 1, chroma=False)" << std::endl;
     out << "ImageCompare(ref.ExtractU(), cuda.ExtractU(), 1, chroma=False)" << std::endl;
 
@@ -756,10 +756,10 @@ void KFMTest::CFieldDiffTest(int nt, bool chroma)
       env->Invoke("Import", scriptpath.c_str());
       double ref = env->GetVar("ref").AsFloat();
       double cuda = env->GetVar("cuda").AsFloat();
-      // ‹«ŠE‚Ìˆµ‚¢‚ªˆÙ‚È‚é‚Ì‚Åi‘½•ªjˆê’v‚µ‚È‚¢
-      // ·‚ª1%–¢–‚Å‚ ‚é‚±‚Æ‚ğŠm”F
+      // å¢ƒç•Œã®æ‰±ã„ãŒç•°ãªã‚‹ã®ã§ï¼ˆå¤šåˆ†ï¼‰ä¸€è‡´ã—ãªã„
+      // å·®ãŒ1%æœªæº€ã§ã‚ã‚‹ã“ã¨ã‚’ç¢ºèª
       if (std::abs(ref - cuda) / ref >= 0.02) {
-        printf("Œë·‚ª‘å‚«‚·‚¬‚Ü‚· %f vs %f\n", ref, cuda);
+        printf("èª¤å·®ãŒå¤§ãã™ãã¾ã™ %f vs %f\n", ref, cuda);
         GTEST_FAIL();
       }
     }
@@ -824,10 +824,10 @@ void KFMTest::CFrameDiffDupTest(int blocksize, bool chroma)
       env->Invoke("Import", scriptpath.c_str());
       double ref = env->GetVar("ref").AsFloat();
       double cuda = env->GetVar("cuda").AsFloat();
-      // ‹«ŠE‚Ìˆµ‚¢‚ªˆÙ‚È‚é‚Ì‚Åi‘½•ªjˆê’v‚µ‚È‚¢
-      // ·‚ª1%–¢–‚Å‚ ‚é‚±‚Æ‚ğŠm”F
+      // å¢ƒç•Œã®æ‰±ã„ãŒç•°ãªã‚‹ã®ã§ï¼ˆå¤šåˆ†ï¼‰ä¸€è‡´ã—ãªã„
+      // å·®ãŒ1%æœªæº€ã§ã‚ã‚‹ã“ã¨ã‚’ç¢ºèª
       if (std::abs(ref - cuda) / ref >= 0.01) {
-        printf("Œë·‚ª‘å‚«‚·‚¬‚Ü‚· %f vs %f\n", ref, cuda);
+        printf("èª¤å·®ãŒå¤§ãã™ãã¾ã™ %f vs %f\n", ref, cuda);
         GTEST_FAIL();
       }
     }

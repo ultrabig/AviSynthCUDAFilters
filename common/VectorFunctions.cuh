@@ -3,7 +3,7 @@
 #include <cuda_runtime_api.h>
 #include <cuda_device_runtime_api.h>
 
-// intŠg’£‚Í–¾¦“I‚É‘‚­ //
+// intæ‹¡å¼µã¯æ˜ç¤ºçš„ã«æ›¸ã //
 
 // to_int(uchar)
 static __device__ __host__ int to_int(unsigned char a) {
@@ -280,7 +280,7 @@ static __device__ __host__ int4 absdiff(ushort4 a, ushort4 b) {
   return r2;
 }
 
-// ƒOƒ[ƒoƒ‹ŠÖ”‚ÌƒI[ƒo[ƒ[ƒh‚Å‘‚¯‚È‚¢ˆ— //
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã§æ›¸ã‘ãªã„å‡¦ç† //
 
 template <typename V> struct VHelper { };
 

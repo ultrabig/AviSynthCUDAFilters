@@ -8,7 +8,7 @@
 
 #include "CommonFunctions.h"
 
-// CUDAƒJ[ƒlƒ‹À‘•‚Ì‹¤’Êˆ—
+// CUDAã‚«æ‹ãƒãƒ«å®Ÿè£…ã®å…±é€šæ¶ç†
 class CudaKernelBase
 {
 protected:

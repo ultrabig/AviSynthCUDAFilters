@@ -92,7 +92,7 @@ public:
 
     PVideoFrame src = child->GetFrame(n, env);
     if (IsAligned(src)) {
-      // Šù‚ÉAlign‚³‚ê‚Ä‚¢‚é
+      // æ—¢ã«Alignã•ã‚Œã¦ã„ã‚‹
       return src;
     }
 

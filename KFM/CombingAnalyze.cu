@@ -692,7 +692,7 @@ class KFMSuperShow : public KFMFilterBase
 
   void VisualizeFlags(Frame& dst, Frame& combe, PNeoEnv env)
   {
-    // ”»’èŒ‹‰Ê‚ğ•\¦
+    // åˆ¤å®šçµæœã‚’è¡¨ç¤º
     int black[] = { 0, 128, 128 };
     int blue[] = { 73, 230, 111 };
     int gray[] = { 140, 128, 128 };
@@ -713,7 +713,7 @@ class KFMSuperShow : public KFMFilterBase
     int width = combe.GetWidth<uchar2>(PLANAR_Y);
     int height = combe.GetHeight(PLANAR_Y);
 
-    // •‚Å‰Šú‰»‚µ‚Ä‚¨‚­
+    // é»’ã§åˆæœŸåŒ–ã—ã¦ãŠã
     for (int y = 0; y < vi.height; ++y) {
       for (int x = 0; x < vi.width; ++x) {
         int offY = x + y * dstPitchY;
@@ -724,7 +724,7 @@ class KFMSuperShow : public KFMFilterBase
       }
     }
 
-    // F‚ğ•t‚¯‚é
+    // è‰²ã‚’ä»˜ã‘ã‚‹
     for (int by = 0; by < height; ++by) {
       for (int bx = 0; bx < width; ++bx) {
         uchar2 cY = combeY[bx + by * combPitchY];
@@ -907,7 +907,7 @@ class KTelecine : public KFMFilterBase
   template <typename pixel_t>
   Frame CreateWeaveFrame(PClip clip, int n, int fstart, int fnum, int parity, PNeoEnv env)
   {
-    // fstart‚Í0or1‚É‚·‚é
+    // fstartã¯0or1ã«ã™ã‚‹
     if (fstart < 0 || fstart >= 2) {
       n += fstart / 2;
       fstart &= 1;
@@ -923,7 +923,7 @@ class KTelecine : public KFMFilterBase
     };
 
     if (fstart + fnum == 2) {
-      // ƒtƒŒ[ƒ€‚»‚Ì‚Ü‚Ü
+      // ãƒ•ãƒ¬ãƒ¼ãƒ ãã®ã¾ã¾
       return frames[0].frame;
     }
     else {
@@ -979,10 +979,10 @@ public:
     , fmclip(fmclip)
     , show(show)
   {
-    // ƒ`ƒFƒbƒN
+    // ãƒã‚§ãƒƒã‚¯
     CycleAnalyzeInfo::GetParam(fmclip->GetVideoInfo(), env);
 
-    // ƒtƒŒ[ƒ€ƒŒ[ƒg
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆ
     vi.MulDivFPS(4, 5);
     vi.num_frames = (vi.num_frames / 5 * 4) + (vi.num_frames % 5);
   }
@@ -1089,10 +1089,10 @@ public:
     : KFMFilterBase(child, env)
     , fmclip(fmclip)
   {
-    // ƒ`ƒFƒbƒN
+    // ãƒã‚§ãƒƒã‚¯
     CycleAnalyzeInfo::GetParam(fmclip->GetVideoInfo(), env);
 
-    // ƒtƒŒ[ƒ€ƒŒ[ƒg
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆ
     vi.MulDivFPS(2, 5);
     vi.num_frames >>= 1;
     vi.num_frames = (vi.num_frames / 5 * 4) + (vi.num_frames % 5);
@@ -1192,7 +1192,7 @@ void cpu_sum_box3x3(pixel_t* __restrict__ dst, pixel_t* __restrict__ src, int wi
       auto sumv = (src[(x - 1) + (y - 1)*pitch] + src[(x + 0) + (y - 1)*pitch] + src[(x + 1) + (y - 1)*pitch] +
         src[(x - 1) + (y + 0)*pitch] + src[(x + 0) + (y + 0)*pitch] + src[(x + 1) + (y + 0)*pitch] +
         src[(x - 1) + (y + 1)*pitch] + src[(x + 0) + (y + 1)*pitch] + src[(x + 1) + (y + 1)*pitch]);
-      dst[x + y * pitch] = min(sumv >> 2, maxv); // “K“–‚É1/4‚·‚é
+      dst[x + y * pitch] = min(sumv >> 2, maxv); // é©å½“ã«1/4ã™ã‚‹
     }
   }
 }
@@ -1207,7 +1207,7 @@ __global__ void kl_sum_box3x3(pixel_t* __restrict__ dst, pixel_t* __restrict__ s
     auto sumv = (src[(x - 1) + (y - 1)*pitch] + src[(x + 0) + (y - 1)*pitch] + src[(x + 1) + (y - 1)*pitch] +
       src[(x - 1) + (y + 0)*pitch] + src[(x + 0) + (y + 0)*pitch] + src[(x + 1) + (y + 0)*pitch] +
       src[(x - 1) + (y + 1)*pitch] + src[(x + 0) + (y + 1)*pitch] + src[(x + 1) + (y + 1)*pitch]);
-    dst[x + y * pitch] = min(sumv >> 2, maxv); // “K“–‚É1/4‚·‚é
+    dst[x + y * pitch] = min(sumv >> 2, maxv); // é©å½“ã«1/4ã™ã‚‹
   }
 }
 
@@ -1442,7 +1442,7 @@ class KSwitchFlag : public KFMFilterBase
     int height = combe.GetHeight(PLANAR_Y);
     int heightUV = combe.GetHeight(PLANAR_U);
 
-    // “®‚«‚Í‚¢‚ç‚È‚¢‚Ì‚ÅÈ‚¾‚¯’Šo
+    // å‹•ãã¯ã„ã‚‰ãªã„ã®ã§ç¸ã ã‘æŠ½å‡º
     if (IS_CUDA) {
       dim3 threads(32, 16);
       dim3 blocks(nblocks(width, threads.x), nblocks(height, threads.y));
@@ -1460,7 +1460,7 @@ class KSwitchFlag : public KFMFilterBase
       cpu_copy_first(combeV, pitchUV, srcV, widthUV, heightUV, spitchUV);
     }
 
-    // UV‚ğU‚Éƒ}[ƒW
+    // UVã‚’Uã«ãƒãƒ¼ã‚¸
     if (IS_CUDA) {
       dim3 threads(32, 16);
       dim3 blocksUV(nblocks(widthUV, threads.x), nblocks(heightUV, threads.y));
@@ -1471,8 +1471,8 @@ class KSwitchFlag : public KFMFilterBase
       cpu_max(combeU, combeU, combeV, widthUV, heightUV, pitchUV);
     }
 
-    // ‚»‚Ì‚Ü‚Ü4“_•½‹Ï‚Åk¬‚·‚é‚ÆˆÊ’u‚ª‚¸‚ê‚é‚Ì‚Å
-    // k¬‚·‚éƒvƒŒ[ƒ“‚Í¶ã‚Éextend‚·‚é
+    // ãã®ã¾ã¾4ç‚¹å¹³å‡ã§ç¸®å°ã™ã‚‹ã¨ä½ç½®ãŒãšã‚Œã‚‹ã®ã§
+    // ç¸®å°ã™ã‚‹ãƒ—ãƒ¬ãƒ¼ãƒ³ã¯å·¦ä¸Šã«extendã™ã‚‹
     ExtendBlocks<uint8_t>(combe, combetmp, width == widthUV, env);
 
     uint8_t* flagpY = flagY.GetWritePtr<uint8_t>();
@@ -1488,7 +1488,7 @@ class KSwitchFlag : public KFMFilterBase
 
     for (int i = 0; i < 2; ++i) {
       if (i == 0 || width == widthUV) {
-        // 4“_•½‹Ï‚Åk¬ src‚àdst‚à¶1—ñ‚Æã1s‚ÍƒXƒLƒbƒv
+        // 4ç‚¹å¹³å‡ã§ç¸®å° srcã‚‚dstã‚‚å·¦1åˆ—ã¨ä¸Š1è¡Œã¯ã‚¹ã‚­ãƒƒãƒ—
         if (IS_CUDA) {
           dim3 threads(32, 8);
           dim3 blocks(nblocks(fwidth, threads.x), nblocks(fheight, threads.y));
@@ -1502,15 +1502,15 @@ class KSwitchFlag : public KFMFilterBase
         }
       }
       else {
-        // k¬‚µ‚È‚¢ê‡‚ÍƒRƒs[
+        // ç¸®å°ã—ãªã„å ´åˆã¯ã‚³ãƒ”ãƒ¼
         assert(fpitch == pitchUV);
         assert(fwidth == widthUV);
-        // ¶1—ñ‚Æã1s‚ÍƒXƒLƒbƒv
+        // å·¦1åˆ—ã¨ä¸Š1è¡Œã¯ã‚¹ã‚­ãƒƒãƒ—
         Copy(flagpC + fpitch + 1, fpitch, combeU + pitchUV + 1, pitchUV, fwidth - 1, fheight - 1, env);
       }
     }
 
-    // 3x3boxƒtƒBƒ‹ƒ^‚Å‚Ú‚©‚·
+    // 3x3boxãƒ•ã‚£ãƒ«ã‚¿ã§ã¼ã‹ã™
     if (IS_CUDA) {
       dim3 threads(32, 8);
       dim3 blocks(nblocks(fwidth, threads.x), nblocks(fheight, threads.y));
@@ -1530,7 +1530,7 @@ class KSwitchFlag : public KFMFilterBase
       }
     }
 
-    // è‡’l‚Å2’l‰»
+    // é–¾å€¤ã§2å€¤åŒ–
     if (IS_CUDA) {
       dim3 threads(32, 8);
       dim3 binary_blocks(nblocks(fwidth, threads.x), nblocks(fheight, threads.y));
@@ -1542,7 +1542,7 @@ class KSwitchFlag : public KFMFilterBase
       cpu_binary_flag(flagpY, flagpY, flagpC, fwidth, fheight, fpitch, (int)thY, (int)thC);
     }
 
-    // ¶ã‚Éextend
+    // å·¦ä¸Šã«extend
     ExtendBlocks<uint8_t>(flagY, flagtmp, false, env);
 
     return flagY;
@@ -1570,11 +1570,11 @@ public:
   PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env_)
   {
     PNeoEnv env = env_;
-    // TemporalSoften‚ÆMakeSwitchFlag‚Ì“à•”‚Åplane‚²‚Æ‚Éstream‚ğg‚Á‚Ä•À—ñ‚Ç‚¤‚³‚¹‚éÅ“K‰»‚ªl‚¦‚ç‚ê‚é‚ªA
-    // ‚Ü‚ê‚ÉƒtƒŠ[ƒY‚·‚éŒ»Û‚ÌŒ´ˆö‚Æ‚µ‚Ä‚Ì‰Â”\«‚ğ”Û’è‚Å‚«‚È‚©‚Á‚½‚½‚ßAæ‚è‚â‚ß
-    // MakeSwitchFlag‚Å‚Í“r’†‚Ìˆ—‚Åflagtmpp‚ğˆê•Ï”‚Æ‚µ‚ÄplaneŠÔ‚Åg‚¢‚Ü‚í‚µ‚Ä‚¢‚é‚½‚ßA
-    // ‚»‚Ì‚Ü‚Ü‚Å‚Í•À—ñ‰»‚ª‚Å‚«‚È‚¢
-    // ‚»‚ê‚É‘Îô‚µ‚½‚Â‚à‚è‚Å‚àƒtƒŠ[ƒY‚ª”­¶‚µ‚½‚½‚ßAstream‚ğg‚¤‚Ì‚ğæ‚è‚â‚ß‚é‚±‚Æ‚É‚µ‚½
+    // TemporalSoftenã¨MakeSwitchFlagã®å†…éƒ¨ã§planeã”ã¨ã«streamã‚’ä½¿ã£ã¦ä¸¦åˆ—ã©ã†ã•ã›ã‚‹æœ€é©åŒ–ãŒè€ƒãˆã‚‰ã‚Œã‚‹ãŒã€
+    // ã¾ã‚Œã«ãƒ•ãƒªãƒ¼ã‚ºã™ã‚‹ç¾è±¡ã®åŸå› ã¨ã—ã¦ã®å¯èƒ½æ€§ã‚’å¦å®šã§ããªã‹ã£ãŸãŸã‚ã€å–ã‚Šã‚„ã‚
+    // MakeSwitchFlagã§ã¯é€”ä¸­ã®å‡¦ç†ã§flagtmppã‚’ä¸€æ™‚å¤‰æ•°ã¨ã—ã¦planeé–“ã§ä½¿ã„ã¾ã‚ã—ã¦ã„ã‚‹ãŸã‚ã€
+    // ãã®ã¾ã¾ã§ã¯ä¸¦åˆ—åŒ–ãŒã§ããªã„
+    // ãã‚Œã«å¯¾ç­–ã—ãŸã¤ã‚‚ã‚Šã§ã‚‚ãƒ•ãƒªãƒ¼ã‚ºãŒç™ºç”Ÿã—ãŸãŸã‚ã€streamã‚’ä½¿ã†ã®ã‚’å–ã‚Šã‚„ã‚ã‚‹ã“ã¨ã«ã—ãŸ
     Frame src = TemporalSoften(
       child->GetFrame(n - 1, env),
       child->GetFrame(n + 0, env),
@@ -1724,15 +1724,15 @@ class KCombeMask : public KFMFilterBase
     assert(scalew == 8 || scalew == 4);
     assert(scaleh == 8 || scaleh == 4);
 
-    // ã‰ºƒpƒfƒBƒ“ƒO1s•ª‚àŠÜ‚ß‚Äˆ—
+    // ä¸Šä¸‹ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°1è¡Œåˆ†ã‚‚å«ã‚ã¦å‡¦ç†
     table[is_cuda][0][scalew == 8](dsttmp, dwidth, sheight + 2, dpitch, src - spitch, spitch, env);
-    // ƒ\[ƒX‚ÍƒpƒfƒBƒ“ƒO1s•ª‚ğƒXƒLƒbƒv‚µ‚Ä“n‚·
+    // ã‚½ãƒ¼ã‚¹ã¯ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°1è¡Œåˆ†ã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¦æ¸¡ã™
     table[is_cuda][1][scaleh == 8](dst, dwidth, dheight, dpitch, dsttmp + dpitch, dpitch, env);
   }
 
   Frame MakeMask(Frame& flag, PNeoEnv env)
   {
-    // SwitchFlag‚©‚çMaskì¬
+    // SwitchFlagã‹ã‚‰Maskä½œæˆ
     Frame dst = env->NewVideoFrame(vi);
     Frame dsttmp = env->NewVideoFrame(vi);
 
@@ -1945,7 +1945,7 @@ public:
     if (vi.width & 7) env->ThrowError("[KRemoveCombe]: width must be multiple of 8");
     if (vi.height & 7) env->ThrowError("[KRemoveCombe]: height must be multiple of 8");
 
-    // superclip‚ğƒ`ƒFƒbƒN
+    // superclipã‚’ãƒã‚§ãƒƒã‚¯
     VideoInfo supervi = superclip->GetVideoInfo();
     if (supervi.num_frames != vi.num_frames) {
       env->ThrowError("[KRemoveCombe]: padclip and superclip should have the same num_frames");

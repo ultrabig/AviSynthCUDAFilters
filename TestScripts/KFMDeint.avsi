@@ -1,7 +1,7 @@
-# KFM‚ÆKTGMC‚ğg‚Á‚½ƒCƒ“ƒ^ƒŒ[ƒX‰ğœ
+# KFMã¨KTGMCã‚’ä½¿ã£ãŸã‚¤ãƒ³ã‚¿ãƒ¬ãƒ¼ã‚¹è§£é™¤
 # requires AvisynthNeo
 
-# SVP—p
+# SVPç”¨
 SetFilterMTMode("SVSuper",1)
 SetFilterMTMode("SVAnalyse",1)
 SetFilterMTMode("SVSmoothFps",1)
@@ -28,7 +28,7 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
     out3clips = (mode == 3) # output 3 clips
     decimate = (mode == 0) # output decimated frames
     
-    flagcrop = 6 # ã‰º‚ÌƒmƒCƒY•”•ª‚ÍœŠO‚·‚é
+    flagcrop = 6 # ä¸Šä¸‹ã®ãƒã‚¤ã‚ºéƒ¨åˆ†ã¯é™¤å¤–ã™ã‚‹
     nrblk = (Height(src) >= 720) ? 32 : 16 # SMDegrain block size
     
     Assert(!(mode == 1 && pass != 0), "60fps mode does not support multi-pass")
@@ -36,7 +36,7 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
     Assert(!(mode == 3 && pass == 2), "3clips mode does not support timing output pass")
     Assert(mode == 2 || mode == 4 || !svp, "only mode 2 and 4 support SVP")
 
-    # CUDAƒfƒoƒCƒXƒ`ƒFƒbƒN
+    # CUDAãƒ‡ãƒã‚¤ã‚¹ãƒã‚§ãƒƒã‚¯
     if(cuda) {
         cc = CUDAComputeCapability(dev)
         Assert(cc >= 35, "[KFM CUDA Error] Specified GPU: " + CUDADeviceName(dev) + " is not usable. (CC=" + string(cc) + " < 35)")
@@ -58,23 +58,23 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
     
     OnDEV = cuda ? function[dev](clip c, int "pre") { c.OnCUDA(default(pre, 1), dev) } : function(clip c) { c }
 
-    # KFMPad‚Íã‰º‚ğ4ƒsƒNƒZƒ‹i‡Œv8ƒsƒNƒZƒ‹jŠg’£‚·‚é
+    # KFMPadã¯ä¸Šä¸‹ã‚’4ãƒ”ã‚¯ã‚»ãƒ«ï¼ˆåˆè¨ˆ8ãƒ”ã‚¯ã‚»ãƒ«ï¼‰æ‹¡å¼µã™ã‚‹
     pad = src.KFMPad()
     
-    # ƒLƒƒƒbƒVƒ…ß–ñ‚Ì‚½‚ßsrc‚Ípadƒx[ƒX‚É‚·‚é
+    # ã‚­ãƒ£ãƒƒã‚·ãƒ¥ç¯€ç´„ã®ãŸã‚srcã¯padãƒ™ãƒ¼ã‚¹ã«ã™ã‚‹
     src = pad.Crop(0,4,0,-4)
 
-    ## 60fpsƒNƒŠƒbƒv‚ğì‚é ##
+    ## 60fpsã‚¯ãƒªãƒƒãƒ—ã‚’ä½œã‚‹ ##
 
-    # QTGMC/KTGMC‚ğŒÄ‚Ño‚· useFlag‚Í 0:’Êí 1:‘O‚ÌƒtƒB[ƒ‹ƒh‚¾‚¯‚ğg‚Á‚Ä•âŠÔ 2:Œã‚ë‚ÌƒtƒB[ƒ‹ƒh‚¾‚¯‚ğg‚Á‚Ä•âŠÔ
-    # useFlag‚ÍKTGMC‚Ì‚İ‘Î‰iQTGMC‚Í–³‹‚³‚ê‚éj
-    # “®‚«ƒxƒNƒgƒ‹‚È‚Ç‚ÍÄ—˜—p‚·‚é‚Ì‚Å0‚ğÅ‰‚ÉŒÄ‚Ño‚µ‚Ä‚©‚ç1,2‚ğŒÄ‚Ño‚·‚±‚Æ
+    # QTGMC/KTGMCã‚’å‘¼ã³å‡ºã™ useFlagã¯ 0:é€šå¸¸ 1:å‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã ã‘ã‚’ä½¿ã£ã¦è£œé–“ 2:å¾Œã‚ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã ã‘ã‚’ä½¿ã£ã¦è£œé–“
+    # useFlagã¯KTGMCã®ã¿å¯¾å¿œï¼ˆQTGMCã¯ç„¡è¦–ã•ã‚Œã‚‹ï¼‰
+    # å‹•ããƒ™ã‚¯ãƒˆãƒ«ãªã©ã¯å†åˆ©ç”¨ã™ã‚‹ã®ã§0ã‚’æœ€åˆã«å‘¼ã³å‡ºã—ã¦ã‹ã‚‰1,2ã‚’å‘¼ã³å‡ºã™ã“ã¨
     xTGMC = function[preset, cuda, dev](clip c, int useFlag) {
         prevGlobals = (useFlag == 0) ? "Replace" : "Reuse"
         cuda ? c.KTGMC(Preset=preset, dev=dev, PrevGlobals=prevGlobals, useFlag=useFlag) : c.QTGMC(Preset=preset)
     }
 
-    # 16 == (Blocksize - Overlap): ƒuƒƒbƒNƒTƒCƒY‚É‡‚í‚¹‚é
+    # 16 == (Blocksize - Overlap): ãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚ºã«åˆã‚ã›ã‚‹
     call_xTGMC = function[preset, src, pad, xTGMC](int useFlag) {
         is_pad = (preset == "Faster" && (Height(src) % 16) == 8)
         srcq = is_pad ? pad : src
@@ -82,22 +82,22 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
         is_pad ? p60.Crop(0,4,0,-4) : p60
     }
     
-    # Ã~•”•ª•âŠÔ—p
+    # é™æ­¢éƒ¨åˆ†è£œé–“ç”¨
     stt = src.KAnalyzeStatic(30, 15, pad)
 
     clip60 = call_xTGMC(0).KMergeStatic(src, stt)
     
     if(ucf) {
-        # ƒmƒCƒYî•ñƒNƒŠƒbƒvì¬ŠÖ”
+        # ãƒã‚¤ã‚ºæƒ…å ±ã‚¯ãƒªãƒƒãƒ—ä½œæˆé–¢æ•°
         UCFNoise = function[pad, cuda, OnDev](clip src) {
             if(cuda) {
-                # ƒmƒCƒY”»’è‚Ì€”õBŠOü4ƒsƒNƒZƒ‹‚Í”»’è‚©‚çœŠOBCropŒã‚ÉCUDA‚Åˆ—‚·‚é‚Ì‚ÉAlign•K{
+                # ãƒã‚¤ã‚ºåˆ¤å®šã®æº–å‚™ã€‚å¤–å‘¨4ãƒ”ã‚¯ã‚»ãƒ«ã¯åˆ¤å®šã‹ã‚‰é™¤å¤–ã€‚Cropå¾Œã«CUDAã§å‡¦ç†ã™ã‚‹ã®ã«Alignå¿…é ˆ
                 fields = src.SeparateFields().Crop(4,4,-4,-4).Align()
-                # ƒIƒŠƒWƒiƒ‹‚ÌDecombUCF‚¾‚ÆCrop‘O‚ÉbinomialBlur‚ğŠ|‚¯‚Ä‚¢‚½‚ªACrop‚ÆAlign‚ª‘½‚­‚È‚é‚Ì‚Å
-                # CropŒã‚ÉŠ|‚¯‚¿‚á‚¤B‘½­Œ‹‰Ê‚ª•Ï‚í‚é‚©‚à‚µ‚ê‚È‚¢‚¯‚Ç‚ ‚Ü‚è•Ï‚í‚ç‚È‚¢‚Æv‚¤
-                # ƒIƒŠƒWƒiƒ‹‚ÌbinomialBlur‚Í—˜_“I‚É‚Íp=2.5‘Š“–i‚½‚¾Œ©”ä‚×‚é‚ÆƒtƒBƒ‹ƒ^”ÍˆÍ‚Ìˆá‚¢‚æ‚é·‚ÍŒ‹\o‚Ä‚éj
+                # ã‚ªãƒªã‚¸ãƒŠãƒ«ã®DecombUCFã ã¨Cropå‰ã«binomialBlurã‚’æ›ã‘ã¦ã„ãŸãŒã€Cropã¨AlignãŒå¤šããªã‚‹ã®ã§
+                # Cropå¾Œã«æ›ã‘ã¡ã‚ƒã†ã€‚å¤šå°‘çµæœãŒå¤‰ã‚ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã‘ã©ã‚ã¾ã‚Šå¤‰ã‚ã‚‰ãªã„ã¨æ€ã†
+                # ã‚ªãƒªã‚¸ãƒŠãƒ«ã®binomialBlurã¯ç†è«–çš„ã«ã¯p=2.5ç›¸å½“ï¼ˆãŸã è¦‹æ¯”ã¹ã‚‹ã¨ãƒ•ã‚£ãƒ«ã‚¿ç¯„å›²ã®é•ã„ã‚ˆã‚‹å·®ã¯çµæ§‹å‡ºã¦ã‚‹ï¼‰
                 noise = fields.KGaussResize(p=2.5)
-                # ƒmƒCƒY”»’è‚Ì‚½‚ß‚Ìî•ñ‚ğWŒvBKAnalyzeNoise‚ÌŒ‹‰Ê‚ÍCPU‚©‚çƒAƒNƒZƒX‚³‚ê‚é‚Ì‚ÅOnCUDA‚µ‚Ä‚¨‚­
+                # ãƒã‚¤ã‚ºåˆ¤å®šã®ãŸã‚ã®æƒ…å ±ã‚’é›†è¨ˆã€‚KAnalyzeNoiseã®çµæœã¯CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã•ã‚Œã‚‹ã®ã§OnCUDAã—ã¦ãŠã
                 src.KAnalyzeNoise(fields.KNoiseClip(noise), pad).OnDEV()
             }
             else {
@@ -110,9 +110,9 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
             }
         }
 
-        # DecombUCFƒpƒ‰ƒ[ƒ^
+        # DecombUCFãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
         ucfparam = KDecombUCFParam()
-        # ƒmƒCƒYî•ñƒNƒŠƒbƒv
+        # ãƒã‚¤ã‚ºæƒ…å ±ã‚¯ãƒªãƒƒãƒ—
         noise30 = src.UCFNoise()
         
         if(cuda) {
@@ -120,9 +120,9 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
             after60 = call_xTGMC(2).KMergeStatic(src, stt)
         }
         else {
-            # CPU”Å‚Í‘Î‰‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅTDeint‚ğg‚¤
+            # CPUç‰ˆã¯å¯¾å¿œã—ã¦ã„ãªã„ã®ã§TDeintã‚’ä½¿ã†
             #before60 = src.TDeint(chroma=true,mode=1,edeint=src.nnedi3(field=-2),emask=src.TMM2(mode=1, order=-1, field=-1))
-            # ‚Æv‚Á‚½‚¯‚Ç—pˆÓ‚·‚é‚Ì‚ª–Ê“|‚È‚Ì‚ÅYadifmod2‚Å‘ã—p
+            # ã¨æ€ã£ãŸã‘ã©ç”¨æ„ã™ã‚‹ã®ãŒé¢å€’ãªã®ã§Yadifmod2ã§ä»£ç”¨
             before60 = src.Yadifmod2( mode=1, order=-1, field=-1, edeint=src.nnedi3(field=-2) )
             after60 = before60
         }
@@ -139,15 +139,15 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
             clip60 = clip60.Print("****** BOB ******", y=20)
         }
 
-        ## ‹tƒeƒŒƒVƒl‰ğÍ ##
+        ## é€†ãƒ†ãƒ¬ã‚·ãƒè§£æ ##
 
-        # KFM‰ğÍ—pƒNƒŠƒbƒv
+        # KFMè§£æç”¨ã‚¯ãƒªãƒƒãƒ—
         super = src.KFMSuper(pad).KCleanSuper()
 
-        # 30fps‚ÌKFM‰ğÍ—pƒNƒŠƒbƒv
+        # 30fpsã®KFMè§£æç”¨ã‚¯ãƒªãƒƒãƒ—
         super30 = super.SelectEven()
 
-        # ƒeƒŒƒVƒl‰ğÍ”»’è KFMCycleAnalyze‚ÍCUDA”ñ‘Î‰‚È‚Ì‚Å’ˆÓ
+        # ãƒ†ãƒ¬ã‚·ãƒè§£æåˆ¤å®š KFMCycleAnalyzeã¯CUDAéå¯¾å¿œãªã®ã§æ³¨æ„
         mode = (pass >= 3) ? 2 : pass
         fmclip = super.KPreCycleAnalyze()
         fmclip = cuda ? fmclip.OnDEV() : fmclip.Prefetch(threads)
@@ -157,15 +157,15 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
             return fmclip
         }
 
-        # ‹tƒeƒŒƒVƒl‚µ‚½KFM‰ğÍ—pƒNƒŠƒbƒv
+        # é€†ãƒ†ãƒ¬ã‚·ãƒã—ãŸKFMè§£æç”¨ã‚¯ãƒªãƒƒãƒ—
         super24 = super.KTelecineSuper(fmclip)
 
-        # ‹tƒeƒŒƒVƒl Èœ‹‚ÍƒmƒCƒY’áŒ¸‚Ì‚½‚ß
+        # é€†ãƒ†ãƒ¬ã‚·ãƒ ç¸é™¤å»ã¯ãƒã‚¤ã‚ºä½æ¸›ã®ãŸã‚
         #clip24 = src.KTelecine(fmclip).KFMPad().KRemoveCombe(super24)
         clip24 = pad.KTelecine(fmclip).KRemoveCombe(super24)
 
         if(ucf) {
-            # DoubleWeave‚µ‚½ƒNƒŠƒbƒv Èœ‹‚ÍƒmƒCƒY’áŒ¸‚Ì‚½‚ß
+            # DoubleWeaveã—ãŸã‚¯ãƒªãƒƒãƒ— ç¸é™¤å»ã¯ãƒã‚¤ã‚ºä½æ¸›ã®ãŸã‚
             #dweave = src.DoubleWeave().KFMPad().KRemoveCombe(super)
             dweave = pad.DoubleWeave().KRemoveCombe(super)
 
@@ -173,13 +173,13 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
                 dweave = dweave.Print("** DOUBLE WEAVE **", y=20)
             }
 
-            # DecombUCF‚ğ“K—p(24fps)
+            # DecombUCFã‚’é©ç”¨(24fps)
             clip24 = clip24.KDecombUCF24(ucfparam, fmclip, noise30, before60, after60, dweave)
         }
 
         if(nr) {
             if(cuda) {
-                # 24fps‚ÍŒy‚ß‚Ìİ’è‚Ås‚¤
+                # 24fpsã¯è»½ã‚ã®è¨­å®šã§è¡Œã†
                     clip24 = clip24.KSMDegrain(tr=1, blksize=nrblk, binomial=True, dev=dev)
                 }
             else {
@@ -187,10 +187,10 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
             }
         }
 
-        # 24fps/60fps Ø‚è‘Ö‚¦ƒ}ƒXƒNimask‚Æcc‚ğƒZƒbƒg‚Åg‚¤j
+        # 24fps/60fps åˆ‡ã‚Šæ›¿ãˆãƒã‚¹ã‚¯ï¼ˆmaskã¨ccã‚’ã‚»ãƒƒãƒˆã§ä½¿ã†ï¼‰
         flag24 = super24.KSwitchFlag()
         mask24 = clip24.KCombeMask(flag24)
-        cc24 = flag24.Crop(0,flagcrop,0,-flagcrop).KContainsCombe().OnDEV() # CPU‚©‚çƒAƒNƒZƒX‚³‚ê‚é‚Ì‚ÅOnCUDA‚µ‚Ä‚¨‚­
+        cc24 = flag24.Crop(0,flagcrop,0,-flagcrop).KContainsCombe().OnDEV() # CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã•ã‚Œã‚‹ã®ã§OnCUDAã—ã¦ãŠã
 
         if(out24) {
             clip24.KPatchCombe(clip60, fmclip, mask24, cc24)
@@ -198,7 +198,7 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
         else {
             clip30 = show ? src.Print("****** SOURCE *****", y=20) : src
             if(ucf) {
-                # DecombUCF‚ğ“K—p(30fps)
+                # DecombUCFã‚’é©ç”¨(30fps)
                 clip30 = clip30.KDecombUCF(ucfparam, noise30, before60, after60)
             }
             if(nr) {
@@ -210,24 +210,24 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
                 }
             }
 
-            # 30fps/60fps Ø‚è‘Ö‚¦ƒ}ƒXƒNimask‚Æcc‚ğƒZƒbƒg‚Åg‚¤j
+            # 30fps/60fps åˆ‡ã‚Šæ›¿ãˆãƒã‚¹ã‚¯ï¼ˆmaskã¨ccã‚’ã‚»ãƒƒãƒˆã§ä½¿ã†ï¼‰
             flag30 = super30.KSwitchFlag()
             mask30 = clip30.KCombeMask(flag30)
-            cc30 = flag30.Crop(0,flagcrop,0,-flagcrop).KContainsCombe().OnDEV() # CPU‚©‚çƒAƒNƒZƒX‚³‚ê‚é‚Ì‚ÅOnCUDA‚µ‚Ä‚¨‚­
+            cc30 = flag30.Crop(0,flagcrop,0,-flagcrop).KContainsCombe().OnDEV() # CPUã‹ã‚‰ã‚¢ã‚¯ã‚»ã‚¹ã•ã‚Œã‚‹ã®ã§OnCUDAã—ã¦ãŠã
 
-            # DecombUCF‚ğ“K—p(60fps)
+            # DecombUCFã‚’é©ç”¨(60fps)
             ucfc = ucf ? clip60.KDecombUCF60(ucfparam, noise30, before60, after60) : Undefined()
             
             if(out3clips) {
-                # ƒNƒŠƒbƒv‚ğ3‚Â—pˆÓ
+                # ã‚¯ãƒªãƒƒãƒ—ã‚’3ã¤ç”¨æ„
                 clip24 = clip24.KPatchCombe(clip60, fmclip, mask24, cc24)
                 clip30 = clip30.KPatchCombe(clip60, fmclip, mask30, cc30)
                 clip60 = ucf ? ucfc : clip60
             }
             else {
-				# SVP‚ğ“K—p
+				# SVPã‚’é©ç”¨
 				if(svp) {
-					# SVP‚ğƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚ÅŒÄ‚Ño‚·‚ÆƒoƒO‚é‚Ì‚Å’ˆÓ
+					# SVPã‚’ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§å‘¼ã³å‡ºã™ã¨ãƒã‚°ã‚‹ã®ã§æ³¨æ„
 					clip24 = clip24.OnDEV().SmoothFps(5, 2).OnCPU(1)
 					clip30 = clip30.OnDEV().SmoothFps(2, 1).OnCPU(1)
 				}
@@ -237,7 +237,7 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
 				}
             
 				if(!cuda) {
-					# KFMSwitchŒã‚ÉPrefetch‚·‚é‚ÆŒø—¦‚ª—‚¿‚é‚Ì‚Å‚±‚±‚Å‚â‚é
+					# KFMSwitchå¾Œã«Prefetchã™ã‚‹ã¨åŠ¹ç‡ãŒè½ã¡ã‚‹ã®ã§ã“ã“ã§ã‚„ã‚‹
 					clip60 = clip60.Prefetch(threads)
 					mask24 = mask24.Prefetch(threads / 2)
 					cc24 = cc24.Prefetch(mode == 2 ? threads : (threads / 2))
@@ -270,7 +270,7 @@ function KFMDeint(clip src, int "mode", int "pass", string "preset", float "thsw
         }
     }
     else if(out24) {
-        # 24fpso—Í‚ÌSVP‚Í‚±‚±‚Å“K—p
+        # 24fpså‡ºåŠ›æ™‚ã®SVPã¯ã“ã“ã§é©ç”¨
         svp ? SmoothFps(5, 2) : Prefetch(threads)
     }
     else {

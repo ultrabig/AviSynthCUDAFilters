@@ -145,15 +145,15 @@ void CondFuncTest::CondTest_(const char* fname, bool is_cuda, FORMAT format, int
       double ref = env->GetVar("ref").AsFloat();
       double cuda = env->GetVar("cuda").AsFloat();
       if (bits == 32) {
-        // —LŒø”š‚ª•ª‚©‚ç‚È‚¢‚Ì‚Å“K“–‚É8bit‡‚Á‚Ä‚ê‚ÎOK‚É‚·‚é
+        // æœ‰åŠ¹æ•°å­—ãŒåˆ†ã‹ã‚‰ãªã„ã®ã§é©å½“ã«8bitåˆã£ã¦ã‚Œã°OKã«ã™ã‚‹
         if (std::abs(ref - cuda) / std::abs(ref) >= std::abs(ref) / (1 << 8)) {
-          printf("’l‚ªˆá‚¢‚Ü‚·(float) %f vs %f\n", ref, cuda);
+          printf("å€¤ãŒé•ã„ã¾ã™(float) %f vs %f\n", ref, cuda);
           GTEST_FAIL();
         }
       }
       else {
         if (ref != cuda) {
-          printf("’l‚ªˆá‚¢‚Ü‚· %f vs %f\n", ref, cuda);
+          printf("å€¤ãŒé•ã„ã¾ã™ %f vs %f\n", ref, cuda);
           GTEST_FAIL();
         }
       }
@@ -757,11 +757,11 @@ struct ConvBits32Gen : ScriptGen
 
 TEST_F(GenericTest, ConvBitsTo8)
 {
-  // ƒrƒbƒg•ÏŠ·‚Íƒpƒ^[ƒ“‚Æ‚µ‚Ä full scale ‚Æ shifted scale ‚ª‚ ‚é
-  // full scale ‚Í 0-255 ‚ğ 0-65535 ‚Éƒ}ƒbƒsƒ“ƒO‚·‚é•ÏŠ·
-  // shifted scale ‚Í 0-255 ‚ğ 0-65280 ‚Éƒ}ƒbƒsƒ“ƒO‚·‚é•ÏŠ·
-  // CUDA”Å‚Íshifted scale‚µ‚©ƒTƒ|[ƒg‚µ‚Ä‚¢‚È‚¢
-  // ƒIƒvƒVƒ‡ƒ“‚È‚µ‚¾‚ÆRGB‚ªfull scale•ÏŠ·‚³‚ê‚é‚Ì‚Å’l‚ª‡‚í‚È‚­‚È‚é‚Ì‚Å’ˆÓ
+  // ãƒ“ãƒƒãƒˆå¤‰æ›ã¯ãƒ‘ã‚¿ãƒ¼ãƒ³ã¨ã—ã¦ full scale ã¨ shifted scale ãŒã‚ã‚‹
+  // full scale ã¯ 0-255 ã‚’ 0-65535 ã«ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹å¤‰æ›
+  // shifted scale ã¯ 0-255 ã‚’ 0-65280 ã«ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹å¤‰æ›
+  // CUDAç‰ˆã¯shifted scaleã—ã‹ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ãªã„
+  // ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãªã—ã ã¨RGBãŒfull scaleå¤‰æ›ã•ã‚Œã‚‹ã®ã§å€¤ãŒåˆã‚ãªããªã‚‹ã®ã§æ³¨æ„
 
   std::vector<FORMAT> formats = { FORMAT_YV420, FORMAT_YV422, FORMAT_YV444, FORMAT_Y, FORMAT_RGB, FORMAT_RGBA, FORMAT_PLANAR_RGB, FORMAT_PLANAR_RGBA };
   int bits[] = { 8, 16, 10, 12, 14, 32 };
@@ -883,7 +883,7 @@ struct Resize1DGen : ScriptGen
 {
   virtual double Thresh(
     std::ofstream& out, const char* fname, bool is_cuda, int bits) const {
-    // ®”‰‰ZƒƒWƒbƒN‚ÍŒë·‚ª‚ ‚é‚Á‚Û‚¢
+    // æ•´æ•°æ¼”ç®—ãƒ­ã‚¸ãƒƒã‚¯ã¯èª¤å·®ãŒã‚ã‚‹ã£ã½ã„
     if (bits >= 12 && bits <= 16) return 1 << (bits - 11);
     if (bits == 32) return 0.25;
     return 1;

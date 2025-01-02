@@ -444,7 +444,7 @@ public:
 
   //void SetInterp(int nRfilter, int nSharp)
   //{
-  //  // ¡‚Í–¢‘Î‰
+  //  // ä»Šã¯æœªå¯¾å¿œ
   //}
 
   void SetTarget(uint8_t* _pSrc, int _nPitch)
@@ -503,7 +503,7 @@ public:
         kernel->VerticalWiener(pPlane[2], pPlane[0], nPitch, nPitch, nExtendedWidth, nExtendedHeight, nBitsPerPixel, stream_);
         kernel->HorizontalWiener(pPlane[3], pPlane[2], nPitch, nPitch, nExtendedWidth, nExtendedHeight, nBitsPerPixel, stream_);
         break;
-        //case 4: // ¡‚Í–¢‘Î‰
+        //case 4: // ä»Šã¯æœªå¯¾å¿œ
         //  break;
       }
     }
@@ -515,7 +515,7 @@ public:
         VerticalWiener(pPlane[2], pPlane[0], nPitch, nPitch, nExtendedWidth, nExtendedHeight, nBitsPerPixel);
         HorizontalWiener(pPlane[3], pPlane[2], nPitch, nPitch, nExtendedWidth, nExtendedHeight, nBitsPerPixel);
         break;
-        //case 4: // ¡‚Í–¢‘Î‰
+        //case 4: // ä»Šã¯æœªå¯¾å¿œ
         //  break;
       }
     }
@@ -742,7 +742,7 @@ public:
 
   //void	SetInterp(int rfilter, int sharp)
   //{
-  //  // TODO: ‚±‚ê‚È‚ñ‚Åƒ[ƒ‚¾‚¯H
+  //  // TODO: ã“ã‚Œãªã‚“ã§ã‚¼ãƒ­ã ã‘ï¼Ÿ
   //  pFrames[0]->SetInterp(rfilter, sharp);
   //}
 };
@@ -761,7 +761,7 @@ public:
     , params(KMVParam::SUPER_FRAME)
     , cuda(CreateKDeintCUDA())
   {
-    // ¡‚ÌŠ‘Î‰‚µ‚Ä‚¢‚é‚ÌƒRƒŒ‚¾‚¯
+    // ä»Šã®æ‰€å¯¾å¿œã—ã¦ã„ã‚‹ã®ã‚³ãƒ¬ã ã‘
     if (nHPad != 8) env->ThrowError("[KMSuper] hpad must be 8.");
     if (nVPad != 8) env->ThrowError("[KMSuper] vpad must be 8.");
     if (nSharp != 2) env->ThrowError("[KMSuper] sharp must be 2.");
@@ -1053,7 +1053,7 @@ enum {
   MAX_BATCH = 8,
 };
 
-// •K‚¸ƒoƒbƒ`•ª‚Ü‚Æ‚ß‚Äˆ—‚·‚éiÅŒã‚Æ‚©‚ÅƒtƒŒ[ƒ€‚ª‚È‚¢‚Æ‚«‚Íƒ|ƒCƒ“ƒ^‚ğ•¡»‚µ‚Ä“n‚·j
+// å¿…ãšãƒãƒƒãƒåˆ†ã¾ã¨ã‚ã¦å‡¦ç†ã™ã‚‹ï¼ˆæœ€å¾Œã¨ã‹ã§ãƒ•ãƒ¬ãƒ¼ãƒ ãŒãªã„ã¨ãã¯ãƒã‚¤ãƒ³ã‚¿ã‚’è¤‡è£½ã—ã¦æ¸¡ã™ï¼‰
 class PlaneOfBlocksBase {
 public:
   virtual ~PlaneOfBlocksBase() { }
@@ -1464,7 +1464,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
         const pixel_t* pRefV = GetRefBlockV(vx, vy);
 
         int sum = 0;
-#if 0 // blksize==16—p
+#if 0 // blksize==16ç”¨
         for (int i = 0; i < 16; ++i) {
           int s = pSrc[0][nSrcPitch[0] * i];
           int r = pRefY[nRefPitch[0] * i];
@@ -1480,7 +1480,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
           sum += std::abs(sv - rv);
           printf("i=%d,sum=%d\n", i, sum);
         }
-#else // blksize==32—p
+#else // blksize==32ç”¨
         for (int i = 0; i < 32; ++i) {
           int s0 = pSrc[0][nSrcPitch[0] * i];
           int r0 = pRefY[nRefPitch[0] * i];
@@ -1516,7 +1516,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
       }
 #endif
 
-#if 1 // CUDA”Å‚Æ‡‚í‚¹‚é
+#if 1 // CUDAç‰ˆã¨åˆã‚ã›ã‚‹
       int sad = LumaSAD(GetRefBlock(vx, vy));
       if (p.chroma) {
         sad += SADCHROMA(pSrc[1], nSrcPitch[1], GetRefBlockU(vx, vy), nRefPitch[1])
@@ -1553,7 +1553,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
 
       typedef typename std::conditional < sizeof(pixel_t) == 1, int, __int64 >::type safe_sad_t;
 
-#if 1 // CUDA”Å‚Æ‡‚í‚¹‚é
+#if 1 // CUDAç‰ˆã¨åˆã‚ã›ã‚‹
       int sad = LumaSAD(GetRefBlock(vx, vy));
       if (p.chroma) {
         sad += SADCHROMA(pSrc[1], nSrcPitch[1], GetRefBlockU(vx, vy), nRefPitch[1])
@@ -1581,7 +1581,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
   void PseudoEPZSearch()
   {
     typedef typename std::conditional < sizeof(pixel_t) == 1, int, __int64 >::type safe_sad_t;
-#if 1 // CUDA”Å‚Æ‡‚í‚¹‚é
+#if 1 // CUDAç‰ˆã¨åˆã‚ã›ã‚‹
     FetchPredictorsCudaEmu();
 #else
     FetchPredictors();
@@ -1620,7 +1620,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
         pRefV[0], pRefV[1], pRefV[0 + nRefPitch[2]], pRefV[1 + nRefPitch[2]]
       );
       int sum = 0;
-#if 0 // blksize==16—p
+#if 0 // blksize==16ç”¨
       for (int i = 0; i < 16; ++i) {
         int s = pSrc[0][nSrcPitch[0] * i];
         int r = pRefY[nRefPitch[0] * i];
@@ -1636,7 +1636,7 @@ class PlaneOfBlocks : public PlaneOfBlocksBase
         sum += std::abs(sv - rv);
         printf("i=%d,sum=%d\n", i, sum);
       }
-#elif 0 // blksize==32—p
+#elif 0 // blksize==32ç”¨
       for (int i = 0; i < 32; ++i) {
         int s0 = pSrc[0][nSrcPitch[0] * i];
         int r0 = pRefY[nRefPitch[0] * i];
@@ -2217,7 +2217,7 @@ public:
     batchdata = (void*)&((uint8_t*)blocks)[p.nBlkCount * p.batch * kernel->GetSearchBlockSize()];
     loadmvbatchdata = (void*)&((uint8_t*)batchdata)[p.batch * kernel->GetSearchBatchSize()];
 
-    // ƒIƒtƒZƒbƒg‚µ‚Ä‚¨‚­
+    // ã‚ªãƒ•ã‚»ãƒƒãƒˆã—ã¦ãŠã
     vectors += N_CONST_VEC;
     sads += N_CONST_VEC;
   }
@@ -2456,7 +2456,7 @@ public:
 
     planes[0]->InitializeGlobalMV(batch, globalMV);
 
-    // pre‚ª‚ ‚ê‚Îout‚ÉƒRƒs[‚µ‚ÄƒŒƒxƒ‹‚ği‚ß‚Ä‚¨‚­
+    // preãŒã‚ã‚Œã°outã«ã‚³ãƒ”ãƒ¼ã—ã¦ãƒ¬ãƒ™ãƒ«ã‚’é€²ã‚ã¦ãŠã
     if (pre) {
       const VECTOR* preptr[ANALYZE_MAX_BATCH];
       std::copy(pre, pre + batch, preptr);
@@ -2497,7 +2497,7 @@ public:
 
       planes[i]->SearchMVs(batch, pSrcFrame, pRefFrame, globalMV, outptr, nBlks);
 
-      // ƒfƒoƒbƒO—p
+      // ãƒ‡ãƒãƒƒã‚°ç”¨
       //if (i == 1 && cuda->IsEnabled() == false) {
       //	FILE *fp = fopen("vector-1.txt", "w");
       //	for (int i = 0; i < nBlks; ++i) fprintf(fp, "%d,%d,%d,%d\n", i, outptr[i].x, outptr[i].y, outptr[i].sad);
@@ -2662,7 +2662,7 @@ public:
       params.chroma = false;
     }
 
-    // Partial Super ‚Ìê‡ nActual~ ‚ÆˆÙ‚È‚éê‡‚ª‚ ‚é
+    // Partial Super ã®å ´åˆ nActual~ ã¨ç•°ãªã‚‹å ´åˆãŒã‚ã‚‹
     const int nWidth = params.nActualWidth ? params.nActualWidth : params.nWidth;
     const int nHeight = params.nActualHeight ? params.nActualHeight : params.nHeight;
 
@@ -2698,7 +2698,7 @@ public:
 
     params.isBackward = isb;
 
-    // ŠeŠK‘w‚ÌƒuƒƒbƒN”‚ğŒvZ
+    // å„éšå±¤ã®ãƒ–ãƒ­ãƒƒã‚¯æ•°ã‚’è¨ˆç®—
     params.nAnalyzeLevels = nAnalyzeLevel;
     for (int i = 0; i < nAnalyzeLevel; i++) {
       LevelInfo linfo = {
@@ -2834,11 +2834,11 @@ public:
     int requested = n - minframe;
     int requestedBatch = requested / maxBatch;
     if (requestedBatch == curBatch) {
-      // Šù‚ÉŒvZÏ‚İ
+      // æ—¢ã«è¨ˆç®—æ¸ˆã¿
       return batchFrames[requested % maxBatch];
     }
 
-    // ˆÙ‚È‚éƒoƒbƒ`‚È‚Ì‚ÅÄŒvZ
+    // ç•°ãªã‚‹ãƒãƒƒãƒãªã®ã§å†è¨ˆç®—
     int numBatch = std::min(maxframe - minframe - requestedBatch * maxBatch, maxBatch);
 
     PVideoFrame srcFrames[ANALYZE_MAX_BATCH];
@@ -2858,7 +2858,7 @@ public:
 #endif
 
     for (int b = 0; b < numBatch; ++b) {
-      // ƒtƒŒ[ƒ€Šm•Û
+      // ãƒ•ãƒ¬ãƒ¼ãƒ ç¢ºä¿
       batchFrames[b] = env->NewVideoFrame(vi);
       // Avisynth+ style
       auto avsmap = env->getFramePropsRW(batchFrames[b]);
@@ -3144,12 +3144,12 @@ class KMSuperCheck : public GenericVideoFilter
     int w = kPlane->GetExtendedWidth();
     int h = kPlane->GetExtendedHeight();
 
-    // ƒTƒuƒsƒNƒZƒ‹ƒ‹[ƒv
+    // ã‚µãƒ–ãƒ”ã‚¯ã‚»ãƒ«ãƒ«ãƒ¼ãƒ—
     for (int sy = 0; sy < nPel; ++sy) {
       for (int sx = 0; sx < nPel; ++sx) {
         const pixel_t* kptr = kPlane->GetAbsolutePointer(sx, sy);
         const pixel_t* mptr = mPlane->GetAbsolutePointer(sx, sy);
-        // ‰æ‘fƒ‹[ƒv
+        // ç”»ç´ ãƒ«ãƒ¼ãƒ—
         for (int y = 0; y < h; ++y) {
           for (int x = 0; x < w; ++x) {
             pixel_t kv = kptr[x + y * nPitch];
@@ -3218,7 +3218,7 @@ public:
   }
 };
 
-// KMAnalyze‹U‘•‚µ‚½MAnalyzeƒf[ƒ^
+// KMAnalyzeå½è£…ã—ãŸMAnalyzeãƒ‡ãƒ¼ã‚¿
 class KMVReplaceWithMV : public GenericVideoFilter
 {
   PClip mvv;
@@ -3284,7 +3284,7 @@ public:
     // ret->SetProperty(GetAnalyzeValidPropName(), pMv[1]);
     pMv += 2;
 
-    // mvƒf[ƒ^
+    // mvãƒ‡ãƒ¼ã‚¿
     for (int i = params->nAnalyzeLevels - 1; i >= 0; i--) {
       int nBlkCount = params->levelInfo[i].nBlkX * params->levelInfo[i].nBlkY;
       int length = pMv[0];
@@ -3308,16 +3308,16 @@ public:
   }
 };
 
-// MAnalyze‹U‘•‚µ‚½KMAnalyzeƒf[ƒ^
+// MAnalyzeå½è£…ã—ãŸKMAnalyzeãƒ‡ãƒ¼ã‚¿
 class MVReplaceWithKMV : public GenericVideoFilter
 {
   PClip kmv;
 
   const KMVParam* params;
 
-  // ƒwƒbƒ_‚È‚Ç‚Ìƒf[ƒ^‚ÌÄŒ»‚Í‘å•Ï‚È‚Ì‚ÅA
-  // 1–‡‚¾‚¯mvtools‚©‚çƒtƒŒ[ƒ€‚ğæ“¾‚µ‚Ä
-  // ƒRƒs[‚µ‚ÄAƒeƒ“ƒvƒŒ[ƒg‚É‚µ‚Ä‚¨‚­
+  // ãƒ˜ãƒƒãƒ€ãªã©ã®ãƒ‡ãƒ¼ã‚¿ã®å†ç¾ã¯å¤§å¤‰ãªã®ã§ã€
+  // 1æšã ã‘mvtoolsã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—ã—ã¦
+  // ã‚³ãƒ”ãƒ¼ã—ã¦ã€ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ã—ã¦ãŠã
   std::vector<int> tmpldata;
 
   void GetTemplateData(int n, PNeoEnv env)
@@ -3359,7 +3359,7 @@ public:
   {
     PNeoEnv env = env_;
 
-    // ƒeƒ“ƒvƒŒ[ƒgæ“¾
+    // ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆå–å¾—
     if (tmpldata.size() == 0) {
       GetTemplateData(n, env);
     }
@@ -3371,7 +3371,7 @@ public:
     const LevelInfo *linfo = params->levelInfo;
     int* pMv = reinterpret_cast<int*>(ret->GetWritePtr());
 
-    // ƒeƒ“ƒvƒŒ[ƒg‚©‚çƒRƒs[
+    // ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‹ã‚‰ã‚³ãƒ”ãƒ¼
     memcpy(pMv, tmpldata.data(), tmpldata.size() * sizeof(int));
 
     pMv += pMv[0] / sizeof(int);
@@ -3386,7 +3386,7 @@ public:
     pMv[1] = isValid;
     pMv += 2;
 
-    // mvƒf[ƒ^
+    // mvãƒ‡ãƒ¼ã‚¿
     for (int i = params->nAnalyzeLevels - 1; i >= 0; i--) {
       int nBlkCount = params->levelInfo[i].nBlkX * params->levelInfo[i].nBlkY;
       int length = pMv[0];
@@ -4083,7 +4083,7 @@ public:
   PVideoFrame GetRefFrame(bool &usable_flag, PClip &super, int n, PNeoEnv env)
   {
     usable_flag = isValid;
-    // CUDA‚Ìê‡‚ÍŒã‚Åˆ—‚³‚ê‚é
+    // CUDAã®å ´åˆã¯å¾Œã§å‡¦ç†ã•ã‚Œã‚‹
     if (env->GetDeviceType() == DEV_TYPE_CPU) {
       usable_flag &= !pFrames[0]->IsSceneChange(nSCD1, nSCD2);
     }
@@ -4231,7 +4231,7 @@ class KMDegrainCore : public KMDegrainCoreBase
         return true;
       }
     }
-    // —LŒø‚ÈQÆƒtƒŒ[ƒ€‚ª1–‡‚à‚È‚¢
+    // æœ‰åŠ¹ãªå‚ç…§ãƒ•ãƒ¬ãƒ¼ãƒ ãŒ1æšã‚‚ãªã„
     return false;
   }
 
@@ -4624,17 +4624,17 @@ class KMDegrainX : public GenericVideoFilter
     int nBlkX = params->levelInfo[0].nBlkX;
     int nBlkY = params->levelInfo[0].nBlkY;
 
-    // tmpŠm•Û
+    // tmpç¢ºä¿
     VideoInfo tmpvi = { 0 };
-    // 420‘O’ñAtmp‚Í2”{‚ÌƒTƒCƒY
-    // nSrcPitchY < nSrcPitchUV * 2 ‚Ì‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
-    //i‘å‚«‚¢‚Ô‚ñ‚É‚ÍŒvZã–â‘è‚È‚¢‚Ì‚ÅƒRƒŒ‚Åg‚¤j
+    // 420å‰æã€tmpã¯2å€ã®ã‚µã‚¤ã‚º
+    // nSrcPitchY < nSrcPitchUV * 2 ã®å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+    //ï¼ˆå¤§ãã„ã¶ã‚“ã«ã¯è¨ˆç®—ä¸Šå•é¡Œãªã„ã®ã§ã‚³ãƒ¬ã§ä½¿ã†ï¼‰
     tmpvi.width = (nSrcPitchUV * 2) * 2;
     tmpvi.height = vi.height;
     tmpvi.pixel_type = vi.pixel_type;
     PVideoFrame tmp = env->NewVideoFrame(tmpvi);
 
-    // ƒ[ƒNŠm•Û
+    // ãƒ¯ãƒ¼ã‚¯ç¢ºä¿
     int degrainBlock;
     int degrainArg;
     cuda->get(pixel_t())->GetDegrainStructSize(delta, degrainBlock, degrainArg);
@@ -4809,7 +4809,7 @@ public:
     PVideoFrame mvF[MAX_DEGRAIN];
     PVideoFrame refF[MAX_DEGRAIN];
 
-    // mv,refæ“¾
+    // mv,refå–å¾—
     if (useFlag != USE_ONLY_AFTER) {
       for (int j = delta - 1; j >= 0; j--) {
         mvF[j] = rawClipF[j]->GetFrame(n, env);
@@ -5265,17 +5265,17 @@ class KMCompensate : public GenericVideoFilter
     int nBlkX = params->levelInfo[0].nBlkX;
     int nBlkY = params->levelInfo[0].nBlkY;
 
-    // tmpŠm•Û
+    // tmpç¢ºä¿
     VideoInfo tmpvi = { 0 };
-    // 420‘O’ñAtmp‚Í2”{‚ÌƒTƒCƒY
-    // nSrcPitchY < nSrcPitchUV * 2 ‚Ì‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
-    //i‘å‚«‚¢‚Ô‚ñ‚É‚ÍŒvZã–â‘è‚È‚¢‚Ì‚ÅƒRƒŒ‚Åg‚¤j
+    // 420å‰æã€tmpã¯2å€ã®ã‚µã‚¤ã‚º
+    // nSrcPitchY < nSrcPitchUV * 2 ã®å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
+    //ï¼ˆå¤§ãã„ã¶ã‚“ã«ã¯è¨ˆç®—ä¸Šå•é¡Œãªã„ã®ã§ã‚³ãƒ¬ã§ä½¿ã†ï¼‰
     tmpvi.width = (nSrcPitchUV * 2) * 2;
     tmpvi.height = vi.height;
     tmpvi.pixel_type = vi.pixel_type;
     PVideoFrame tmp = env->NewVideoFrame(tmpvi);
 
-    // ƒ[ƒNŠm•Û
+    // ãƒ¯ãƒ¼ã‚¯ç¢ºä¿
     int blockBytes = cuda->get(pixel_t())->GetCompensateStructSize() * nBlkX * nBlkY * 3/*YUV*/;
     int scBytes = sizeof(int);
     int work_bytes = blockBytes + scBytes;
@@ -5371,7 +5371,7 @@ public:
     , super(_super)
     , vectors(vectors)
   {
-    // TODO: super ‚Æ vectors ‚ª‡’v‚µ‚Ä‚é‚±‚Æ‚ğŠm”F
+    // TODO: super ã¨ vectors ãŒåˆè‡´ã—ã¦ã‚‹ã“ã¨ã‚’ç¢ºèª
 
     for (int i = 0; i < 2; ++i) {
       superFrame[i] = std::unique_ptr<KMSuperFrame>(

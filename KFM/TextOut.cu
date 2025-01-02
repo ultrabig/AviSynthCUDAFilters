@@ -829,13 +829,13 @@ static std::vector<std::string> split_string(const std::string& str,
 template <typename pixel_t>
 void DrawText(PVideoFrame &dst_, int bitsPerComponent, int x1, int y1, const std::string& s, PNeoEnv env)
 {
-  // YUV planar ‚µ‚©‘Î‰ž‚µ‚È‚¢
+  // YUV planar ã—ã‹å¯¾å¿œã—ãªã„
   Frame dst = Frame(dst_, x1, y1, 0, 0, sizeof(pixel_t));
   dst_ = nullptr; // move
 
   env->MakeWritable(&dst.frame);
 
-  // •¶Žš—ñ‚ð‚QŽŸŒ³‚É“WŠJ‚µ‚½ƒf[ƒ^‚ðì‚Á‚ÄGPU‚É“]‘—
+  // æ–‡å­—åˆ—ã‚’ï¼’æ¬¡å…ƒã«å±•é–‹ã—ãŸãƒ‡ãƒ¼ã‚¿ã‚’ä½œã£ã¦GPUã«è»¢é€
   auto lines = split_string(s, "\n");
   int maxlen = (int)std::max_element(lines.begin(), lines.end(),
     [](const std::string& s0, const std::string& s1) {
@@ -887,7 +887,7 @@ void DrawText(PVideoFrame &dst_, int bitsPerComponent, int x1, int y1, const std
         dev_charmap, maxlen, (int)lines.size(), maxlen, logx, logy, shift, true);
       DEBUG_SYNC;
 
-      // I‚í‚Á‚½‚ç‰ð•ú‚·‚éƒR[ƒ‹ƒoƒbƒN‚ð’Ç‰Á
+      // çµ‚ã‚ã£ãŸã‚‰è§£æ”¾ã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’è¿½åŠ 
       env->DeviceAddCallback([](void* arg) {
         delete[]((char*)arg);
       }, charmap);

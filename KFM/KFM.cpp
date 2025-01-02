@@ -20,7 +20,7 @@
 #endif
 
 void OnCudaError(cudaError_t err) {
-#if 1 // ƒfƒoƒbƒO—pi–{”Ô‚Íæ‚èœ‚­j
+#if 1 // ãƒ‡ãƒãƒƒã‚°ç”¨ï¼ˆæœ¬ç•ªã¯å–ã‚Šé™¤ãï¼‰
   printf("[CUDA Error] %s (code: %d)\n", cudaGetErrorString(err), err);
 #endif
 }
@@ -248,9 +248,9 @@ float RSplitCost(const PulldownPatternField* pattern, const float* fv, const flo
     if (pattern[i].split) {
       nsplit++;
       if (fv[i] < costth) {
-        // ‘Š‘Î“I‚Éfv‚ğd‹‚µ‚½‚¢‚Ì‚ÅAfvcost‚Ílog‚Å—}‚¦‚é
-        //u‘SØ‚è‘Ö‚¦ƒ|ƒCƒ“ƒg‚Åfv‚ª¬‚³‚¢v->‘åi‚½‚¾‚µ“®‚«‚ª‘S‚­–³‚¯‚ê‚Î¬j
-        //u‚ ‚éØ‚è‘Ö‚¦ƒ|ƒCƒ“ƒg‚Å‚Ì‚İƒmƒCƒY‚ª”­¶v->¬ ‚É‚µ‚½‚¢
+        // ç›¸å¯¾çš„ã«fvã‚’é‡è¦–ã—ãŸã„ã®ã§ã€fvcostã¯logã§æŠ‘ãˆã‚‹
+        //ã€Œå…¨åˆ‡ã‚Šæ›¿ãˆãƒã‚¤ãƒ³ãƒˆã§fvãŒå°ã•ã„ã€->å¤§ï¼ˆãŸã ã—å‹•ããŒå…¨ãç„¡ã‘ã‚Œã°å°ï¼‰
+        //ã€Œã‚ã‚‹åˆ‡ã‚Šæ›¿ãˆãƒã‚¤ãƒ³ãƒˆã§ã®ã¿ãƒã‚¤ã‚ºãŒç™ºç”Ÿã€->å° ã«ã—ãŸã„
         sumcost += (costth - fv[i]) * log2f(fvcost[i] + 1.0f);
       }
     }
@@ -297,7 +297,7 @@ PulldownPattern::PulldownPattern(int nf0, int nf1, int nf2, int nf3)
       }
       fields[fstart + nf - 1].split = true;
 
-      // È‚È‚µ24fps‘Î‰
+      // ç¸ãªã—24fpså¯¾å¿œ
       if (nf0 == 4 && nf1 == 2 && nf2 == 2 && nf3 == 2) {
         if (i < 2) {
           fields[fstart + nf - 1].shift = true;
@@ -361,12 +361,12 @@ Frame24Info PulldownPatterns::GetFrame24(int patternIndex, int n24) const {
 
   int searchFrame = info.frameIndex;
 
-  // ƒpƒ^[ƒ“‚ª30p‚Ìê‡‚ÍA5–‡’†^‚ñ’†‚Ì1–‡‚ğÁ‚·
-  // 30p‚Ìê‡‚ÍA24p‚É‚µ‚½“_‚Å5–‡’†1–‡‚ª¸‚í‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅA³‚µ‚­60p‚É•œŒ³‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢
-  // 30p•”•ª‚Í60pƒNƒŠƒbƒv‚©‚çæ“¾‚³‚ê‚é‚Ì‚ÅŠî–{“I‚É‚Í–â‘è‚È‚¢‚ªA
-  // ‘OŒã‚ÌƒTƒCƒNƒ‹‚ª24p‚ÅAƒTƒCƒNƒ‹‹«ŠE‚Ì‹ó‚«ƒtƒŒ[ƒ€‚Æ‚µ‚Ä30p•”•ª‚àæ“¾‚³‚ê‚é‚±‚Æ‚ª‚ ‚é
-  // ‚È‚Ì‚ÅA5–‡’†AÅ‰‚ÆÅŒã‚ÌƒtƒŒ[ƒ€‚¾‚¯‚Í³‚µ‚­60p‚É•œŒ³‚·‚é•K—v‚ª‚ ‚é
-  // ˆÈ‰º‚Ìˆ—‚ª‚È‚¢‚ÆÅŒã‚ÌƒtƒŒ[ƒ€(4–‡–Ú)‚ªƒYƒŒ‚Ä‚µ‚Ü‚¤
+  // ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒ30pã®å ´åˆã¯ã€5æšä¸­çœŸã‚“ä¸­ã®1æšã‚’æ¶ˆã™
+  // 30pã®å ´åˆã¯ã€24pã«ã—ãŸæ™‚ç‚¹ã§5æšä¸­1æšãŒå¤±ã‚ã‚Œã¦ã—ã¾ã†ã®ã§ã€æ­£ã—ã60pã«å¾©å…ƒã™ã‚‹ã“ã¨ã¯ã§ããªã„
+  // 30péƒ¨åˆ†ã¯60pã‚¯ãƒªãƒƒãƒ—ã‹ã‚‰å–å¾—ã•ã‚Œã‚‹ã®ã§åŸºæœ¬çš„ã«ã¯å•é¡Œãªã„ãŒã€
+  // å‰å¾Œã®ã‚µã‚¤ã‚¯ãƒ«ãŒ24pã§ã€ã‚µã‚¤ã‚¯ãƒ«å¢ƒç•Œã®ç©ºããƒ•ãƒ¬ãƒ¼ãƒ ã¨ã—ã¦30péƒ¨åˆ†ã‚‚å–å¾—ã•ã‚Œã‚‹ã“ã¨ãŒã‚ã‚‹
+  // ãªã®ã§ã€5æšä¸­ã€æœ€åˆã¨æœ€å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ã ã‘ã¯æ­£ã—ã60pã«å¾©å…ƒã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+  // ä»¥ä¸‹ã®å‡¦ç†ãŒãªã„ã¨æœ€å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ (4æšç›®)ãŒã‚ºãƒ¬ã¦ã—ã¾ã†
   if (Is30p(patternIndex)) {
     if (searchFrame >= 2) ++searchFrame;
   }
@@ -395,18 +395,18 @@ Frame24Info PulldownPatterns::GetFrame60(int patternIndex, int n60) const {
   Frame24Info info = { 0 };
   info.cycleIndex = n60 / 10;
 
-  // split‚ÅƒtƒŒ[ƒ€‚ÌØ‚è‘Ö‚í‚è‚ğŒ©‚é
-  // split‚Í‘O‚ÌƒtƒŒ[ƒ€‚ÌÅŒã‚ÌƒtƒB[ƒ‹ƒh‚Æ‚È‚é‚Ì‚Å
-  // -2ƒtƒB[ƒ‹ƒh–Ú‚©‚çŒ©‚é‚ÆŒŸo‚Å‚«‚éÅ‰‚ÌƒtƒŒ[ƒ€‚Í
-  // Å‚à‘‚­‚Ä-1ƒtƒB[ƒ‹ƒhƒXƒ^[ƒg
-  // ‚±‚ê‚ğ‘O’ñ‚ÉƒAƒ‹ƒSƒŠƒYƒ€‚ª‘g‚Ü‚ê‚Ä‚¢‚é‚±‚Æ‚É’ˆÓ
+  // splitã§ãƒ•ãƒ¬ãƒ¼ãƒ ã®åˆ‡ã‚Šæ›¿ã‚ã‚Šã‚’è¦‹ã‚‹
+  // splitã¯å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®æœ€å¾Œã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¨ãªã‚‹ã®ã§
+  // -2ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç›®ã‹ã‚‰è¦‹ã‚‹ã¨æ¤œå‡ºã§ãã‚‹æœ€åˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã¯
+  // æœ€ã‚‚æ—©ãã¦-1ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚¹ã‚¿ãƒ¼ãƒˆ
+  // ã“ã‚Œã‚’å‰æã«ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ãŒçµ„ã¾ã‚Œã¦ã„ã‚‹ã“ã¨ã«æ³¨æ„
 
   const PulldownPatternField* ptn = allpatterns[patternIndex];
   int fldstart = 0;
   int nframes = -1;
   int findex = n60 % 10;
 
-  // Å‘å4ƒtƒB[ƒ‹ƒh‚ª‚ ‚é‚Ì‚ÅA2+10+4‚¾‚¯‰ñ‚µ‚Ä‚é
+  // æœ€å¤§4ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹ã®ã§ã€2+10+4ã ã‘å›ã—ã¦ã‚‹
   for (int i = 0; i < 16; ++i) {
     if (ptn[i].split) {
       if (fldstart >= 1) {
@@ -431,14 +431,14 @@ FMMatch PulldownPatterns::Matching(const FMData& data, int width, int height, fl
 {
   FMMatch match;
 
-  // ŠeƒXƒRƒA‚ğŒvZ
+  // å„ã‚¹ã‚³ã‚¢ã‚’è¨ˆç®—
   for (int i = 0; i < NUM_PATTERNS; ++i) {
     match.shima[i] = RSplitScore(allpatterns[i], data.mftr);
     match.costs[i] = RSplitCost(allpatterns[i], data.mftr, data.mftcost, costth);
     match.reliability[i] = RSplitReliability(allpatterns[i], data.mftr, costth);
   }
 
-  // ’²®
+  // èª¿æ•´
   for (int i = patternOffsets[2]; i < patternOffsets[3]; ++i) {
     match.shima[i] -= adj2224;
   }
@@ -464,25 +464,25 @@ class KFMCycleAnalyze : public GenericVideoFilter
   VideoInfo srcvi;
   int numCycles;
   PulldownPatterns patterns;
-  int mode; // 0:ƒŠƒAƒ‹ƒ^ƒCƒ€Å—Ç, 1:1ƒpƒX–Ú, 2:2ƒpƒX–Ú
+  int mode; // 0:ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ æœ€è‰¯, 1:1ãƒ‘ã‚¹ç›®, 2:2ãƒ‘ã‚¹ç›®
 
   CycleAnalyzeInfo info;
 
-  // Šî–{ƒpƒ‰ƒ[ƒ^
+  // åŸºæœ¬ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
   float lscale;
   float costth;
   float adj2224;
   float adj30;
 
-  // 2ƒpƒX—p
+  // 2ãƒ‘ã‚¹ç”¨
   int cycleRange;
   float NGThresh;
   int pastCycles;
 
-  // 60p”»’è—p
-  float th60;  // 60p”»’è‚µ‚«‚¢’l
-  float th24;  // 24p”»’è‚µ‚«‚¢’l
-  float rel24; // 24p”»’èM—Š«‚µ‚«‚¢’l
+  // 60påˆ¤å®šç”¨
+  float th60;  // 60påˆ¤å®šã—ãã„å€¤
+  float th24;  // 24påˆ¤å®šã—ãã„å€¤
+  float rel24; // 24påˆ¤å®šä¿¡é ¼æ€§ã—ãã„å€¤
 
   std::string filepath;
   int debug;
@@ -490,7 +490,7 @@ class KFMCycleAnalyze : public GenericVideoFilter
   std::vector<KFMResult> results;
   std::unique_ptr<TextFile> debugFile;
 
-  // ƒeƒ“ƒ|ƒ‰ƒŠ
+  // ãƒ†ãƒ³ãƒãƒ©ãƒª
   std::deque<KFMResult> recentBest;
   int pattern;
   int current;
@@ -510,8 +510,8 @@ class KFMCycleAnalyze : public GenericVideoFilter
       memcpy(fmcnt + (i + 2) * 2, frame.GetReadPtr<uint8_t>(), sizeof(fmcnt[0]) * 2);
     }
 
-    // shima, lshima, move‚Ì‰æ‘f”‚ªƒ}ƒ`ƒ}ƒ`‚È‚Ì‚Å‘å‚«‚³‚Ìˆá‚¢‚É‚æ‚éd‚İ‚Ìˆá‚¢‚ªo‚é
-    // shima, lshima‚ğmove‚É‡‚í‚¹‚éi•½‹Ï‚ª“¯‚¶‚É‚È‚é‚æ‚¤‚É‚·‚éj
+    // shima, lshima, moveã®ç”»ç´ æ•°ãŒãƒãƒãƒãƒãªã®ã§å¤§ãã•ã®é•ã„ã«ã‚ˆã‚‹é‡ã¿ã®é•ã„ãŒå‡ºã‚‹
+    // shima, lshimaã‚’moveã«åˆã‚ã›ã‚‹ï¼ˆå¹³å‡ãŒåŒã˜ã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹ï¼‰
 
     int mft[18] = { 0 };
     for (int i = 1; i < 17; ++i) {
@@ -549,10 +549,10 @@ class KFMCycleAnalyze : public GenericVideoFilter
     for (int i = 0; i < (int)results.size(); ++i) {
       auto& cur = results[i];
       if (is60p) {
-        // 60pƒ‚[ƒh
+        // 60pãƒ¢ãƒ¼ãƒ‰
         if (cur.cost < th24) {
           if (cur.reliability < rel24) {
-            // 24p‚ÖˆÚs
+            // 24pã¸ç§»è¡Œ
             is60p = false;
           }
         }
@@ -561,16 +561,16 @@ class KFMCycleAnalyze : public GenericVideoFilter
         }
       }
       else {
-        // 24pƒ‚[ƒh
+        // 24pãƒ¢ãƒ¼ãƒ‰
         if (cur.cost >= th60) {
-          // 60p‚ÖˆÚs
+          // 60pã¸ç§»è¡Œ
           is60p = true;
-          // ‘k‚Á‚Äth24ˆÈã‚È‚ç60p‰»
+          // é¡ã£ã¦th24ä»¥ä¸Šãªã‚‰60påŒ–
           for (int t = i; t >= 0; --t) {
             auto& cur = results[t];
             if (cur.cost < th24) {
               if (cur.reliability < rel24) {
-                // 24p‚ÖˆÚs‚·‚éƒ|ƒCƒ“ƒg
+                // 24pã¸ç§»è¡Œã™ã‚‹ãƒã‚¤ãƒ³ãƒˆ
                 break;
               }
             }
@@ -609,7 +609,7 @@ class KFMCycleAnalyze : public GenericVideoFilter
       }
 
       if (results.back().pattern != recentBest[0].pattern) {
-        // Œ»İ‚Ìƒpƒ^[ƒ“‚ªÅ—Çƒpƒ^[ƒ“‚Å‚È‚¢‚È‚çƒpƒ^[ƒ“Ø‚è‘Ö‚¦”»’è
+        // ç¾åœ¨ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒæœ€è‰¯ãƒ‘ã‚¿ãƒ¼ãƒ³ã§ãªã„ãªã‚‰ãƒ‘ã‚¿ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆåˆ¤å®š
         float NGScore = 0;
         for (int i = 0; i < std::min(cycleRange, (int)recentBest.size()); ++i) {
           NGScore += recentBest[i].score - results[current - i].score;
@@ -618,10 +618,10 @@ class KFMCycleAnalyze : public GenericVideoFilter
           fprintf(debugFile->fp, ",%.2f,%s", NGScore, (NGScore > NGThresh) ? "@" : "-");
         }
         if (NGScore > NGThresh) {
-          // ƒpƒ^[ƒ“Ø‚è‘Ö‚¦
+          // ãƒ‘ã‚¿ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
           pattern = recentBest[0].pattern;
 
-          // ‘k‚Á‚ÄØ‚è‘Ö‚¦Œã‚Ìƒpƒ^[ƒ“‚ªÅ—Çƒpƒ^[ƒ“‚È‚ç‘‚«Š·‚¦
+          // é¡ã£ã¦åˆ‡ã‚Šæ›¿ãˆå¾Œã®ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒæœ€è‰¯ãƒ‘ã‚¿ãƒ¼ãƒ³ãªã‚‰æ›¸ãæ›ãˆ
           for (int i = 0; i < (int)recentBest.size(); ++i) {
             if (recentBest[i].pattern != pattern) {
               break;
@@ -641,9 +641,9 @@ class KFMCycleAnalyze : public GenericVideoFilter
     }
 
     if (last == numCycles + cycleRange) {
-      // 60p”»’è
+      // 60påˆ¤å®š
       Make60p();
-      // ÅŒã‚Íƒtƒ@ƒCƒ‹‚É‘‚«‚Ş
+      // æœ€å¾Œã¯ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€
       File file(filepath + ".result.dat", "wb", env);
       for (int i = 0; i < numCycles; ++i) {
         file.writeValue(results[i], env);
@@ -687,7 +687,7 @@ public:
     , th60(th60)
     , th24(th24)
     , rel24(rel24)
-    , filepath(GetFullPath(filepath)) // GetFrame‚ÆƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ªˆá‚¤‚Ì‚Åƒtƒ‹ƒpƒX‚É‚µ‚Ä‚¨‚­
+    , filepath(GetFullPath(filepath)) // GetFrameæ™‚ã¨ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒé•ã†ã®ã§ãƒ•ãƒ«ãƒ‘ã‚¹ã«ã—ã¦ãŠã
     , debug(debug)
     , pattern(0)
     , current(0)
@@ -854,7 +854,7 @@ public:
     }
 
     if (nOut == vi.num_frames) {
-      // ÅŒã‚Ü‚ÅGetFrame‚µ‚½
+      // æœ€å¾Œã¾ã§GetFrameã—ãŸ
       outFile = nullptr;
     }
 

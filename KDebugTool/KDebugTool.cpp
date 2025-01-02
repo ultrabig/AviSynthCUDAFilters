@@ -99,7 +99,7 @@ class ImageCompare : GenericVideoFilter
         pixel_t diff = std::abs(a[x + y * apitch] - b[x + y * bpitch]);
         if (diff > thresh) {
           PrintMissMatch(a[x + y * apitch], b[x + y * bpitch], x, y);
-          env->ThrowError("[ImageCompare] ‰æ‘œ‚ªˆê’v‚µ‚Ü‚¹‚ñBƒeƒXƒgŽ¸”s");
+          env->ThrowError("[ImageCompare] ç”»åƒãŒä¸€è‡´ã—ã¾ã›ã‚“ã€‚ãƒ†ã‚¹ãƒˆå¤±æ•—");
         }
         d[x + y * dpitch] = diff;
       }
@@ -181,7 +181,7 @@ class ImageCompare : GenericVideoFilter
           const char* color = "BGRA";
           printf("miss match %d vs %d at %c(%d,%d)\n", a[x + y * apitch], b[x + y * bpitch],
             color[x % el], x / el , y);
-          env->ThrowError("[ImageCompare] ‰æ‘œ‚ªˆê’v‚µ‚Ü‚¹‚ñBƒeƒXƒgŽ¸”s");
+          env->ThrowError("[ImageCompare] ç”»åƒãŒä¸€è‡´ã—ã¾ã›ã‚“ã€‚ãƒ†ã‚¹ãƒˆå¤±æ•—");
         }
         d[x + y * dpitch] = diff;
       }

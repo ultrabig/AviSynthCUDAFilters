@@ -19,9 +19,9 @@ struct FMCount {
 };
 
 struct PulldownPatternField {
-  bool split; // Ÿ‚ÌƒtƒB[ƒ‹ƒh‚Æ‚Í•ÊƒtƒŒ[ƒ€
-  bool merge; // 3ƒtƒB[ƒ‹ƒh‚ÌÅ‰‚ÌƒtƒB[ƒ‹ƒh
-  bool shift; // Œã‚Ì24pƒtƒŒ[ƒ€‚ğQÆ‚·‚éƒtƒB[ƒ‹ƒh
+  bool split; // æ¬¡ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¨ã¯åˆ¥ãƒ•ãƒ¬ãƒ¼ãƒ 
+  bool merge; // 3ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®æœ€åˆã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+  bool shift; // å¾Œã®24pãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å‚ç…§ã™ã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
 };
 
 struct PulldownPattern {
@@ -31,8 +31,8 @@ struct PulldownPattern {
   PulldownPattern(int nf0, int nf1, int nf2, int nf3); // 24p
   PulldownPattern(); // 30p
 
-  // ƒpƒ^[ƒ“‚Í10ƒtƒB[ƒ‹ƒh+‘OŒã2ƒtƒB[ƒ‹ƒh‚¸‚Â‚Ì‡‚í‚¹‚Ä
-  // 14ƒtƒB[ƒ‹ƒh•ª‚ğ‚İ‚é‘z’èB14ƒtƒB[ƒ‹ƒh‚Ì‘O“ª‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+  // ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯10ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰+å‰å¾Œ2ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãšã¤ã®åˆã‚ã›ã¦
+  // 14ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰åˆ†ã‚’ã¿ã‚‹æƒ³å®šã€‚14ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å‰é ­ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
   const PulldownPatternField* GetPattern(int n) const {
     return &fields[10 + n - 2];
   }
@@ -43,14 +43,14 @@ struct PulldownPattern {
 
 struct Frame24Info {
   int cycleIndex;
-  int frameIndex; // ƒTƒCƒNƒ‹“à‚ÌƒtƒŒ[ƒ€”Ô†
-  int fieldStartIndex; // ƒ\[ƒXƒtƒB[ƒ‹ƒhŠJn”Ô†
-  int numFields; // ƒ\[ƒXƒtƒB[ƒ‹ƒh”
-  int fieldShift; // 2224ƒpƒ^[ƒ“‚ğ2323•ÏŠ·‚·‚éê‡‚Ì‚¸‚ç‚µ‚ª•K—v‚ÈƒtƒŒ[ƒ€
+  int frameIndex; // ã‚µã‚¤ã‚¯ãƒ«å†…ã®ãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·
+  int fieldStartIndex; // ã‚½ãƒ¼ã‚¹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰é–‹å§‹ç•ªå·
+  int numFields; // ã‚½ãƒ¼ã‚¹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰æ•°
+  int fieldShift; // 2224ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’2323å¤‰æ›ã™ã‚‹å ´åˆã®ãšã‚‰ã—ãŒå¿…è¦ãªãƒ•ãƒ¬ãƒ¼ãƒ 
 };
 
 struct FMData {
-  // È‚Æ“®‚«‚Ì˜a
+  // ç¸ã¨å‹•ãã®å’Œ
   float mft[14];
   float mftr[14];
   float mftcost[14];
@@ -104,12 +104,12 @@ public:
 
   const char* PatternToString(int patternIndex, int& index) const;
 
-  // ƒpƒ^[ƒ“‚Æ24fps‚ÌƒtƒŒ[ƒ€”Ô†‚©‚çƒtƒŒ[ƒ€î•ñ‚ğæ“¾
+  // ãƒ‘ã‚¿ãƒ¼ãƒ³ã¨24fpsã®ãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ æƒ…å ±ã‚’å–å¾—
   Frame24Info GetFrame24(int patternIndex, int n24) const;
 
-  // ƒpƒ^[ƒ“‚Æ60fps‚ÌƒtƒŒ[ƒ€”Ô†‚©‚çƒtƒŒ[ƒ€î•ñ‚ğæ“¾
-  // frameIndex < 0 or frameIndex >= 4‚Ìê‡A
-  // fieldStartIndex‚ÆnumFields‚Í³‚µ‚­‚È‚¢‰Â”\«‚ª‚ ‚é‚Ì‚Å’ˆÓ
+  // ãƒ‘ã‚¿ãƒ¼ãƒ³ã¨60fpsã®ãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ æƒ…å ±ã‚’å–å¾—
+  // frameIndex < 0 or frameIndex >= 4ã®å ´åˆã€
+  // fieldStartIndexã¨numFieldsã¯æ­£ã—ããªã„å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æ³¨æ„
   Frame24Info GetFrame60(int patternIndex, int n60) const;
 
   FMMatch Matching(const FMData& data, int width, int height, float costth, float adj2224, float adj30) const;
@@ -167,12 +167,12 @@ static Frame WrapSwitchFragFrame(const PVideoFrame& frame) {
 #define DECOMB_UCF_FLAG_STR "KDecombUCF_Flag"
 
 enum DECOMB_UCF_FLAG {
-  DECOMB_UCF_NONE,  // î•ñ‚È‚µ
-  DECOMB_UCF_PREV,  // ‘O‚ÌƒtƒŒ[ƒ€
-  DECOMB_UCF_NEXT,  // Ÿ‚ÌƒtƒŒ[ƒ€
-  DECOMB_UCF_FIRST, // 1”Ô–Ú‚ÌƒtƒB[ƒ‹ƒh‚Åbob
-  DECOMB_UCF_SECOND,// 2”Ô–Ú‚ÌƒtƒB[ƒ‹ƒh‚Åbob
-  DECOMB_UCF_NR,    // ‰˜‚¢ƒtƒŒ[ƒ€
+  DECOMB_UCF_NONE,  // æƒ…å ±ãªã—
+  DECOMB_UCF_PREV,  // å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ 
+  DECOMB_UCF_NEXT,  // æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ 
+  DECOMB_UCF_FIRST, // 1ç•ªç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã§bob
+  DECOMB_UCF_SECOND,// 2ç•ªç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã§bob
+  DECOMB_UCF_NR,    // æ±šã„ãƒ•ãƒ¬ãƒ¼ãƒ 
 };
 
 struct DecombUCFInfo {

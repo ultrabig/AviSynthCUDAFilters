@@ -7,7 +7,7 @@
 #          CUDA accelerated high quality deinterlacer               #
 #         using motion-compensated temporal smoothing,              #
 #       with a range of features for quality and convenience        #
-#          Originally based on TempGaussMC_beta2 by Didée           #
+#          Originally based on TempGaussMC_beta2 by Didé¦¥           #
 #                                                                   #
 #-------------------------------------------------------------------#
 #

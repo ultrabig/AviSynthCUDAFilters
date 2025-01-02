@@ -149,9 +149,9 @@ class KFieldDiff : public KFMFilterBase
         PadFrame<pixel_t>(padded, env);
     }
     auto raw = CalcFieldDiff<pixel_t>(padded, work, env);
-    raw /= 6; // ŒvZ®‚©‚ç
+    raw /= 6; // è¨ˆç®—å¼ã‹ã‚‰
 
-    int shift = vi.BitsPerComponent() - 8; // 8bit‚É‡‚í‚¹‚é
+    int shift = vi.BitsPerComponent() - 8; // 8bitã«åˆã‚ã›ã‚‹
     return (double)(raw >> shift);
   }
 
@@ -474,7 +474,7 @@ class KFrameDiffDup : public KFMFilterBase
 
     int shift = vi.BitsPerComponent() - 8;
 
-    // dup232a‚¾‚Æ‚±‚¤‚¾‚¯‚ÇA‚±‚ÌŒvZ®‚Í‚¨‚©‚µ‚¢‚Æv‚¤‚Ì‚ÅC³
+    // dup232aã ã¨ã“ã†ã ã‘ã©ã€ã“ã®è¨ˆç®—å¼ã¯ãŠã‹ã—ã„ã¨æ€ã†ã®ã§ä¿®æ­£
     //return  diff / (64.0 * (235 << shift) * blocksize) * 100.0;
     return  diff / (2.0 * (235 << shift) * blocksize * blocksize) * 100.0;
   }
@@ -775,13 +775,13 @@ void cpu_analyze_diff(
       int4 d = to_int(f0[x + (y + 1) * pitch]);
       int4 e = to_int(f0[x + (y + 2) * pitch]);
 
-      // Œ»İ‚ÌƒtƒŒ[ƒ€(f0)
+      // ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ (f0)
       sum0 += dev_horizontal_sum(CalcCombe(a, b, c, d, e));
 
-      // TFF‘O’ñ
-      // Œ»İ‚ÌƒtƒŒ[ƒ€‚Ìƒ{ƒgƒ€ƒtƒB[ƒ‹ƒhiŠï”ƒ‰ƒCƒ“j‚ÆŸ‚ÌƒtƒŒ[ƒ€‚ÌƒgƒbƒvƒtƒB[ƒ‹ƒhi‹ô”ƒ‰ƒCƒ“j
+      // TFFå‰æ
+      // ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒœãƒˆãƒ ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ï¼ˆå¥‡æ•°ãƒ©ã‚¤ãƒ³ï¼‰ã¨æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒˆãƒƒãƒ—ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ï¼ˆå¶æ•°ãƒ©ã‚¤ãƒ³ï¼‰
       if (y & 1) {
-        // y‚ÍŠï”ƒ‰ƒCƒ“
+        // yã¯å¥‡æ•°ãƒ©ã‚¤ãƒ³
         a = to_int(f0[x + (y - 2) * pitch]);
         b = to_int(f1[x + (y - 1) * pitch]);
         c = to_int(f0[x + (y + 0) * pitch]);
@@ -790,7 +790,7 @@ void cpu_analyze_diff(
         sum1 += dev_horizontal_sum(CalcCombe(a, b, c, d, e));
       }
       else {
-        // y‚Í‹ô”ƒ‰ƒCƒ“
+        // yã¯å¶æ•°ãƒ©ã‚¤ãƒ³
         a = to_int(f1[x + (y - 2) * pitch]);
         b = to_int(f0[x + (y - 1) * pitch]);
         c = to_int(f1[x + (y + 0) * pitch]);
@@ -821,31 +821,31 @@ __global__ void kl_analyze_diff(
     int4 d = to_int(f0[x + (y + 1) * pitch]);
     int4 e = to_int(f0[x + (y + 2) * pitch]);
 
-    // Œ»İ‚ÌƒtƒŒ[ƒ€(f0)
+    // ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ (f0)
     sum[0] = dev_horizontal_sum(CalcCombe(a, b, c, d, e));
 
-    // TFF‘O’ñ
-    // Œ»İ‚ÌƒtƒŒ[ƒ€‚Ìƒ{ƒgƒ€ƒtƒB[ƒ‹ƒhiŠï”ƒ‰ƒCƒ“j‚ÆŸ‚ÌƒtƒŒ[ƒ€‚ÌƒgƒbƒvƒtƒB[ƒ‹ƒhi‹ô”ƒ‰ƒCƒ“j
+    // TFFå‰æ
+    // ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒœãƒˆãƒ ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ï¼ˆå¥‡æ•°ãƒ©ã‚¤ãƒ³ï¼‰ã¨æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒˆãƒƒãƒ—ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ï¼ˆå¶æ•°ãƒ©ã‚¤ãƒ³ï¼‰
     if (y & 1) {
-      // y‚ÍŠï”ƒ‰ƒCƒ“
-      // «•K—v‚È‚­‚Ä‚à“Ç‚Ş‚Ì‚ğ‚â‚ß‚é‚ÆƒŒƒWƒXƒ^g—p”‚ª25->32‚É‘‚¦‚é
+      // yã¯å¥‡æ•°ãƒ©ã‚¤ãƒ³
+      // â†“å¿…è¦ãªãã¦ã‚‚èª­ã‚€ã®ã‚’ã‚„ã‚ã‚‹ã¨ãƒ¬ã‚¸ã‚¹ã‚¿ä½¿ç”¨æ•°ãŒ25->32ã«å¢—ãˆã‚‹
       a = to_int(f0[x + (y - 2) * pitch]);
       b = to_int(f1[x + (y - 1) * pitch]);
       c = to_int(f0[x + (y + 0) * pitch]);
       d = to_int(f1[x + (y + 1) * pitch]);
       e = to_int(f0[x + (y + 2) * pitch]);
-      // «‚±‚Ìs‚ğif‚ÌŠO‚É‚Á‚Ä‚¢‚­‚ÆƒŒƒWƒXƒ^g—p”‚ª25->39‚É‘‚¦‚é
+      // â†“ã“ã®è¡Œã‚’ifã®å¤–ã«æŒã£ã¦ã„ãã¨ãƒ¬ã‚¸ã‚¹ã‚¿ä½¿ç”¨æ•°ãŒ25->39ã«å¢—ãˆã‚‹
       sum[1] = dev_horizontal_sum(CalcCombe(a, b, c, d, e));
     }
     else {
-      // y‚Í‹ô”ƒ‰ƒCƒ“
-      // «•K—v‚È‚­‚Ä‚à“Ç‚Ş‚Ì‚ğ‚â‚ß‚é‚ÆƒŒƒWƒXƒ^g—p”‚ª25->32‚É‘‚¦‚é
+      // yã¯å¶æ•°ãƒ©ã‚¤ãƒ³
+      // â†“å¿…è¦ãªãã¦ã‚‚èª­ã‚€ã®ã‚’ã‚„ã‚ã‚‹ã¨ãƒ¬ã‚¸ã‚¹ã‚¿ä½¿ç”¨æ•°ãŒ25->32ã«å¢—ãˆã‚‹
       a = to_int(f1[x + (y - 2) * pitch]);
       b = to_int(f0[x + (y - 1) * pitch]);
       c = to_int(f1[x + (y + 0) * pitch]);
       d = to_int(f0[x + (y + 1) * pitch]);
       e = to_int(f1[x + (y + 2) * pitch]);
-      // «‚±‚Ìs‚ğif‚ÌŠO‚É‚Á‚Ä‚¢‚­‚ÆƒŒƒWƒXƒ^g—p”‚ª25->39‚É‘‚¦‚é
+      // â†“ã“ã®è¡Œã‚’ifã®å¤–ã«æŒã£ã¦ã„ãã¨ãƒ¬ã‚¸ã‚¹ã‚¿ä½¿ç”¨æ•°ãŒ25->39ã«å¢—ãˆã‚‹
       sum[1] = dev_horizontal_sum(CalcCombe(a, b, c, d, e));
     }
   }
@@ -1117,11 +1117,11 @@ public:
 };
 
 enum DECOMB_UCF_RESULT {
-  DECOMB_UCF_CLEAN_1, // 1Ÿ”»’è‚ÅãY—í‚ÈƒtƒŒ[ƒ€‚Æ”»’è
-  DECOMB_UCF_CLEAN_2, // ƒmƒCƒY”»’è‚ÅãY—í‚ÈƒtƒŒ[ƒ€‚Æ”»’è
-  DECOMB_UCF_USE_0,   // 1”Ô–Ú‚ÌƒtƒB[ƒ‹ƒh‚ğg‚¤‚×‚«
-  DECOMB_UCF_USE_1,   // 2”Ô–Ú‚ÌƒtƒB[ƒ‹ƒh‚ğg‚¤‚×‚«
-  DECOMB_UCF_NOISY,   // ‚Ç‚Á‚¿‚à‰˜‚¢
+  DECOMB_UCF_CLEAN_1, // 1æ¬¡åˆ¤å®šã§ç¶ºéº—ãªãƒ•ãƒ¬ãƒ¼ãƒ ã¨åˆ¤å®š
+  DECOMB_UCF_CLEAN_2, // ãƒã‚¤ã‚ºåˆ¤å®šã§ç¶ºéº—ãªãƒ•ãƒ¬ãƒ¼ãƒ ã¨åˆ¤å®š
+  DECOMB_UCF_USE_0,   // 1ç•ªç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ä½¿ã†ã¹ã
+  DECOMB_UCF_USE_1,   // 2ç•ªç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ä½¿ã†ã¹ã
+  DECOMB_UCF_NOISY,   // ã©ã£ã¡ã‚‚æ±šã„
 };
 
 struct DecombUCFResult {
@@ -1145,7 +1145,7 @@ struct DecombUCFThreshScore {
 };
 
 static DecombUCFThreshScore THRESH_SCORE_PARAM_TABLE[] = {
-  {}, // 0ig‚í‚ê‚È‚¢j
+  {}, // 0ï¼ˆä½¿ã‚ã‚Œãªã„ï¼‰
   { 13,17,17,20,50,20,28,32,37,50 }, // 1
   { 14,18,20,40,50,19,28,36,42,50 },
   { 15,19,21,43,63,20,28,36,41,53 },
@@ -1179,7 +1179,7 @@ struct DecombUCFParam {
   double off_t;        // offset for diff threshold of top field (first field, top,diff<0)
   double off_b;        // offset for diff threshold of bottom field (second field, botom, 0<diff)
 
-                       // reverse (chroma=0‚Ì‚İ‚Å‹@”\BƒmƒCƒY—Ê‚Ìâ‘Î’l‚ª‘½‰ß‚¬‚éê‡A‰f‘œŒø‰Ê‚Æl‚¦ƒmƒCƒY‚Ì‘å‚«‚¢ƒtƒB[ƒ‹ƒh‚ğc‚·(¬‚³‚¢‚Ù‚¤‚ÍƒuƒƒbƒNƒmƒCƒY‚É‚æ‚é•½’R‰»))
+                       // reverse (chroma=0ã®ã¿ã§æ©Ÿèƒ½ã€‚ãƒã‚¤ã‚ºé‡ã®çµ¶å¯¾å€¤ãŒå¤šéãã‚‹å ´åˆã€æ˜ åƒåŠ¹æœã¨è€ƒãˆãƒã‚¤ã‚ºã®å¤§ãã„ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’æ®‹ã™(å°ã•ã„ã»ã†ã¯ãƒ–ãƒ­ãƒƒã‚¯ãƒã‚¤ã‚ºã«ã‚ˆã‚‹å¹³å¦åŒ–))
   int namax_thresh; // 82 #MX:90 #[0-256] #disabled with chroma=1 #upper limit of max noise for Noise detaction (75-80-83)
   int namax_diff;   // 30-40 #disabled with chroma=1  #If average noise >= namax_thresh,  use namax_diff as diff threshold.
 
@@ -1309,40 +1309,40 @@ public:
 DECOMB_UCF_RESULT CalcDecombUCF(
   const UCFNoiseMeta* meta,
   const DecombUCFParam* param,
-  const NoiseResult* result0, // 1ƒtƒŒ[ƒ€–Ú
-  const NoiseResult* result1, // 2ƒtƒŒ[ƒ€–Ú(second=false‚È‚çnullptr‰Â)
+  const NoiseResult* result0, // 1ãƒ•ãƒ¬ãƒ¼ãƒ ç›®
+  const NoiseResult* result1, // 2ãƒ•ãƒ¬ãƒ¼ãƒ ç›®(second=falseãªã‚‰nullptrå¯)
   bool second,          // 
-  std::string* message) // ƒfƒoƒbƒOƒƒbƒZ[ƒW
+  std::string* message) // ãƒ‡ãƒãƒƒã‚°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 {
   double pixels = meta->srcw * meta->srch;
   //double pixelsUV = meta->srcUVw * meta->srcUVh;
   double noisepixels = meta->noisew * meta->noiseh;
   double noisepixelsUV = meta->noiseUVw * meta->noiseUVh * 2;
 
-  // 1Ÿ”»’èƒtƒB[ƒ‹ƒh·•ª
+  // 1æ¬¡åˆ¤å®šãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å·®åˆ†
   double field_diff = (second
     ? (result0[0].diff1 + result0[1].diff1)
     : (result0[0].diff0 + result0[1].diff0)) / (6 * pixels) * 100;
 
-  // â‘ÎƒmƒCƒY—Ê
+  // çµ¶å¯¾ãƒã‚¤ã‚ºé‡
   double noise_t_y = (second ? result0[0].noise1 : result0[0].noise0) / noisepixels;
   double noise_t_uv = (second ? result0[1].noise1 : result0[1].noise0) / noisepixelsUV;
   double noise_b_y = (second ? result1[0].noise0 : result0[0].noise1) / noisepixels;
   double noise_b_uv = (second ? result1[1].noise0 : result0[1].noise1) / noisepixelsUV;
-  // â‘ÎƒmƒCƒY-•½‹Ï(reverse‚Å—˜—p)
+  // çµ¶å¯¾ãƒã‚¤ã‚º-å¹³å‡(reverseã§åˆ©ç”¨)
   double navg1_y = (noise_t_y + noise_b_y) / 2;
   double navg1_uv = (noise_t_uv + noise_b_uv) / 2;
-  // ‘Š‘ÎƒmƒCƒY-•½‹Ï [comp t,b](diffŒvZ‚Å—˜—p)
+  // ç›¸å¯¾ãƒã‚¤ã‚º-å¹³å‡ [comp t,b](diffè¨ˆç®—ã§åˆ©ç”¨)
   double navg2_y = (second ? result0[0].noiseR1 : result0[0].noiseR0) / noisepixels / 2;
   double navg2_uv = (second ? result0[1].noiseR1 : result0[1].noiseR0) / noisepixelsUV / 2;
-  // â‘ÎƒmƒCƒY-•„†•t·•ª(diffŒvZ‚Å—˜—p)
+  // çµ¶å¯¾ãƒã‚¤ã‚º-ç¬¦å·ä»˜å·®åˆ†(diffè¨ˆç®—ã§åˆ©ç”¨)
   double diff1_y = noise_t_y - noise_b_y;
   double diff1_uv = noise_t_uv - noise_b_uv;
 
-  double diff1;     // â‘ÎƒmƒCƒY - •„†•t·•ª
-  double navg1;     // â‘ÎƒmƒCƒY•½‹Ï(‘ƒmƒCƒY—Ê”»’è—p, F·‚Ì×‚©‚¢–Í—l‚Í–Å‘½‚ÉŒ©‚È‚¢)
-  double navg1_d;   // debug—p
-  double navg2;     // ‘Š‘ÎƒmƒCƒY - •½‹Ï
+  double diff1;     // çµ¶å¯¾ãƒã‚¤ã‚º - ç¬¦å·ä»˜å·®åˆ†
+  double navg1;     // çµ¶å¯¾ãƒã‚¤ã‚ºå¹³å‡(ç·ãƒã‚¤ã‚ºé‡åˆ¤å®šç”¨, è‰²å·®ã®ç´°ã‹ã„æ¨¡æ§˜ã¯æ»…å¤šã«è¦‹ãªã„)
+  double navg1_d;   // debugç”¨
+  double navg2;     // ç›¸å¯¾ãƒã‚¤ã‚º - å¹³å‡
 
   if (param->chroma == 0) {
     // Y
@@ -1372,7 +1372,7 @@ DECOMB_UCF_RESULT CalcDecombUCF(
   double min_thresh = (navg1 < param->namax_thresh)
     ? param->th_score.calc(nmin) + off_thresh
     : param->namax_diff + off_thresh;
-  // •„†•t•â³·•ª
+  // ç¬¦å·ä»˜è£œæ­£å·®åˆ†
   double diff = absdiff1 < 1.8 ? diff1 * 10
     : absdiff1 < 5 ? diff1 * 5 + (diff1 / absdiff1) * 9
     : absdiff1 < 10 ? diff1 * 2 + (diff1 / absdiff1) * 24
@@ -1472,7 +1472,7 @@ DECOMB_UCF_RESULT CalcDecombUCF(
   return (field_diff < param->fd_thresh) ? DECOMB_UCF_CLEAN_1 : result;
 }
 
-// 24pƒNƒŠƒbƒv‚ğ•ªÍ‚µ‚Ä24pƒNƒŠƒbƒv‚É“K—p‚·‚éƒtƒBƒ‹ƒ^iƒIƒŠƒWƒiƒ‹‚Æ“¯“™j
+// 24pã‚¯ãƒªãƒƒãƒ—ã‚’åˆ†æã—ã¦24pã‚¯ãƒªãƒƒãƒ—ã«é©ç”¨ã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿ï¼ˆã‚ªãƒªã‚¸ãƒŠãƒ«ã¨åŒç­‰ï¼‰
 class KDecombUCF : public KFMFilterBase
 {
   PClip paramclip;
@@ -1502,7 +1502,7 @@ public:
     if (srcvi.width & 3) env->ThrowError("[KDecombUCF]: width must be multiple of 4");
     if (srcvi.height & 3) env->ThrowError("[KDecombUCF]: height must be multiple of 4");
 
-    // VideoInfoƒ`ƒFƒbƒN
+    // VideoInfoãƒã‚§ãƒƒã‚¯
     VideoInfo vi24 = clip24->GetVideoInfo();
     VideoInfo vinoise = noiseclip->GetVideoInfo();
     VideoInfo vibefore = beforeclip->GetVideoInfo();
@@ -1562,7 +1562,7 @@ public:
       result0, nullptr, false, param->show ? &message : nullptr);
 
     if (param->show) {
-      // message‚ğ‘‚¢‚Ä•Ô‚·
+      // messageã‚’æ›¸ã„ã¦è¿”ã™
       Frame frame = child->GetFrame(n24, env);
       DrawText<uint8_t>(frame.frame, vi.BitsPerComponent(), 0, 0, message, env);
       return frame.frame;
@@ -1601,7 +1601,7 @@ public:
   }
 };
 
-// 60iƒNƒŠƒbƒv‚ğ•ªÍ‚µ‚Ä24pƒNƒŠƒbƒv‚É“K—p‚·‚éƒtƒBƒ‹ƒ^
+// 60iã‚¯ãƒªãƒƒãƒ—ã‚’åˆ†æã—ã¦24pã‚¯ãƒªãƒƒãƒ—ã«é©ç”¨ã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿
 class KDecombUCF24 : public KFMFilterBase
 {
   PClip paramclip;
@@ -1635,7 +1635,7 @@ public:
     if (srcvi.width & 3) env->ThrowError("[KDecombUCF24]: width must be multiple of 4");
     if (srcvi.height & 3) env->ThrowError("[KDecombUCF24]: height must be multiple of 4");
 
-    // VideoInfoƒ`ƒFƒbƒN
+    // VideoInfoãƒã‚§ãƒƒã‚¯
     VideoInfo vi24 = clip24->GetVideoInfo();
     VideoInfo vinoise = noiseclip->GetVideoInfo();
     VideoInfo vibefore = beforeclip->GetVideoInfo();
@@ -1643,10 +1643,10 @@ public:
     VideoInfo vidw = dweaveclip->GetVideoInfo();
     VideoInfo vinr = nrclip ? nrclip->GetVideoInfo() : VideoInfo();
 
-    // ƒ`ƒFƒbƒN
+    // ãƒã‚§ãƒƒã‚¯
     CycleAnalyzeInfo::GetParam(fmclip->GetVideoInfo(), env);
 
-    // fpsƒ`ƒFƒbƒN
+    // fpsãƒã‚§ãƒƒã‚¯
     vi24.MulDivFPS(5, 2);
     vinoise.MulDivFPS(2, 1);
     vibefore.MulDivFPS(1, 1);
@@ -1681,7 +1681,7 @@ public:
         env->ThrowError("[KDecombUCF24]: vi24.fps_numerator != vinr.fps_numerator");
     }
 
-    // ƒTƒCƒYƒ`ƒFƒbƒN
+    // ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
     if (vi24.width != vibefore.width)
       env->ThrowError("[KDecombUCF24]: vi24.width != vibefore.width");
     if (vi24.width != viafter.width)
@@ -1731,7 +1731,7 @@ public:
     int cycleIndex = n24 / 4;
     KFMResult fm = *(Frame(env->GetFrame(fmclip, cycleIndex, cpuDevice)).GetReadPtr<KFMResult>());
 
-    // 24pƒtƒŒ[ƒ€”Ô†‚ğæ“¾
+    // 24pãƒ•ãƒ¬ãƒ¼ãƒ ç•ªå·ã‚’å–å¾—
     Frame24Info frameInfo = patterns.GetFrame24(fm.pattern, n24);
     std::string message;
 
@@ -1770,7 +1770,7 @@ public:
     }
 
     if (param->show) {
-      // message‚ğ‘‚¢‚Ä•Ô‚·
+      // messageã‚’æ›¸ã„ã¦è¿”ã™
       Frame frame = child->GetFrame(n24, env);
       DrawText<uint8_t>(frame.frame, vi.BitsPerComponent(), 0, 0, message, env);
       return frame.frame;
@@ -1779,10 +1779,10 @@ public:
     int n60start = frameInfo.cycleIndex * 10 + frameInfo.fieldStartIndex;
 
     if (std::find(cleanField, cleanField + frameInfo.numFields, false) != cleanField + frameInfo.numFields) {
-      // ‰˜‚¢ƒtƒB[ƒ‹ƒh‚ª1–‡ˆÈã‚ ‚é
+      // æ±šã„ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒ1æšä»¥ä¸Šã‚ã‚‹
       for (int i = 0; i < frameInfo.numFields - 1; ++i) {
         if (cleanField[i + 0] && cleanField[i + 1]) {
-          // 2–‡˜A‘±‚Å‚«‚ê‚¢‚ÈƒtƒB[ƒ‹ƒh‚ª‚ ‚é -> ‚«‚ê‚¢‚ÈƒtƒB[ƒ‹ƒh‚Å\¬‚³‚ê‚½ƒtƒŒ[ƒ€‚ğ•Ô‚·
+          // 2æšé€£ç¶šã§ãã‚Œã„ãªãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹ -> ãã‚Œã„ãªãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã§æ§‹æˆã•ã‚ŒãŸãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¿”ã™
           int n60 = n60start + i;
           PVideoFrame frame = dweaveclip->GetFrame(n60, env);
           int sourceStart = n60 / 2;
@@ -1798,11 +1798,11 @@ public:
           return frame;
         }
       }
-      // 3ƒtƒB[ƒ‹ƒhˆÈã‚ ‚é‚Ì‚É2–‡˜A‘±‚ÌãY—í‚ÈƒtƒB[ƒ‹ƒh‚ª‚È‚¢ê‡‚ÍA
-      // ‚»‚à‚»‚à‘SƒtƒB[ƒ‹ƒh‚ª‰˜‚¢‰Â”\«‚ª‚‚¢‚Ì‚Åbob‚ÅX‚É‰˜‚­‚È‚é‚Ì‚ğ–h‚®
+      // 3ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ä»¥ä¸Šã‚ã‚‹ã®ã«2æšé€£ç¶šã®ç¶ºéº—ãªãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒãªã„å ´åˆã¯ã€
+      // ãã‚‚ãã‚‚å…¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒæ±šã„å¯èƒ½æ€§ãŒé«˜ã„ã®ã§bobã§æ›´ã«æ±šããªã‚‹ã®ã‚’é˜²ã
       if (frameInfo.numFields <= 2) {
         if (cleanField[0]) {
-          // 1–‡–Ú‚ÌƒtƒB[ƒ‹ƒh‚ÍãY—í -> Œã‚ë‚ÌƒtƒB[ƒ‹ƒh‚Í‰˜‚¢‚Ì‚Å‘O‚ÌƒtƒB[ƒ‹ƒh‚ğg‚Á‚Ä•âŠÔ
+          // 1æšç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ç¶ºéº— -> å¾Œã‚ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯æ±šã„ã®ã§å‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ä½¿ã£ã¦è£œé–“
           PVideoFrame frame = beforeclip->GetFrame(n60start, env);
           int sourceStart = n60start / 2;
           // avs+ style
@@ -1816,7 +1816,7 @@ public:
           return frame;
         }
         else if (cleanField[1]) {
-          // 2–‡–Ú‚ÌƒtƒB[ƒ‹ƒh‚ÍãY—í -> ‘O‚ÌƒtƒB[ƒ‹ƒh‚Í‰˜‚¢‚Ì‚ÅŒã‚ë‚ÌƒtƒB[ƒ‹ƒh‚ğg‚Á‚Ä•âŠÔ
+          // 2æšç›®ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ç¶ºéº— -> å‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯æ±šã„ã®ã§å¾Œã‚ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ä½¿ã£ã¦è£œé–“
           PVideoFrame frame = afterclip->GetFrame(n60start + 1, env);
           int sourceStart = (n60start + 1) / 2;
           // avs+ style
@@ -1830,7 +1830,7 @@ public:
           return frame;
         }
       }
-      // ‚«‚ê‚¢‚ÈƒtƒB[ƒ‹ƒh‚ª‚È‚©‚Á‚½ -> NR‚ğ•Ô‚·
+      // ãã‚Œã„ãªãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒãªã‹ã£ãŸ -> NRã‚’è¿”ã™
       if (nrclip) {
         return nrclip->GetFrame(n24, env);
       }
@@ -1840,7 +1840,7 @@ public:
   }
 
   int __stdcall SetCacheHints(int cachehints, int frame_range) {
-    // CPU‰¼’è‚ÌƒNƒŠƒbƒv‚ª‚ ‚é‚Ì‚Å
+    // CPUä»®å®šã®ã‚¯ãƒªãƒƒãƒ—ãŒã‚ã‚‹ã®ã§
     if (cachehints == CACHE_GET_CHILD_DEV_TYPE) return DEV_TYPE_ANY;
     else if (cachehints == CACHE_GET_MTMODE) return MT_NICE_FILTER;
     return KFMFilterBase::SetCacheHints(cachehints, frame_range);
@@ -1862,7 +1862,7 @@ public:
   }
 };
 
-// 60iƒNƒŠƒbƒv‚ğ•ªÍ‚µ‚Ä60pƒtƒ‰ƒO‚ğo—Í
+// 60iã‚¯ãƒªãƒƒãƒ—ã‚’åˆ†æã—ã¦60pãƒ•ãƒ©ã‚°ã‚’å‡ºåŠ›
 class KDecombUCF60Flag : public GenericVideoFilter
 {
   PClip paramclip;
@@ -1904,10 +1904,10 @@ public:
       vi = showclip->GetVideoInfo();
     }
     else {
-      // ƒtƒŒ[ƒ€”AFPS‚ğ2”{
+      // ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã€FPSã‚’2å€
       vi.num_frames *= 2;
       vi.MulDivFPS(2, 1);
-      // ƒtƒŒ[ƒ€‚Ío—Í‚µ‚È‚¢‚Ì‚Åƒ_ƒ~[
+      // ãƒ•ãƒ¬ãƒ¼ãƒ ã¯å‡ºåŠ›ã—ãªã„ã®ã§ãƒ€ãƒŸãƒ¼
       vi.pixel_type = VideoInfo::CS_BGR32;
       vi.width = 4;
       vi.height = 1;
@@ -1940,11 +1940,11 @@ public:
       if (result == replace_resluts[i]) {
         double diff[4];
         if (i == 0) {
-          // ‘O‚ÌƒtƒŒ[ƒ€‚ğg‚Á‚½•û‚ª‚¢‚¢‚Æ”»’è‚³‚ê‚½
+          // å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½¿ã£ãŸæ–¹ãŒã„ã„ã¨åˆ¤å®šã•ã‚ŒãŸ
           GetFieldDiff(n60 - 3, diff, env);
           double sc = diff[3] / (std::max(diff[0], diff[1]) + 0.0001);
           if (sc > dup_thresh && diff[3] > sc_thresh) {
-            // ‘O‚ªÃ~
+            // å‰ãŒé™æ­¢
             useFrame = n60 - 1;
           }
           if (param->show) {
@@ -1965,11 +1965,11 @@ public:
           }
         }
         else {
-          // Œã‚ÌƒtƒŒ[ƒ€‚ğg‚Á‚½•û‚ª‚¢‚¢‚Æ”»’è‚³‚ê‚½
+          // å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ä½¿ã£ãŸæ–¹ãŒã„ã„ã¨åˆ¤å®šã•ã‚ŒãŸ
           GetFieldDiff(n60 - 1, diff, env);
           double sc = diff[0] / (std::max(diff[2], diff[3]) + 0.0001);
           if (sc > dup_thresh && diff[0] > sc_thresh) {
-            // Œã‚ªÃ~
+            // å¾ŒãŒé™æ­¢
             useFrame = n60 + 1;
           }
           if (param->show) {
@@ -1996,7 +1996,7 @@ public:
     }
 
     if (param->show) {
-      // message‚ğ‘‚¢‚Ä•Ô‚·
+      // messageã‚’æ›¸ã„ã¦è¿”ã™
       Frame frame = showclip->GetFrame(n60, env);
       if (useFrame == n60 && isDirty) {
         message = "******** !!! DIRTY FRAME !!! ********\n" + message;
@@ -2054,7 +2054,7 @@ public:
   }
 };
 
-// 60iƒNƒŠƒbƒv‚ğ•ªÍ‚µ‚Ä60pƒNƒŠƒbƒv‚É“K—p‚·‚éƒtƒBƒ‹ƒ^
+// 60iã‚¯ãƒªãƒƒãƒ—ã‚’åˆ†æã—ã¦60pã‚¯ãƒªãƒƒãƒ—ã«é©ç”¨ã™ã‚‹ãƒ•ã‚£ãƒ«ã‚¿
 class KDecombUCF60 : public KFMFilterBase
 {
   PClip flagclip;
@@ -2076,7 +2076,7 @@ public:
     if (srcvi.width & 3) env->ThrowError("[KDecombUCF60]: width must be multiple of 4");
     if (srcvi.height & 3) env->ThrowError("[KDecombUCF60]: height must be multiple of 4");
 
-    // VideoInfoƒ`ƒFƒbƒN
+    // VideoInfoãƒã‚§ãƒƒã‚¯
     VideoInfo vi60 = clip60->GetVideoInfo();
     VideoInfo viflag = flagclip->GetVideoInfo();
     VideoInfo vibefore = beforeclip->GetVideoInfo();
@@ -2085,7 +2085,7 @@ public:
 
     DecombUCFInfo::SetParam(vi, &info);
 
-    // fpsƒ`ƒFƒbƒN
+    // fpsãƒã‚§ãƒƒã‚¯
     if (vi60.fps_denominator != viflag.fps_denominator)
       env->ThrowError("[KDecombUCF60]: vi60.fps_denominator != viflag.fps_denominator");
     if (vi60.fps_numerator != viflag.fps_numerator)
@@ -2105,7 +2105,7 @@ public:
         env->ThrowError("[KDecombUCF60]: vi60.fps_numerator != vinr.fps_numerator");
     }
 
-    // ƒTƒCƒYƒ`ƒFƒbƒN
+    // ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯
     if (vi60.width != vibefore.width)
       env->ThrowError("[KDecombUCF60]: vi60.num_frames != vibefore.num_frames");
     if (vi60.width != viafter.width)
@@ -2142,7 +2142,7 @@ public:
     PVideoFrame centerFrame;
     bool useNR = false;
 
-    // ‘OŒã‚ÌƒtƒŒ[ƒ€‚àl—¶‚·‚é
+    // å‰å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚‚è€ƒæ…®ã™ã‚‹
     for (int i = -1; i < 2; ++i) {
       PVideoFrame frame = flagclip->GetFrame(n60 + i, env);
       int error;
@@ -2171,7 +2171,7 @@ public:
       }
     }
 
-    // ƒfƒBƒXƒpƒbƒ`
+    // ãƒ‡ã‚£ã‚¹ãƒ‘ãƒƒãƒ
     PVideoFrame res;
     if (centerFlag == DECOMB_UCF_NR && nrclip) {
       res = nrclip->GetFrame(n60, env);

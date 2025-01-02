@@ -32,15 +32,15 @@ protected:
   AvsTestBase() { }
 
   virtual ~AvsTestBase() {
-    // �e�X�g���Ɏ��s�����C��O�𓊂��Ȃ� clean-up �������ɏ����܂��D
+    // テスト毎に実行される，例外を投げない clean-up をここに書きます．
   }
 
-  // �R���X�g���N�^�ƃf�X�g���N�^�ł͕s�\���ȏꍇ�D
-  // �ȉ��̃��\�b�h���`���邱�Ƃ��ł��܂��F
+  // コンストラクタとデストラクタでは不十分な場合．
+  // 以下のメソッドを定義することができます：
 
   virtual void SetUp() {
-    // ���̃R�[�h�́C�R���X�g���N�^�̒���i�e�e�X�g�̒��O�j
-    // �ɌĂяo����܂��D
+    // このコードは，コンストラクタの直後（各テストの直前）
+    // に呼び出されます．
     char buf[MAX_PATH];
     GetModuleFileName(nullptr, buf, MAX_PATH);
     modulePath = GetDirectoryName(buf);
@@ -48,8 +48,8 @@ protected:
   }
 
   virtual void TearDown() {
-    // ���̃R�[�h�́C�e�e�X�g�̒���i�f�X�g���N�^�̒��O�j
-    // �ɌĂяo����܂��D
+    // このコードは，各テストの直後（デストラクタの直前）
+    // に呼び出されます．
   }
 
   std::string modulePath;

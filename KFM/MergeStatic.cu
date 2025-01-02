@@ -30,7 +30,7 @@ void cpu_compare_frames(vpixel_t* dst,
       int4 minv = min(min(a, b), min(c, min(d, e)));
       int4 maxv = max(max(a, b), max(c, max(d, e)));
 
-      // ÉtÉâÉOäiî[
+      // „Éï„É©„Ç∞Ê†ºÁ¥ç
       dst[x + y * pitch] = VHelper<vpixel_t>::cast_to(maxv - minv);
     }
   }
@@ -58,7 +58,7 @@ __global__ void kl_compare_frames(vpixel_t* dst,
     int4 minv = min(min(a, b), min(c, min(d, e)));
     int4 maxv = max(max(a, b), max(c, max(d, e)));
 
-    // ÉtÉâÉOäiî[
+    // „Éï„É©„Ç∞Ê†ºÁ¥ç
     dst[x + y * pitch] = VHelper<vpixel_t>::cast_to(maxv - minv);
   }
 }
@@ -189,7 +189,7 @@ void cpu_min_frames(vpixel_t* dst,
 
       int4 minv = min(a, min(b, c));
 
-      // ÉtÉâÉOäiî[
+      // „Éï„É©„Ç∞Ê†ºÁ¥ç
       dst[x + y * pitch] = VHelper<vpixel_t>::cast_to(minv);
     }
   }
@@ -212,7 +212,7 @@ __global__ void kl_min_frames(vpixel_t* dst,
 
     int4 minv = min(a, min(b, c));
 
-    // ÉtÉâÉOäiî[
+    // „Éï„É©„Ç∞Ê†ºÁ¥ç
     dst[x + y * pitch] = VHelper<vpixel_t>::cast_to(minv);
   }
 }
@@ -311,8 +311,8 @@ class KAnalyzeStatic : public KFMFilterBase
     vpixel_t* dstp = dst.GetWritePtr<vpixel_t>();
     int pitch = dst.GetPitch<vpixel_t>();
 
-    // dst: combeÇ†ÇËÉtÉâÉO
-    // flagd: diffÇ†ÇËÉtÉâÉO
+    // dst: combe„ÅÇ„Çä„Éï„É©„Ç∞
+    // flagd: diff„ÅÇ„Çä„Éï„É©„Ç∞
     float invcombe = 1.0f / thcombe;
     float invdiff = 1.0f / thdiff;
     int width4 = vi.width >> 2;
@@ -364,7 +364,7 @@ class KAnalyzeStatic : public KFMFilterBase
     MergeUVCoefs<pixel_t>(flagtmp, env);
     ExtendCoefs<pixel_t>(flagtmp, flagd, env);
 
-    AndCoefs<pixel_t>(flagc, flagd, env); // combeÇ†ÇËdiffÇ»Çµ -> flagc
+    AndCoefs<pixel_t>(flagc, flagd, env); // combe„ÅÇ„Çädiff„Å™„Åó -> flagc
     ApplyUVCoefs<pixel_t>(flagc, env);
 
     return flagc.frame;

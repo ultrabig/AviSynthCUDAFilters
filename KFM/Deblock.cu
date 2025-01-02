@@ -51,7 +51,7 @@ struct QPClipInfo {
     }
 };
 
-// ‰f‘œ‚È‚µ‚ÅQP‚¾‚¯‚ÌƒNƒŠƒbƒv
+// æ˜ åƒãªã—ã§QPã ã‘ã®ã‚¯ãƒªãƒƒãƒ—
 class QPClip : public GenericVideoFilter
 {
     QPClipInfo info;
@@ -62,7 +62,7 @@ public:
     {
         QPClipInfo::SetParam(vi, &info);
 
-        // ƒtƒŒ[ƒ€©‘Ì‚Íƒ_ƒ~[
+        // ãƒ•ãƒ¬ãƒ¼ãƒ è‡ªä½“ã¯ãƒ€ãƒŸãƒ¼
         vi.width = 2;
         vi.height = 2;
         vi.pixel_type = VideoInfo::CS_Y8;
@@ -393,10 +393,10 @@ uchar2 g_deblock_offset[127] = {
   { 1,2 },{ 5,6 },{ 1,6 },{ 5,2 },{ 3,0 },{ 7,4 },{ 3,4 },{ 7,0 },
 };
 
-// src: ŠOü8ƒsƒNƒZƒ‹Šg’£‚µ‚½ƒ\[ƒX
-// out: ŠOü8ƒsƒNƒZƒ‹Šg’£‚µA‚©‚ÂAc•ûŒü‚É4”{‚µ‚½’†ŠÔo—Íƒoƒbƒtƒ@
-// qp_table: ffmpeg‚©‚çæ“¾‚µ‚½qpƒe[ƒuƒ‹
-// offsets: ƒuƒƒbƒNƒIƒtƒZƒbƒgƒe[ƒuƒ‹
+// src: å¤–å‘¨8ãƒ”ã‚¯ã‚»ãƒ«æ‹¡å¼µã—ãŸã‚½ãƒ¼ã‚¹
+// out: å¤–å‘¨8ãƒ”ã‚¯ã‚»ãƒ«æ‹¡å¼µã—ã€ã‹ã¤ã€ç¸¦æ–¹å‘ã«4å€ã—ãŸä¸­é–“å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡
+// qp_table: ffmpegã‹ã‚‰å–å¾—ã—ãŸqpãƒ†ãƒ¼ãƒ–ãƒ«
+// offsets: ãƒ–ãƒ­ãƒƒã‚¯ã‚ªãƒ•ã‚»ãƒƒãƒˆãƒ†ãƒ¼ãƒ–ãƒ«
 // shift: min(3, 16 - quality - bits)
 // maxv: (1 << (11 - shift)) - 1
 template <typename pixel_t>
@@ -414,10 +414,10 @@ __global__ void kl_deblock(
     __shared__ ushort2 local_out[16][8];
     extern __shared__ float dct_tmp_buf[];
 
-    // sharedƒƒ‚ƒŠ‚Íƒoƒ“ƒNƒRƒ“ƒtƒŠƒNƒg‚ğ‰ñ”ğ‚·‚é‚½‚ß9x8‚ÅŠm•Û‚·‚é
+    // sharedãƒ¡ãƒ¢ãƒªã¯ãƒãƒ³ã‚¯ã‚³ãƒ³ãƒ•ãƒªã‚¯ãƒˆã‚’å›é¿ã™ã‚‹ãŸã‚9x8ã§ç¢ºä¿ã™ã‚‹
     float* dct_tmp = dct_tmp_buf + 72 * ty;
 
-    // local_out‰Šú‰»
+    // local_outåˆæœŸåŒ–
     for (int y = ty; y < 16; y += blockDim.y) {
         local_out[y][tx] = ushort2();
     }
@@ -449,8 +449,8 @@ __global__ void kl_deblock(
     dev_idct8x8(tx, dct_tmp);
 
     // add
-    // 16bit‚ÌatomicAdd‚Í‚È‚¢‚Ì‚ÅA2‚Â‚Ì16bit‚ğ1‚Â‚Ì32bit‚Æ‚µ‚Äˆµ‚¤
-    //iƒI[ƒo[ƒtƒ[‚µ‚È‚¢‘O’ñj
+    // 16bitã®atomicAddã¯ãªã„ã®ã§ã€2ã¤ã®16bitã‚’1ã¤ã®32bitã¨ã—ã¦æ‰±ã†
+    //ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã—ãªã„å‰æï¼‰
     const int half = (1 << shift) >> 1;
     for (int y = 0; y < 8; ++y) {
         int tmp = clamp((int)(dct_tmp[tx + y * 9] + half) >> shift, 0, maxv);
@@ -481,7 +481,7 @@ void cpu_deblock(
         for (int bx = 0; bx < bw; ++bx) {
             uint16_t local_out[16][16];
 
-            // local_out‰Šú‰»
+            // local_outåˆæœŸåŒ–
             memset(local_out, 0, sizeof(local_out));
 
             for (int ty = 0; ty <= count_minus_1; ++ty) {
@@ -500,8 +500,8 @@ void cpu_deblock(
                 float thresh = qp_apply_thresh(qp, thresh_a, thresh_b) * ((1 << 2) + strength) - 1;
 
                 if (thresh <= 0) {
-                    // •Ï‰»‚µ‚È‚¢‚Ì‚Å‚»‚Ì‚Ü‚Ü“ü‚ê‚é
-                    // ‚Æ‚¢‚Á‚Ä‚àdct->idct‚Å8*8”{‚³‚ê‚é‚Ì‚Å64”{
+                    // å¤‰åŒ–ã—ãªã„ã®ã§ãã®ã¾ã¾å…¥ã‚Œã‚‹
+                    // ã¨ã„ã£ã¦ã‚‚dct->idctã§8*8å€ã•ã‚Œã‚‹ã®ã§64å€
                     for (int i = 0; i < 64; ++i) {
                         dct_tmp[i] *= 64;
                     }
@@ -592,8 +592,8 @@ void cpu_deblock_show(
 }
 
 // normalize the qscale factor
-// ffmpeg‚Ímpeg1‚É‡‚í‚¹‚Ä‚¢‚é‚ª’l‚ª¬‚³‚¢‚Ì‚Åh264‚É‡‚í‚¹‚é‚æ‚¤‚É‚µ‚½
-//iffmpeg‚Ì4”{‚Ì’l‚ª•Ô‚éj
+// ffmpegã¯mpeg1ã«åˆã‚ã›ã¦ã„ã‚‹ãŒå€¤ãŒå°ã•ã„ã®ã§h264ã«åˆã‚ã›ã‚‹ã‚ˆã†ã«ã—ãŸ
+//ï¼ˆffmpegã®4å€ã®å€¤ãŒè¿”ã‚‹ï¼‰
 __device__ __host__ inline int norm_qscale(int qscale, int type)
 {
     switch (type) {
@@ -759,7 +759,7 @@ void cpu_deblock_avx(
 {
     auto store_slice = get_store_slice_avx_func<pixel_t>(mergeShift);
     for (int by = 0; by < bh; ++by) {
-        memset(&tmp[(by + 1) * 8 * tmp_pitch], 0, tmp_pitch * 8 * sizeof(uint16_t)); // dst‰Šú‰»
+        memset(&tmp[(by + 1) * 8 * tmp_pitch], 0, tmp_pitch * 8 * sizeof(uint16_t)); // dståˆæœŸåŒ–
         for (int bx = 0; bx < bw; ++bx) {
             for (int ty = 0; ty <= count_minus_1; ++ty) {
                 const uchar2 offset = g_deblock_offset[count_minus_1 + ty];
@@ -1036,7 +1036,7 @@ class QPForDeblock : public KFMFilterBase
         return dst.frame;
     }
 
-    // QPƒe[ƒuƒ‹‚ÌƒtƒŒ[ƒ€w’è
+    // QPãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ•ãƒ¬ãƒ¼ãƒ æŒ‡å®š
     PVideoFrame QPEntry(PVideoFrame& qp0, PVideoFrame& qp1, PNeoEnv env)
     {
         // avs+ frameprop style
@@ -1044,7 +1044,7 @@ class QPForDeblock : public KFMFilterBase
         auto avsmap = env->getFramePropsRO(qp0);
         env->propGetInt(avsmap, "QP_Table_Non_B", 0, &error); // check existance only
         if (error) {
-            // QPƒe[ƒuƒ‹‚ª‚È‚¢
+            // QPãƒ†ãƒ¼ãƒ–ãƒ«ãŒãªã„
             Frame dst = env->NewVideoFrame(vi);
             env->propSetInt(env->getFramePropsRW(dst.frame), "DEBLOCK_QP_FLAG", QP_TABLE_NONE, 0);
             //dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
@@ -1079,7 +1079,7 @@ class QPForDeblock : public KFMFilterBase
             qpStride, qpScaleType, env);
         /*
             if (qp0->GetProperty("QP_Table_Non_B") == nullptr) {
-                // QPƒe[ƒuƒ‹‚ª‚È‚¢
+                // QPãƒ†ãƒ¼ãƒ–ãƒ«ãŒãªã„
                 Frame dst = env->NewVideoFrame(vi);
                 dst.SetProperty("DEBLOCK_QP_FLAG", QP_TABLE_NONE);
                 return dst.frame;
@@ -1159,7 +1159,7 @@ public:
         Frame src = child->GetFrame(n, env);
 
         if (force_qp > 0) {
-            // QPw’è‚ ‚è
+            // QPæŒ‡å®šã‚ã‚Š
             return QPEntry(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0, env);
         }
 
@@ -1170,11 +1170,11 @@ public:
         if (!error) {
             // Neo fp stlye
             // if (src.GetProperty("KFM_SourceStart")) {
-            // ƒtƒŒ[ƒ€w’è‚ ‚è
+            // ãƒ•ãƒ¬ãƒ¼ãƒ æŒ‡å®šã‚ã‚Š
             int start = (int)env->propGetInt(avsmap, "KFM_SourceStart", 0, &error);
             int num = (int)env->propGetInt(avsmap, "KFM_NumSourceFrames", 0, &error);
 
-            // ‘z’è‚³‚ê‚éƒtƒŒ[ƒ€‚Æ—£‚ê‚·‚¬‚Ä‚½‚çƒoƒO‚Ì‰Â”\«‚ª‚‚¢‚Ì‚ÅŒŸo
+            // æƒ³å®šã•ã‚Œã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ ã¨é›¢ã‚Œã™ãã¦ãŸã‚‰ãƒã‚°ã®å¯èƒ½æ€§ãŒé«˜ã„ã®ã§æ¤œå‡º
             int qp_n = (int)(frameRateConv * n + 0.3f);
             if (start < qp_n - 10 || start > qp_n + 10) {
                 env->ThrowError("Invalid KFM_SourceStart");
@@ -1194,14 +1194,14 @@ public:
         }
 
         if (qpclip) {
-            // QPƒNƒŠƒbƒvw’è‚ ‚è
+            // QPã‚¯ãƒªãƒƒãƒ—æŒ‡å®šã‚ã‚Š
             int qp_n = (int)(frameRateConv * n + 0.3f);
             auto qp0 = GetQPFrame(qp_n, env);
             auto qp1 = PVideoFrame();
             return QPEntry(qp0, qp1, env);
         }
 
-        // ƒ\[ƒXƒtƒŒ[ƒ€‚©‚çQPæ“¾
+        // ã‚½ãƒ¼ã‚¹ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰QPå–å¾—
         auto qp1 = PVideoFrame();
         return QPEntry(src.frame, qp1, env);
     }
@@ -1469,7 +1469,7 @@ class SharpenFilter : public KFMFilterBase
         if (IS_CUDA) {
             cudaStream_t stream = static_cast<cudaStream_t>(env->GetDeviceStream());
             {
-                // qp -> coeff •ÏŠ·
+                // qp -> coeff å¤‰æ›
                 dim3 threads(32, 8);
                 dim3 blocks(nblocks(qpw, threads.x), nblocks(qph, threads.y));
                 kl_sharpen_coeff <<<blocks, threads, 0, stream>>> (
@@ -1501,7 +1501,7 @@ class SharpenFilter : public KFMFilterBase
                 }
             }
         } else {
-            // qp -> coeff •ÏŠ·
+            // qp -> coeff å¤‰æ›
             cpu_sharpen_coeff(
                 coeff.GetWritePtr<uint8_t>(plane), qpw, qph, coeff.GetPitch<uint8_t>(plane),
                 qp.GetReadPtr<uint16_t>(plane), qp.GetPitch<uint16_t>(plane));
@@ -1609,10 +1609,10 @@ class KDeblock : public KFMFilterBase
         cudaStream_t stream = static_cast<cudaStream_t>(env->GetDeviceStream());
 
         VideoInfo padvi = vi;
-        // —LŒø‚Èƒf[ƒ^‚ÍŠOü8ƒsƒNƒZƒ‹‚Ü‚Å‚¾‚ªA
-        // 8‚Ì”{”‚Å‚È‚¢‚Æ‚«‚É‚³‚ç‚É‚»‚ÌŠO‚Ü‚ÅƒAƒNƒZƒX‚ª—L‚è“¾‚é‚Ì‚Å
-        // ƒAƒNƒZƒX‰Â”\‚Èó‘Ô‚É‚µ‚Ä‚¨‚­B8ƒsƒNƒZƒ‹‚æ‚èŠO‘¤‚ÍƒAƒNƒZƒX‚ª‚ ‚Á‚½‚Æ‚µ‚Ä‚à
-        // ÅIƒtƒŒ[ƒ€‚É‚ÍZ“ü‚³‚ê‚È‚¢‚Ì‚ÅApad‚µ‚È‚­‚Ä—Ç‚¢
+        // æœ‰åŠ¹ãªãƒ‡ãƒ¼ã‚¿ã¯å¤–å‘¨8ãƒ”ã‚¯ã‚»ãƒ«ã¾ã§ã ãŒã€
+        // 8ã®å€æ•°ã§ãªã„ã¨ãã«ã•ã‚‰ã«ãã®å¤–ã¾ã§ã‚¢ã‚¯ã‚»ã‚¹ãŒæœ‰ã‚Šå¾—ã‚‹ã®ã§
+        // ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ãªçŠ¶æ…‹ã«ã—ã¦ãŠãã€‚8ãƒ”ã‚¯ã‚»ãƒ«ã‚ˆã‚Šå¤–å´ã¯ã‚¢ã‚¯ã‚»ã‚¹ãŒã‚ã£ãŸã¨ã—ã¦ã‚‚
+        // æœ€çµ‚ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã¯ç®—å…¥ã•ã‚Œãªã„ã®ã§ã€padã—ãªãã¦è‰¯ã„
         padvi.width = (width + 7 + 8 * 2) & ~7;
         padvi.height = (height + 7 + 8 * 2) & ~7;
         padvi.pixel_type = GetYType(vi);
@@ -1648,7 +1648,7 @@ class KDeblock : public KFMFilterBase
                 pad.GetPitch<pixel_t>(), 8);
         }
 
-        // qpclip‚Ìvi‚Íchroma‚àl—¶‚µ‚Ä‘å‚«–Ú‚É‚È‚Á‚Ä‚¢‚é‚Ì‚ÅA‚»‚Ì‚Ü‚Ü‚Å‚Íg‚¦‚È‚¢‚±‚Æ‚É’ˆÓ
+        // qpclipã®viã¯chromaã‚‚è€ƒæ…®ã—ã¦å¤§ãç›®ã«ãªã£ã¦ã„ã‚‹ã®ã§ã€ãã®ã¾ã¾ã§ã¯ä½¿ãˆãªã„ã“ã¨ã«æ³¨æ„
         VideoInfo qpvi = vi;
         qpvi.width = (width + 7 + 8) >> 3;
         qpvi.height = (height + 7 + 8) >> 3;
@@ -1675,7 +1675,7 @@ class KDeblock : public KFMFilterBase
             }
         } else if (!IS_CUDA && IsAVX2Available()) {
             //if(false) {
-              // CPU‚ÅAVX2‚ªg‚¦‚é‚È‚çAVX2”Å
+              // CPUã§AVX2ãŒä½¿ãˆã‚‹ãªã‚‰AVX2ç‰ˆ
             VideoInfo tmpvi = vi;
             tmpvi.width = (width + 7 + 8 * 2) & ~7;
             tmpvi.height = (height + 7 + 8 * 2) & ~7;
@@ -1766,7 +1766,7 @@ class KDeblock : public KFMFilterBase
         // int qpflag = (int)qp.GetProperty("DEBLOCK_QP_FLAG")->GetInt();
 
         if (qpflag == QP_TABLE_NONE) {
-            // QPƒe[ƒuƒ‹‚ª‚È‚¢
+            // QPãƒ†ãƒ¼ãƒ–ãƒ«ãŒãªã„
             if (show) {
                 ShowQPFlag<pixel_t>(src, qpflag, env);
             }
@@ -1775,12 +1775,12 @@ class KDeblock : public KFMFilterBase
 
         Frame dst = env->NewVideoFrame(vi);
 
-        // ‚±‚Ìplane‚²‚Æ‚Ìˆ—‚ğstream‚Å•À—ñ‚Éˆµ‚¤Å“K‰»‚ªl‚¦‚ç‚ê‚é‚ªA
-        // Œ´ˆö•s–¾‚Ì•s‹ï‡‚ª‚ ‚èA‚½‚Ü(30•ª‚ÌƒGƒ“ƒR[ƒh‚Å10‰ñ‚É1‰ñˆÈ‰º)‚Å
-        // 0xc0000005—áŠO‚ÅˆÙíI—¹‚·‚é‚½‚ßAstreamg—p‚ğæ‚è‚â‚ß
-        // DeblockPlane“à•”‚Åg—p‚·‚éˆê—Ìˆæ(tmpvi, padvi)“™‚ª
-        // padding‚Ì‰e‹¿‚ÅY‚ÆUV‚ÅƒTƒCƒY‚ªˆÙ‚È‚é‚Ì‚ªŒ´ˆö‚©‚à‚µ‚ê‚È‚¢‚ªA
-        // ‚»‚ê‚ğl—¶‚µ‚ÄÀ‘•‚µ‚½‚Â‚à‚è‚Å‚à”­¶‚·‚é‚½‚ßAŒ´ˆö•s–¾
+        // ã“ã®planeã”ã¨ã®å‡¦ç†ã‚’streamã§ä¸¦åˆ—ã«æ‰±ã†æœ€é©åŒ–ãŒè€ƒãˆã‚‰ã‚Œã‚‹ãŒã€
+        // åŸå› ä¸æ˜ã®ä¸å…·åˆãŒã‚ã‚Šã€ãŸã¾(30åˆ†ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã§10å›ã«1å›ä»¥ä¸‹)ã§
+        // 0xc0000005ä¾‹å¤–ã§ç•°å¸¸çµ‚äº†ã™ã‚‹ãŸã‚ã€streamä½¿ç”¨ã‚’å–ã‚Šã‚„ã‚
+        // DeblockPlaneå†…éƒ¨ã§ä½¿ç”¨ã™ã‚‹ä¸€æ™‚é ˜åŸŸ(tmpvi, padvi)ç­‰ãŒ
+        // paddingã®å½±éŸ¿ã§Yã¨UVã§ã‚µã‚¤ã‚ºãŒç•°ãªã‚‹ã®ãŒåŸå› ã‹ã‚‚ã—ã‚Œãªã„ãŒã€
+        // ãã‚Œã‚’è€ƒæ…®ã—ã¦å®Ÿè£…ã—ãŸã¤ã‚‚ã‚Šã§ã‚‚ç™ºç”Ÿã™ã‚‹ãŸã‚ã€åŸå› ä¸æ˜
 
         DeblockPlane(vi.width, vi.height,
             dst.GetWritePtr<pixel_t>(PLANAR_Y), dst.GetPitch<pixel_t>(PLANAR_Y),
@@ -1864,9 +1864,9 @@ public:
 
     static AVSValue __cdecl Create(AVSValue args, void* user_data, IScriptEnvironment* env)
     {
-        // 1: ¶ã‚Éî•ñ‚ğ•\¦
-        // 2: ƒfƒuƒƒbƒLƒ“ƒO—Ìˆæ‚ğ•\¦
-        // 3: ƒVƒƒ[ƒv‰»—Ìˆæ‚ğ•\¦
+        // 1: å·¦ä¸Šã«æƒ…å ±ã‚’è¡¨ç¤º
+        // 2: ãƒ‡ãƒ–ãƒ­ãƒƒã‚­ãƒ³ã‚°é ˜åŸŸã‚’è¡¨ç¤º
+        // 3: ã‚·ãƒ£ãƒ¼ãƒ—åŒ–é ˜åŸŸã‚’è¡¨ç¤º
         int show = args[9].AsInt(0);
 
         bool b_adap = args[7].AsBool(true);
@@ -1889,8 +1889,8 @@ public:
         );
 
         if (args[8].AsBool(false)) { // sharpen
-            // GaussResize‚ÆSharpenFilter‚Ì2‚Â‚ªg‚¤‚Ì‚ÅƒLƒƒƒbƒVƒ…‚ğ“ü‚ê‚é
-            // i‚±‚ê‚ğ“ü‚ê‚È‚¢‚Æ2‰ñÀs‚³‚ê‚Ä‚µ‚Ü‚¤j
+            // GaussResizeã¨SharpenFilterã®2ã¤ãŒä½¿ã†ã®ã§ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’å…¥ã‚Œã‚‹
+            // ï¼ˆã“ã‚Œã‚’å…¥ã‚Œãªã„ã¨2å›å®Ÿè¡Œã•ã‚Œã¦ã—ã¾ã†ï¼‰
             clip = env->Invoke("Cache", AVSValue(clip)).AsClip();
 
             VideoInfo vi = clip->GetVideoInfo();
@@ -1923,7 +1923,7 @@ void cpu_scale_qp(int width, int height,
     }
 }
 
-// QPƒe[ƒuƒ‹‚ğƒtƒŒ[ƒ€ƒf[ƒ^‚É•ÏŠ·
+// QPãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ã«å¤‰æ›
 class ShowQP : public GenericVideoFilter
 {
     bool nonB;
@@ -1939,7 +1939,7 @@ public:
         vi.pixel_type = VideoInfo::CS_Y8;
 
         if (vi.sample_type == QPClipInfo::MAGIC_KEY) {
-            // ƒ\[ƒX‚ÍQPClip‚¾‚Á‚½
+            // ã‚½ãƒ¼ã‚¹ã¯QPClipã ã£ãŸ
             auto info = QPClipInfo::GetParam(vi, env);
             vi.width = (info->imageWidth + 15) >> 4;
             vi.height = (info->imageHeight + 15) >> 4;

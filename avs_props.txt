@@ -1,6 +1,6 @@
 VideoInfo
 
-IsRGB() : packed,planar,ƒrƒbƒg”–â‚í‚¸‘S‚Ä‚ÌRGB‚ÆRGBA
+IsRGB() : packed,planar,ãƒ“ãƒƒãƒˆæ•°å•ã‚ãšå…¨ã¦ã®RGBã¨RGBA
 IsRGB24() : 8bit packed RGB
 IsRGB32() : 8bit packed RGBA
 IsRGB48() : 16bit packed RGB
@@ -8,29 +8,29 @@ IsRGB64() : 16bit packed RGBA
 IsPlanarRGB() : Planar RGB
 IsPlanarRGBA() : Planar RGBA
 
-IsYUV() : ƒrƒbƒg”•s–â YUV or YUY2 or Y only (YUVA‚Íœ‚­)
+IsYUV() : ãƒ“ãƒƒãƒˆæ•°ä¸å• YUV or YUY2 or Y only (YUVAã¯é™¤ã)
 IsYUY2() : YUY2 (YUY2 is 8bit only)
 IsYV24() : 8bitYUV444
 IsYV16() : 8bitYUV422
 IsYV12() : 8bitYUV420
 IsY8() : 8bit Y only
 IsYV411() : 8bitYUV411
-Is444() : ƒrƒbƒg”•s–â YUV444 or YUVA444
-Is422() : ƒrƒbƒg”•s–â YUV422 or YUVA422
-Is420() : ƒrƒbƒg”•s–â YUV420 or YUVA420
+Is444() : ãƒ“ãƒƒãƒˆæ•°ä¸å• YUV444 or YUVA444
+Is422() : ãƒ“ãƒƒãƒˆæ•°ä¸å• YUV422 or YUVA422
+Is420() : ãƒ“ãƒƒãƒˆæ•°ä¸å• YUV420 or YUVA420
 IsY() : Y only
 
-IsYUVA() : ƒrƒbƒg”•s–âƒNƒƒ}ƒTƒuƒTƒ“ƒvƒŠƒ“ƒO•s–âYUVA
-IsPlanar() : (packed RGB(RGBA) or YUY2)‚Å‚È‚¢
+IsYUVA() : ãƒ“ãƒƒãƒˆæ•°ä¸å•ã‚¯ãƒ­ãƒžã‚µãƒ–ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ä¸å•YUVA
+IsPlanar() : (packed RGB(RGBA) or YUY2)ã§ãªã„
 
-BytesFromPixels(1) : planar: 1ƒRƒ“ƒ|[ƒlƒ“ƒg‚ÌƒoƒCƒg”, RGBXX: XX/8, YUY2: 2
+BytesFromPixels(1) : planar: 1ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®ãƒã‚¤ãƒˆæ•°, RGBXX: XX/8, YUY2: 2
 RowSize() : BytesFromPixels(1) * width
 
-BitsPerPixel() : ‘SƒRƒ“ƒ|[ƒlƒ“ƒg‡‚í‚¹‚½1ƒsƒNƒZƒ‹‚ ‚½‚è‚Ìƒrƒbƒg”iî•ñ—Ê‚ÌŽQl’l‚Å‚µ‚©Žg‚í‚È‚¢‹C‚ª‚·‚éj
-NumComponents() : FƒRƒ“ƒ|[ƒlƒ“ƒg‚Ì”iƒ‚ƒmƒNƒ=1,ƒJƒ‰[=3,“§‰ß‚ ‚èƒJƒ‰[=4j
-ComponentSize() : 1ƒRƒ“ƒ|[ƒlƒ“ƒg1—v‘f‚ÌƒoƒCƒg”(1 or 2 or 4)
-BitsPerComponent() : 1ƒRƒ“ƒ|[ƒlƒ“ƒg1—v‘f‚Ìƒrƒbƒg”(8,10,12,14,16,32‚Ì‚¢‚¸‚ê‚©)
+BitsPerPixel() : å…¨ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆåˆã‚ã›ãŸ1ãƒ”ã‚¯ã‚»ãƒ«ã‚ãŸã‚Šã®ãƒ“ãƒƒãƒˆæ•°ï¼ˆæƒ…å ±é‡ã®å‚è€ƒå€¤ã§ã—ã‹ä½¿ã‚ãªã„æ°—ãŒã™ã‚‹ï¼‰
+NumComponents() : è‰²ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®æ•°ï¼ˆãƒ¢ãƒŽã‚¯ãƒ­=1,ã‚«ãƒ©ãƒ¼=3,é€éŽã‚ã‚Šã‚«ãƒ©ãƒ¼=4ï¼‰
+ComponentSize() : 1ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ1è¦ç´ ã®ãƒã‚¤ãƒˆæ•°(1 or 2 or 4)
+BitsPerComponent() : 1ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ1è¦ç´ ã®ãƒ“ãƒƒãƒˆæ•°(8,10,12,14,16,32ã®ã„ãšã‚Œã‹)
 
 PVideoFrame
-GetPitch() : ƒoƒCƒg”ƒsƒbƒ`
-GetRowSize() : VideoInfo.RowSize()‚Æ“¯‚¶
+GetPitch() : ãƒã‚¤ãƒˆæ•°ãƒ”ãƒƒãƒ
+GetRowSize() : VideoInfo.RowSize()ã¨åŒã˜

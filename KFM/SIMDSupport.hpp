@@ -33,7 +33,3 @@ constexpr __m256i const_mm256_setr_epi16(
 	};
 #endif
 }
-
-#ifndef _WIN32
-#include "TypeCompat.h"
-#endif

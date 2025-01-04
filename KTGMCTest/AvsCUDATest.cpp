@@ -106,11 +106,11 @@ void CondFuncTest::CondTest_(const char* fname, bool is_cuda, FORMAT format, int
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string pluginPath = modulePath + "\\AvsCUDA.dll";
+    std::string pluginPath = modulePath / "AvsCUDA.dll";
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -526,11 +526,11 @@ void GenericTest::Test_(const char* fname, bool is_cuda, FORMAT format, int bits
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string pluginPath = modulePath + "\\AvsCUDA.dll";
+    std::string pluginPath = modulePath / "AvsCUDA.dll";
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 

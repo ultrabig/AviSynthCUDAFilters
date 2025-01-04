@@ -27,12 +27,12 @@ TEST_F(KFMTest, AnalyzeStaticTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -64,12 +64,12 @@ TEST_F(KFMTest, AnalyzeStaticSuperTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -101,12 +101,12 @@ TEST_F(KFMTest, MergeStaticTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -145,12 +145,12 @@ TEST_F(KFMTest, PadTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -181,12 +181,12 @@ TEST_F(KFMTest, KFMSuperTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -219,12 +219,12 @@ TEST_F(KFMTest, PreCycleAnalyzeTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -256,12 +256,12 @@ TEST_F(KFMTest, TelecineTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -293,12 +293,12 @@ TEST_F(KFMTest, TelecineSuperTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -331,12 +331,12 @@ TEST_F(KFMTest, SwitchFlagTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -369,12 +369,12 @@ TEST_F(KFMTest, CombeMaskTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -408,12 +408,12 @@ TEST_F(KFMTest, RemoveCombeTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -445,12 +445,12 @@ TEST_F(KFMTest, PatchCombeTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -488,12 +488,12 @@ TEST_F(KFMTest, SwitchTest)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -540,12 +540,12 @@ void KFMTest::TemporalNRTest(TEST_FRAMES tf)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -586,12 +586,12 @@ void KFMTest::DebandTest(TEST_FRAMES tf, int sample_mode, bool blur_first)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -659,12 +659,12 @@ void KFMTest::EdgeLevelTest(TEST_FRAMES tf, int repair, bool chroma)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -733,12 +733,12 @@ void KFMTest::CFieldDiffTest(int nt, bool chroma)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -801,12 +801,12 @@ void KFMTest::CFrameDiffDupTest(int blocksize, bool chroma)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -869,12 +869,12 @@ void KFMTest::DecombUCF24Test(TEST_FRAMES tf, int chroma, bool show)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -933,12 +933,12 @@ void KFMTest::DeblockTest(TEST_FRAMES tf, int quality, bool is_soft)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KFM.dll";
+    std::string ktgmcPath = modulePath / "KFM.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 

@@ -3,7 +3,11 @@
 std::string GetDirectoryName(const std::string& filename)
 {
   std::string directory;
+#ifdef _WIN32
   const size_t last_slash_idx = filename.rfind('\\');
+#else
+  const size_t last_slash_idx = filename.rfind('/');
+#endif
   if (std::string::npos != last_slash_idx)
   {
     directory = filename.substr(0, last_slash_idx);

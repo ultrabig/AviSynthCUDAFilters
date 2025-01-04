@@ -12,7 +12,7 @@ TEST_F(MiscTest, UCFPerf)
   try {
     env = PEnv(CreateScriptEnvironment2());
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -40,7 +40,7 @@ TEST_F(MiscTest, UCF2Perf)
   try {
     env = PEnv(CreateScriptEnvironment2());
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -73,7 +73,7 @@ TEST_F(MiscTest, KFMPerf)
   try {
     env = PEnv(CreateScriptEnvironment2());
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -96,18 +96,17 @@ TEST_F(MiscTest, KFMPerf)
   }
 }
 
-
 TEST_F(MiscTest, GenericScriptTest)
 {
   PEnv env;
   try {
     env = PEnv(CreateScriptEnvironment2());
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
-    out << "Import(\"T:\\sandbox\\t28\\AvsTest\\63_ktgmc_perf.avs\")" << std::endl;
+    out << "Import(\"T:/sandbox/t28/AvsTest/63_ktgmc_perf.avs\")" << std::endl;
 
     out.close();
 

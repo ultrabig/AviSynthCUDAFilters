@@ -14,12 +14,12 @@ TEST_F(MaskToolsTest, Lut_1)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KMaskTools.dll";
+    std::string ktgmcPath = modulePath / "KMaskTools.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -51,12 +51,12 @@ TEST_F(MaskToolsTest, Lutxy_1)
     env = PEnv(CreateScriptEnvironment2());
 
     AVSValue result;
-    std::string debugtoolPath = modulePath + "\\KDebugTool.dll";
+    std::string debugtoolPath = modulePath / "KDebugTool.dll";
     env->LoadPlugin(debugtoolPath.c_str(), true, &result);
-    std::string ktgmcPath = modulePath + "\\KMaskTools.dll";
+    std::string ktgmcPath = modulePath / "KMaskTools.dll";
     env->LoadPlugin(ktgmcPath.c_str(), true, &result);
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
@@ -90,7 +90,7 @@ TEST_F(MaskToolsTest, Func)
   try {
     env = PEnv(CreateScriptEnvironment2());
 
-    std::string scriptpath = workDirPath + "\\script.avs";
+    std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 

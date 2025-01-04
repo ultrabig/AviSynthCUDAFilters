@@ -4,14 +4,20 @@
 #include "avisynth.h"
 #pragma comment(lib, "avisynth.lib")
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
+#endif
 
 #include "gtest/gtest.h"
 
 int main(int argc, char **argv)
 {
-  ::testing::GTEST_FLAG(filter) = "*.GenericScriptTest*";
+  if (argc > 1) {
+    ::testing::GTEST_FLAG(filter) = argv[1];
+  } else {
+    ::testing::GTEST_FLAG(filter) = "*.*";
+  }
   ::testing::InitGoogleTest(&argc, argv);
 
   //_crtBreakAlloc = 7978;

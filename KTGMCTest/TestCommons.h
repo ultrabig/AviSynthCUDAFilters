@@ -5,15 +5,20 @@
 #define AVS_LINKAGE_DLLIMPORT
 #include "avisynth.h"
 
+#ifdef _WIN32
 #define NOMINMAX
 #include <Windows.h>
+#else
+#include <linux/limits.h>
+#endif
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include <fstream>
 #include <string>
 #include <iostream>
 #include <memory>
+#include <filesystem>
 
 #define O_C(n) ".OnCUDA(" #n ", 0)"
 
@@ -41,10 +46,17 @@ protected:
   virtual void SetUp() {
     // このコードは，コンストラクタの直後（各テストの直前）
     // に呼び出されます．
+#ifdef _WIN32
     char buf[MAX_PATH];
     GetModuleFileName(nullptr, buf, MAX_PATH);
     modulePath = GetDirectoryName(buf);
     workDirPath = GetDirectoryName(GetDirectoryName(modulePath)) + "\\TestScripts";
+#else
+    char buf[PATH_MAX];
+    readlink("/proc/self/exe", buf, PATH_MAX);
+    modulePath = GetDirectoryName(buf);
+    workDirPath = GetDirectoryName(GetDirectoryName(modulePath)) + "/TestScripts";
+#endif
   }
 
   virtual void TearDown() {
@@ -52,8 +64,8 @@ protected:
     // に呼び出されます．
   }
 
-  std::string modulePath;
-  std::string workDirPath;
+  std::filesystem::path modulePath;
+  std::filesystem::path workDirPath;
 
   enum TEST_FRAMES {
     TF_MID, TF_BEGIN, TF_END, TF_100

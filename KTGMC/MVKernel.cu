@@ -3511,12 +3511,21 @@ public:
         return k8.IsEnabled();
     }
     virtual void *GetDeviceStreamY() override {
+        if (planeStreams == nullptr) {
+          return nullptr;
+        }
         return planeStreams->GetDeviceStreamY();
     }
     virtual void *GetDeviceStreamU() override {
+        if (planeStreams == nullptr) {
+          return nullptr;
+        }
         return planeStreams->GetDeviceStreamU();
     }
     virtual void *GetDeviceStreamV() override {
+        if (planeStreams == nullptr) {
+          return nullptr;
+        }
         return planeStreams->GetDeviceStreamV();
     }
     virtual void *GetDeviceStreamPlane(int idx) override {

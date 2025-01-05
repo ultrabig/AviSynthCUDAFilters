@@ -11,9 +11,10 @@
 #include "VectorFunctions.cuh"
 #include "ReduceKernel.cuh"
 
-#ifndef __WIN32
+#ifndef _WIN32
 #include <x86intrin.h>
 #include "TypeCompat.h"
+#include <type_traits>
 // #include <emmintrin.h>
 #endif
 
@@ -33,6 +34,7 @@ __global__ void kl_init_sum(T* sum)
 __device__ uchar4 clamp_to_range(uchar4 src, int maxv) { return src; }
 __device__ int4 clamp_to_range(ushort4 src, int maxv) { return min(to_int(src), maxv); }
 __device__ float4 clamp_to_range(float4 src, int maxv) { return src; }
+__device__ double4 clamp_to_range(double4 src, int maxv) { return src; }
 
 template <typename vpixel_t, typename gsum_t, typename lsum_t>
 __global__ void kl_sum_of_pixels(const vpixel_t* __restrict__ src, int width, int height, int pitch, int maxv, gsum_t* sum)
@@ -51,7 +53,12 @@ __global__ void kl_sum_of_pixels(const vpixel_t* __restrict__ src, int width, in
   dev_reduce<lsum_t, SUM_THREADS, AddReducer<lsum_t>>(tid, tmpsum, sbuf);
 
   if (tid == 0) {
-    atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
+#ifndef _WIN32
+    if constexpr (std::is_same<gsum_t, uint64_t>::value)
+      atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
+    else
+#endif
+      atomicAdd(sum, (gsum_t)tmpsum);
   }
 }
 
@@ -210,7 +217,7 @@ public:
       PVideoFrame work = env->NewVideoFrame(workvi);
       void* workbuf = work->GetWritePtr();
 
-      int maxv = ((1 << bits_per_pixel) - 1);
+      int maxv = ((1 << bits_per_pixel) - 1); // TODO: if bits_per_pixel is 32, this will be 0
 
       switch (pixelsize) {
       case 1:
@@ -224,7 +231,7 @@ public:
         else
           return calc_sum_of_pixels<ushort4, uint64_t, uint32_t>(srcp, width, height, pitch, maxv, workbuf, env);
       case 4:
-        return calc_sum_of_pixels<float4, float, float>(srcp, width, height, pitch, maxv, workbuf, env);
+        return calc_sum_of_pixels<float4, double, float>(srcp, width, height, pitch, maxv, workbuf, env);
       }
     }
     else {
@@ -301,7 +308,12 @@ __global__ void kl_sad(
   dev_reduce<lsum_t, SUM_THREADS, AddReducer<lsum_t>>(tid, tmpsum, sbuf);
 
   if (tid == 0) {
-    atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
+#ifndef _WIN32
+    if constexpr (std::is_same<gsum_t, uint64_t>::value)
+      atomicAdd((unsigned long long *)sum, (gsum_t)tmpsum);
+    else
+#endif
+      atomicAdd(sum, (gsum_t)tmpsum);
   }
 }
 

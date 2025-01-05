@@ -12,6 +12,9 @@ add_library(${PROJECT_NAME} SHARED
     MVKernel.h
 )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
+set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".dll")
+
 target_link_libraries(${PROJECT_NAME} ${AVISYNTH_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${AVISYNTH_INCLUDE_DIRS})
 target_compile_options(${PROJECT_NAME} PUBLIC ${AVISYNTH_CFLAGS_OTHER})

@@ -1,6 +1,8 @@
 
 #include "TestCommons.h"
 
+extern AVSLoader avsLoader;
+
 class MaskToolsTest : public AvsTestBase {
 protected:
   MaskToolsTest() { }
@@ -11,7 +13,7 @@ TEST_F(MaskToolsTest, Lut_1)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -26,7 +28,7 @@ TEST_F(MaskToolsTest, Lut_1)
     const char* expry = "\"0.000000 1.062500 0.066406 x 16 - 219 / 0 1 clip 0.062500 + / -*x 16 - 219 / 0 1 clip 1 0.000000 - *+255 * \"";
     const char* expr = "\"x 128 - 128 * 112 / 128 + \"";
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "ref = src.mt_lut(yexpr=" << expry << ",expr=" << expr << ",y=3,u=3,v=3)" << std::endl;
     out << "cuda = src.OnCPU(0).kmt_lut(yexpr=" << expry << ",expr=" << expr << ",y=3,u=3,v=3).OnCUDA(0)" << std::endl;
     out << "ImageCompare(ref, cuda, 1, true)" << std::endl;
@@ -48,7 +50,7 @@ TEST_F(MaskToolsTest, Lutxy_1)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -62,7 +64,7 @@ TEST_F(MaskToolsTest, Lutxy_1)
 
     const char* expr = "\"clamp_f x x y - 0.700000 * +\"";
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "sref = src.GaussResize(1920,1080,0,0,1920.0001,1080.0001,p=2)" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "srefcuda = sref.OnCPU(0)" << std::endl;
@@ -88,13 +90,13 @@ TEST_F(MaskToolsTest, Func)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
-    out << "LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "FFmpegSource2(\"test.ts\")" << std::endl;
 
     out.close();
 

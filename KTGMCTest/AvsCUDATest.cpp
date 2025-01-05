@@ -1,6 +1,8 @@
 
 #include "TestCommons.h"
 
+extern AVSLoader avsLoader;
+
 class AvsCUDATest : public AvsTestBase {
 protected:
   AvsCUDATest() { }
@@ -103,7 +105,7 @@ void CondFuncTest::CondTest_(const char* fname, bool is_cuda, FORMAT format, int
 
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -114,7 +116,7 @@ void CondFuncTest::CondTest_(const char* fname, bool is_cuda, FORMAT format, int
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"news.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
 
     ConvertFormat(out, format, bits);
 
@@ -523,7 +525,7 @@ void GenericTest::Test_(const char* fname, bool is_cuda, FORMAT format, int bits
 
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -534,7 +536,7 @@ void GenericTest::Test_(const char* fname, bool is_cuda, FORMAT format, int bits
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"news.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     ConvertFormat(out, format, bits);
     gen.Pre(out, fname, is_cuda);
     gen.Ref(out, fname, is_cuda);

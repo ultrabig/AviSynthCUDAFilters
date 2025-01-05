@@ -11,14 +11,15 @@ add_executable(${PROJECT_NAME}
     TestCommons.h
 )
 
-target_link_libraries(${PROJECT_NAME} ${AVISYNTH_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${AVISYNTH_INCLUDE_DIRS})
-target_compile_options(${PROJECT_NAME} PUBLIC ${AVISYNTH_CFLAGS_OTHER})
+# AVS_Linkage won't work with this
+# target_link_libraries(${PROJECT_NAME} ${AVISYNTH_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${AVISYNTH_INCLUDE_DIRS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${AVISYNTH_CFLAGS_OTHER})
 
 target_link_libraries(${PROJECT_NAME} ${GTEST_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${GTEST_INCLUDE_DIRS})
-target_compile_options(${PROJECT_NAME} PUBLIC ${GTEST_CFLAGS_OTHER})
+target_include_directories(${PROJECT_NAME} PRIVATE ${GTEST_INCLUDE_DIRS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${GTEST_CFLAGS_OTHER})
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC ENABLE_CUDA)
+target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_CUDA)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CUDAToolkit_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CUDAToolkit_INCLUDE_DIRS})

@@ -9,3 +9,6 @@ Release
 *.vcxproj.user
 /build
 /.vscode
+/test
+/TestScripts/script.avs
+/TestScripts/test.*

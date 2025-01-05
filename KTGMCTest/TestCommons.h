@@ -2,7 +2,9 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#ifdef _WIN32
 #define AVS_LINKAGE_DLLIMPORT
+#endif
 #include "avisynth.h"
 
 #ifdef _WIN32
@@ -10,6 +12,7 @@
 #include <Windows.h>
 #else
 #include <linux/limits.h>
+#include <dlfcn.h>
 #endif
 
 #include <gtest/gtest.h>
@@ -23,6 +26,57 @@
 #define O_C(n) ".OnCUDA(" #n ", 0)"
 
 std::string GetDirectoryName(const std::string& filename);
+
+#ifndef _WIN32
+
+// https://github.com/AviSynth/AviSynthPlus/issues/130#issuecomment-595892327
+class AVSLoader {
+  void *handle = nullptr;
+  // IScriptEnvironment2 *env = nullptr;
+  public:
+  AVSLoader() {
+    handle = dlopen("libavisynth.so", RTLD_NOW | RTLD_LOCAL);
+    if (handle == nullptr) {
+      std::cerr << "Failed to load avisynth.so" << std::endl;
+      return;
+    }
+  }
+  // IScriptEnvironment2* get() {
+    // return env;
+  // }
+  // IScriptEnvironment2* operator ->() {
+    // return env;
+  // }
+  ~AVSLoader() {
+    if (AVS_linkage != nullptr) {
+      AVS_linkage = nullptr;
+    }
+    // if (env != nullptr) {
+      // env->DeleteScriptEnvironment();
+      // env = nullptr;
+    // }
+    if (handle != nullptr) {
+      dlclose(handle);
+      handle = nullptr;
+    }
+  }
+  IScriptEnvironment2* CreateScriptEnvironment2() {
+    void* mkr = dlsym(handle, "CreateScriptEnvironment2");
+    if (mkr == nullptr) {
+      std::cerr << "Failed to load CreateScriptEnvironment2" << std::endl;
+      return nullptr;
+    }
+    typedef IScriptEnvironment2 * (*CreateScriptEnvironment2_t)(int);
+    CreateScriptEnvironment2_t cse2 = reinterpret_cast<CreateScriptEnvironment2_t>(mkr);
+    auto env = cse2(AVISYNTH_INTERFACE_VERSION);
+    if (AVS_linkage == nullptr) {
+      AVS_linkage = env->GetAVSLinkage();
+    }
+    return env;
+  }
+};
+
+#endif
 
 struct ScriptEnvironmentDeleter {
   void operator()(IScriptEnvironment* env) {

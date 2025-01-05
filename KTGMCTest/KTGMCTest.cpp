@@ -1,6 +1,8 @@
 
 #include "TestCommons.h"
 
+extern AVSLoader avsLoader;
+
 // テスト対象となるクラス Foo のためのフィクスチャ
 class KTGMCTest : public AvsTestBase {
 protected:
@@ -54,7 +56,7 @@ void KTGMCTest::MSuperTest(TEST_FRAMES tf, bool chroma, int pel, int level)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -68,7 +70,7 @@ void KTGMCTest::MSuperTest(TEST_FRAMES tf, bool chroma, int pel, int level)
 
     const char* chromastr = chroma ? "true" : "false";
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "ref = src.MSuper(chroma = " << chromastr << ", pel = " << pel << ", levels = " << level << ")" << std::endl;
     out << "cuda = src.OnCPU(0).KMSuper(chroma = " << chromastr << ", pel = " << pel << ", levels = " << level << ")" O_C(0) << std::endl;
     out << "KMSuperCheck(cuda, ref, src)" << std::endl;
@@ -119,7 +121,7 @@ void KTGMCTest::AnalyzeTest(TEST_FRAMES tf, bool cuda, int blksize, bool chroma,
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -131,7 +133,7 @@ void KTGMCTest::AnalyzeTest(TEST_FRAMES tf, bool cuda, int blksize, bool chroma,
 
     std::ofstream out(scriptpath);
 
-    out << "LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "FFmpegSource2(\"test.ts\")" << std::endl;
     out << "s = KMSuper(pel = " << pel << ")" << std::endl;
     out << "kap = s.KMPartialSuper().KMAnalyse(isb = true, delta = 1, chroma = " <<
       (chroma ? "true" : "false") << ", blksize = " << blksize <<
@@ -266,7 +268,7 @@ void KTGMCTest::DegrainTest(TEST_FRAMES tf, int N, int blksize, int pel)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -280,7 +282,7 @@ void KTGMCTest::DegrainTest(TEST_FRAMES tf, int N, int blksize, int pel)
 
     // シーンチェンジ判定されるとテストできないのでしきい値は10倍にしてある
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "s = src.KMSuper(pel = " << pel << ")" << std::endl;
     out << "scuda = s.OnCPU(0)" << std::endl;
@@ -423,7 +425,7 @@ void KTGMCTest::DegrainBinomialTest(TEST_FRAMES tf, int N, int blksize, int pel)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -435,7 +437,7 @@ void KTGMCTest::DegrainBinomialTest(TEST_FRAMES tf, int N, int blksize, int pel)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "s = src.KMSuper(pel = " << pel << ")" << std::endl;
     out << "scuda = s.OnCPU(0)" << std::endl;
@@ -489,7 +491,7 @@ void KTGMCTest::CompensateTest(TEST_FRAMES tf, int blksize, int pel)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -501,7 +503,7 @@ void KTGMCTest::CompensateTest(TEST_FRAMES tf, int blksize, int pel)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "s = src.KMSuper(pel = " << pel << ")" << std::endl;
     out << "scuda = s.OnCPU(0)" << std::endl;
@@ -582,7 +584,7 @@ void KTGMCTest::MVReplaceTest(TEST_FRAMES tf, bool kvm)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -594,7 +596,7 @@ void KTGMCTest::MVReplaceTest(TEST_FRAMES tf, bool kvm)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
 
     out << "ks = src.KMSuper(pel = 2)" << std::endl;
     out << "kmvb = ks.KMAnalyse(isb = true, delta = 1, chroma = false, blksize = 32, overlap = 16, lambda = 400, global = true, meander = false)" << std::endl;
@@ -643,7 +645,7 @@ void KTGMCTest::BobTest(TEST_FRAMES tf, bool parity)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -657,7 +659,7 @@ void KTGMCTest::BobTest(TEST_FRAMES tf, bool parity)
 
     out << "Import(\"QTGMC_Bob.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << (parity ? ".AssumeTFF()" : ".AssumeBFF()") << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << (parity ? ".AssumeTFF()" : ".AssumeBFF()") << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.QTGMC_Bob( 0,0.5 )" << std::endl;
@@ -696,7 +698,7 @@ void KTGMCTest::BinomialSoftenTest(TEST_FRAMES tf, int radius, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -710,7 +712,7 @@ void KTGMCTest::BinomialSoftenTest(TEST_FRAMES tf, int radius, bool chroma)
 
     out << "Import(\"QTGMC_BinomialSoften.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.QTGMC_BinomialSoften" << radius << "(" << (chroma ? "true" : "false") << ")" << std::endl;
@@ -759,7 +761,7 @@ void KTGMCTest::RemoveGrainTest(TEST_FRAMES tf, int mode, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -771,7 +773,7 @@ void KTGMCTest::RemoveGrainTest(TEST_FRAMES tf, int mode, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.RemoveGrain(" << mode << (chroma ? "" : ", -1") << ")" << std::endl;
@@ -860,7 +862,7 @@ void KTGMCTest::RepairTest(TEST_FRAMES tf, int mode, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -872,7 +874,7 @@ void KTGMCTest::RepairTest(TEST_FRAMES tf, int mode, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "sref = src.GaussResize(1920,1080,0,0,1920.0001,1080.0001,p=2)" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "srefcuda = sref.OnCPU(0)" << std::endl;
@@ -943,7 +945,7 @@ void KTGMCTest::VerticalCleanerTest(TEST_FRAMES tf, int mode, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -955,7 +957,7 @@ void KTGMCTest::VerticalCleanerTest(TEST_FRAMES tf, int mode, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.VerticalCleaner(" << mode << (chroma ? "" : ", 0") << ")" << std::endl;
@@ -994,7 +996,7 @@ void KTGMCTest::GaussResizeTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1006,7 +1008,7 @@ void KTGMCTest::GaussResizeTest(TEST_FRAMES tf, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.GaussResize(1920,1080,0,0,1920.0001,1080.0001,p=2)" << std::endl;
@@ -1045,7 +1047,7 @@ void KTGMCTest::InpandVerticalX2Test(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1061,7 +1063,7 @@ void KTGMCTest::InpandVerticalX2Test(TEST_FRAMES tf, bool chroma)
 
     //out << "Import(\"QTGMC_BinomialSoften.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.mt_inpand(mode=\"vertical\", U=" << rc << ",V=" << rc <<
@@ -1101,7 +1103,7 @@ void KTGMCTest::ExpandVerticalX2Test(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1117,7 +1119,7 @@ void KTGMCTest::ExpandVerticalX2Test(TEST_FRAMES tf, bool chroma)
 
     //out << "Import(\"QTGMC_BinomialSoften.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.mt_expand(mode=\"vertical\", U=" << rc << ",V=" << rc <<
@@ -1157,7 +1159,7 @@ void KTGMCTest::MakeDiffTest(TEST_FRAMES tf, bool chroma, bool makediff)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1173,7 +1175,7 @@ void KTGMCTest::MakeDiffTest(TEST_FRAMES tf, bool chroma, bool makediff)
 
     //out << "Import(\"QTGMC_BinomialSoften.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "src2 = src.RemoveGrain(20)" << std::endl;
@@ -1231,7 +1233,7 @@ void KTGMCTest::LogicTest(TEST_FRAMES tf, const char* mode, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1247,7 +1249,7 @@ void KTGMCTest::LogicTest(TEST_FRAMES tf, const char* mode, bool chroma)
 
     //out << "Import(\"QTGMC_BinomialSoften.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "src2 = src.RemoveGrain(20)" << std::endl;
@@ -1299,7 +1301,7 @@ void KTGMCTest::BobShimmerFixesMergeTest(TEST_FRAMES tf, int rep, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1316,7 +1318,7 @@ void KTGMCTest::BobShimmerFixesMergeTest(TEST_FRAMES tf, int rep, bool chroma)
     out << "Import(\"QTGMC_KeepOnlyBobShimmerFixes.avs\")" << std::endl;
     out << "Import(\"KTGMC_KeepOnlyBobShimmerFixes.avs\")" << std::endl;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "src2 = src.RemoveGrain(20)" << std::endl;
@@ -1368,7 +1370,7 @@ void KTGMCTest::VResharpenTest(TEST_FRAMES tf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1380,7 +1382,7 @@ void KTGMCTest::VResharpenTest(TEST_FRAMES tf)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = Merge(mt_inpand(src,mode=\"vertical\",U=3,V=3), mt_expand(src,mode=\"vertical\",U=3,V=3))" << std::endl;
@@ -1414,7 +1416,7 @@ void KTGMCTest::ResharpenTest(TEST_FRAMES tf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1426,7 +1428,7 @@ void KTGMCTest::ResharpenTest(TEST_FRAMES tf)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "src1 = src.RemoveGrain(20).RemoveGrain(20)" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "sr1cuda = src1.OnCPU(0)" << std::endl;
@@ -1462,7 +1464,7 @@ void KTGMCTest::LimitOverSharpenTest(TEST_FRAMES tf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1474,7 +1476,7 @@ void KTGMCTest::LimitOverSharpenTest(TEST_FRAMES tf)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "src1 = src.RemoveGrain(20)" << std::endl;
     out << "src2 = src1.RemoveGrain(20)" << std::endl;
     out << "src3 = src2.RemoveGrain(20)" << std::endl;
@@ -1517,7 +1519,7 @@ void KTGMCTest::ToFullRangeTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1531,7 +1533,7 @@ void KTGMCTest::ToFullRangeTest(TEST_FRAMES tf, bool chroma)
 
     int rc = (chroma ? 3 : 1);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out <<
@@ -1573,7 +1575,7 @@ void KTGMCTest::TweakSearchClipTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1587,7 +1589,7 @@ void KTGMCTest::TweakSearchClipTest(TEST_FRAMES tf, bool chroma)
 
     int rc = (chroma ? 3 : 1);
 
-    out << "repair0 = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "repair0 = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "bobbed = repair0.RemoveGrain(20)" << std::endl;
     out << "spatialBlur = bobbed.RemoveGrain(20)" << std::endl;
     out << "repair0cuda = repair0.OnCPU(0)" << std::endl;
@@ -1632,7 +1634,7 @@ void KTGMCTest::LosslessProcTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1646,7 +1648,7 @@ void KTGMCTest::LosslessProcTest(TEST_FRAMES tf, bool chroma)
 
     int rc = (chroma ? 3 : 1);
 
-    out << "x = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "x = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "y = x.RemoveGrain(20)" << std::endl;
     out << "xcuda = x.OnCPU(0)" << std::endl;
     out << "ycuda = y.OnCPU(0)" << std::endl;
@@ -1687,7 +1689,7 @@ void KTGMCTest::MergeTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1699,7 +1701,7 @@ void KTGMCTest::MergeTest(TEST_FRAMES tf, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "src1 = src.RemoveGrain(20)" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "sr1cuda = src1.OnCPU(0)" << std::endl;
@@ -1746,7 +1748,7 @@ void KTGMCTest::WeaveTest(TEST_FRAMES tf, bool parity, bool dbl)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1758,7 +1760,7 @@ void KTGMCTest::WeaveTest(TEST_FRAMES tf, bool parity, bool dbl)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     if (parity) {
       out << "src.AssumeTFF()" << std::endl;
     }
@@ -1819,7 +1821,7 @@ void KTGMCTest::CopyTest(TEST_FRAMES tf, bool cuda)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1831,7 +1833,7 @@ void KTGMCTest::CopyTest(TEST_FRAMES tf, bool cuda)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
 
     if (cuda) {
       out << "srcuda = src.OnCPU(0)" << std::endl;
@@ -1876,7 +1878,7 @@ void KTGMCTest::ErrorAdjustTest(TEST_FRAMES tf, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1891,7 +1893,7 @@ void KTGMCTest::ErrorAdjustTest(TEST_FRAMES tf, bool chroma)
     float errorAdj = 1.333333f;
     int rc = chroma ? 3 : 1;
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "src2 = src.RemoveGrain(20)" << std::endl;
@@ -1928,7 +1930,7 @@ void KTGMCTest::NNEDI3Test(TEST_FRAMES tf, bool chroma, int nsize, int nns, int 
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -1942,7 +1944,7 @@ void KTGMCTest::NNEDI3Test(TEST_FRAMES tf, bool chroma, int nsize, int nns, int 
 
     const char* UV = (chroma ? "True" : "False");
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     // opt>1だと一致しなくなるのでopt=1（SIMDなし）を指定
@@ -2044,7 +2046,7 @@ TEST_F(KTGMCTest, NNEDI3Test_Perf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -2059,7 +2061,7 @@ TEST_F(KTGMCTest, NNEDI3Test_Perf)
     const char* UV = "True";
 
     out << "SetLogParams(\"avsrun.log\", LOG_WARNING)" << std::endl;
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
 #if 1
     out << "return src.OnCPU(1)" << std::endl;
 #else
@@ -2090,13 +2092,13 @@ TEST_F(KTGMCTest, DeviceCheck)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
-    out << "LWLibavVideoSource(\"test.ts\")" O_C(0) "" << std::endl;
+    out << "FFmpegSource2(\"test.ts\")" O_C(0) "" << std::endl;
     out.close();
 
     EXPECT_THROW(env->Invoke("Import", scriptpath.c_str()).AsClip(), AvisynthError);
@@ -2113,14 +2115,14 @@ TEST_F(KTGMCTest, StartupTime)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
     out << "SetCacheMode(CACHE_OPTIMAL_SIZE)" << std::endl;
-    out << "LWLibavVideoSource(\"test.ts\").QTGMC()" << std::endl;
+    out << "FFmpegSource2(\"test.ts\").QTGMC()" << std::endl;
     out.close();
 
     PClip clip = env->Invoke("Import", scriptpath.c_str()).AsClip();
@@ -2155,7 +2157,7 @@ TEST_F(KTGMCTest, KTGMC_Perf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string ktgmcPath = modulePath / "KTGMC.dll";
@@ -2170,7 +2172,7 @@ TEST_F(KTGMCTest, KTGMC_Perf)
     out << "SetLogParams(\"avsrun.log\", LOG_WARNING)" << std::endl;
     out << "SetMemoryMax(2048, type=DEV_TYPE_CUDA)" << std::endl;
     out << "Import(\"KTGMC.avsi\")" << std::endl;
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "src.OnCPU(2).KTGMC()" O_C(2) << std::endl;
 
     out.close();
@@ -2193,14 +2195,14 @@ TEST_F(KTGMCTest, MemoryLeak)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string scriptpath = workDirPath / "script.avs";
     std::ofstream out(scriptpath);
 
     out << "SetLogParams(\"avsrun.log\", LOG_WARNING)" << std::endl;
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "return src.OnCPU(1)" O_C(0) "" << std::endl;
     out.close();
 
@@ -2221,13 +2223,13 @@ TEST_F(KTGMCTest, DeviceMatchingBug)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string scriptpath = workDirPath / "script.avs";
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "src.OnCPU(0)" O_C(0) ".AudioDub(LWLibavAudioSource(\"test.ts\"))" << std::endl;
     out.close();
 
@@ -2248,14 +2250,14 @@ TEST_F(KTGMCTest, AvsProp)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
-    out << "LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "FFmpegSource2(\"test.ts\")" << std::endl;
 
     out << "AddProp(\"luma\", \"AverageLuma()\")" << std::endl;
     out << "ScriptClip(\"\"\"subtitle(string(getprop(\"luma\")))\"\"\")" << std::endl;
@@ -2277,7 +2279,7 @@ TEST_F(KTGMCTest, DISABLED_DumpAVSProperty)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     int types[] = {
       VideoInfo::CS_BGR24,

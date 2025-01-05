@@ -1,6 +1,8 @@
 
 #include "TestCommons.h"
 
+extern AVSLoader avsLoader;
+
 // テスト対象となるクラス Foo のためのフィクスチャ
 class KFMTest : public AvsTestBase {
 protected:
@@ -20,11 +22,12 @@ protected:
 
 #pragma region MergeStatic
 
+
 TEST_F(KFMTest, AnalyzeStaticTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -36,11 +39,12 @@ TEST_F(KFMTest, AnalyzeStaticTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
+    out << "pad = src.KFMPad()" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
-    out << "ref = src.KAnalyzeStatic(30, 15)" << std::endl;
-    out << "cuda = srcuda.KAnalyzeStatic(30, 15)" O_C(0) "" << std::endl;
+    out << "ref = src.KAnalyzeStatic(30, 15, pad)" << std::endl;
+    out << "cuda = srcuda.KAnalyzeStatic(30, 15, pad)" O_C(0) "" << std::endl;
 
     out << "ImageCompare(ref, cuda, 1)" << std::endl;
 
@@ -61,7 +65,7 @@ TEST_F(KFMTest, AnalyzeStaticSuperTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -73,8 +77,8 @@ TEST_F(KFMTest, AnalyzeStaticSuperTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
-    out << "super = src.KFMSuper()" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "super = src.KFMSuper()" << std::endl; 
 
     out << "ref = src.KAnalyzeStatic(30, 15)" << std::endl;
     out << "cuda = src.KAnalyzeStatic(30, 15, super=super)" O_C(0) "" << std::endl;
@@ -98,7 +102,7 @@ TEST_F(KFMTest, MergeStaticTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -110,7 +114,7 @@ TEST_F(KFMTest, MergeStaticTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "bb = src.Bob()" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
     out << "bbcuda = bb.OnCPU(0)" << std::endl;
@@ -142,7 +146,7 @@ TEST_F(KFMTest, PadTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -154,7 +158,7 @@ TEST_F(KFMTest, PadTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
 
     out << "ref = src.KFMPad()" << std::endl;
     out << "cuda = src.KFMPad()" O_C(0) "" << std::endl;
@@ -178,7 +182,7 @@ TEST_F(KFMTest, KFMSuperTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -190,7 +194,7 @@ TEST_F(KFMTest, KFMSuperTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "pad = src.KFMPad().OnCPU(0)" << std::endl;
 
     out << "ref = src.KFMSuper(pad)" << std::endl;
@@ -216,7 +220,7 @@ TEST_F(KFMTest, PreCycleAnalyzeTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -228,7 +232,7 @@ TEST_F(KFMTest, PreCycleAnalyzeTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad()).OnCPU(0)" << std::endl;
 
     out << "ref = super.KPreCycleAnalyze(10, 5, 8, 4)" << std::endl;
@@ -253,7 +257,7 @@ TEST_F(KFMTest, TelecineTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -265,7 +269,7 @@ TEST_F(KFMTest, TelecineTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "fm = src.KFMSuper(src.KFMPad()).KPreCycleAnalyze().KFMCycleAnalyze(src).OnCPU(0)" << std::endl;
 
     out << "ref = src.KTelecine(fm)" << std::endl;
@@ -290,7 +294,7 @@ TEST_F(KFMTest, TelecineSuperTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -302,7 +306,7 @@ TEST_F(KFMTest, TelecineSuperTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad()).OnCPU(0)" << std::endl;
     out << "fm = super.KPreCycleAnalyze().KFMCycleAnalyze(src).OnCPU(0)" << std::endl;
 
@@ -328,7 +332,7 @@ TEST_F(KFMTest, SwitchFlagTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -340,7 +344,7 @@ TEST_F(KFMTest, SwitchFlagTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad()).OnCPU(0)" << std::endl;
 
     out << "ref = super.KSwitchFlag()" << std::endl;
@@ -366,7 +370,7 @@ TEST_F(KFMTest, CombeMaskTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -378,7 +382,7 @@ TEST_F(KFMTest, CombeMaskTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "flag = src.KFMSuper(src.KFMPad()).KSwitchFlag().OnCPU(0)" << std::endl;
 
     out << "ref = src.KCombeMask(flag)" << std::endl;
@@ -405,7 +409,7 @@ TEST_F(KFMTest, RemoveCombeTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -417,7 +421,7 @@ TEST_F(KFMTest, RemoveCombeTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad())" << std::endl;
 
     out << "ref = src.KRemoveCombe(super)" << std::endl;
@@ -442,7 +446,7 @@ TEST_F(KFMTest, PatchCombeTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -454,7 +458,7 @@ TEST_F(KFMTest, PatchCombeTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad()).OnCPU(0)" << std::endl;
     out << "clip60 = src.Bob().OnCPU(0)" << std::endl;
     out << "fmclip = super.KPreCycleAnalyze().KFMCycleAnalyze(src).OnCPU(0)" << std::endl;
@@ -485,7 +489,7 @@ TEST_F(KFMTest, SwitchTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -497,7 +501,7 @@ TEST_F(KFMTest, SwitchTest)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "super = src.KFMSuper(src.KFMPad()).OnCPU(0)" << std::endl;
     out << "clip60 = src.Bob().OnCPU(0)" << std::endl;
     out << "fmclip = super.KPreCycleAnalyze().KFMCycleAnalyze(src).OnCPU(0)" << std::endl;
@@ -537,7 +541,7 @@ void KFMTest::TemporalNRTest(TEST_FRAMES tf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -549,7 +553,7 @@ void KFMTest::TemporalNRTest(TEST_FRAMES tf)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.ConvertBits(14).OnCPU(0)" << std::endl;
 
     out << "ref = src.KTemporalNR(3, 4).ConvertBits(8)" << std::endl;
@@ -583,7 +587,7 @@ void KFMTest::DebandTest(TEST_FRAMES tf, int sample_mode, bool blur_first)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -597,7 +601,7 @@ void KFMTest::DebandTest(TEST_FRAMES tf, int sample_mode, bool blur_first)
 
     const char* blur_str = blur_first ? "true" : "false";
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "ref = src.KDeband(25, 4, " << sample_mode << ", " << blur_str << ")" << std::endl;
@@ -656,7 +660,7 @@ void KFMTest::EdgeLevelTest(TEST_FRAMES tf, int repair, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -668,7 +672,7 @@ void KFMTest::EdgeLevelTest(TEST_FRAMES tf, int repair, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
 		if (chroma) {
 			out << "src = src.ConvertToYUV444()" << std::endl;
 		}
@@ -730,7 +734,7 @@ void KFMTest::CFieldDiffTest(int nt, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -742,7 +746,7 @@ void KFMTest::CFieldDiffTest(int nt, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "global current_frame = 100" << std::endl;
@@ -798,7 +802,7 @@ void KFMTest::CFrameDiffDupTest(int blocksize, bool chroma)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -810,7 +814,7 @@ void KFMTest::CFrameDiffDupTest(int blocksize, bool chroma)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\")" << std::endl;
     out << "srcuda = src.OnCPU(0)" << std::endl;
 
     out << "global current_frame = 100" << std::endl;
@@ -866,7 +870,7 @@ void KFMTest::DecombUCF24Test(TEST_FRAMES tf, int chroma, bool show)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -878,7 +882,7 @@ void KFMTest::DecombUCF24Test(TEST_FRAMES tf, int chroma, bool show)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "fields = src.SeparateFields()" << std::endl;
     out << "bob = src.Bob().OnCPU(0)" << std::endl;
     out << "noise = fields.GaussResize(1920,540,0,0,1920.0001,540.0001,p=2).Crop(4,4,-4,-4).Align().OnCPU(0)" << std::endl;
@@ -930,7 +934,7 @@ void KFMTest::DeblockTest(TEST_FRAMES tf, int quality, bool is_soft)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     AVSValue result;
     std::string debugtoolPath = modulePath / "KDebugTool.dll";
@@ -942,7 +946,7 @@ void KFMTest::DeblockTest(TEST_FRAMES tf, int quality, bool is_soft)
 
     std::ofstream out(scriptpath);
 
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "ref = src.KDeblock(quality=" << quality << ",force_qp=10,is_soft=" << (is_soft ? "true" : "false") << ")" << std::endl;
     out << "cuda = src.KDeblock(quality=" << quality << ",force_qp=10,is_soft=" << (is_soft ? "true" : "false") << ")" O_C(0) << std::endl;
 

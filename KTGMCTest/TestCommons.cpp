@@ -1,5 +1,10 @@
 #include "TestCommons.h"
 
+#ifndef _WIN32
+const AVS_Linkage* AVS_linkage = nullptr;
+AVSLoader avsLoader;
+#endif
+
 std::string GetDirectoryName(const std::string& filename)
 {
   std::string directory;

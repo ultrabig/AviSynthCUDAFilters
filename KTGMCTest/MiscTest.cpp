@@ -1,6 +1,8 @@
 
 #include "TestCommons.h"
 
+extern AVSLoader avsLoader;
+
 class MiscTest : public AvsTestBase {
 protected:
   MiscTest() { }
@@ -10,14 +12,14 @@ TEST_F(MiscTest, UCFPerf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
     out << "Import(\"30_ucf.avs\")" << std::endl;
-    out << "LWLibavVideoSource(\"test.ts\")" << std::endl;
+    out << "FFmpegSource2(\"test.ts\")" << std::endl;
     out << "kgauss = function(clip c) {c.Align().KGaussResize(p=2.5,chroma=true)}" << std::endl;
     out << "OnCPU(2).DecombUCF2(bob_clip=D3DVP().OnCPU(2),affect_noise=kgauss,cuda=true)" << std::endl;
 
@@ -38,13 +40,13 @@ TEST_F(MiscTest, UCF2Perf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     std::string scriptpath = workDirPath / "script.avs";
 
     std::ofstream out(scriptpath);
 
-    out << "LWLibavVideoSource(\"test.ts\").OnCPU(1)" << std::endl;
+    out << "FFmpegSource2(\"test.ts\").OnCPU(1)" << std::endl;
     out << "fields = SeparateFields().Crop(4,4,-4,-4).Align()" << std::endl;
     out << "bob = KTGMC_Bob()" << std::endl;
     out << "noise = fields.KGaussResize(p=2.5)" << std::endl;
@@ -71,7 +73,7 @@ TEST_F(MiscTest, KFMPerf)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     std::string scriptpath = workDirPath / "script.avs";
 
@@ -80,7 +82,7 @@ TEST_F(MiscTest, KFMPerf)
     out << "SetMemoryMax(1500, type=DEV_TYPE_CUDA)" << std::endl;
     out << "SetDeviceOpt(DEV_CUDA_PINNED_HOST)" << std::endl;
     out << "Import(\"KFMDeint.avs\")" << std::endl;
-    out << "src = LWLibavVideoSource(\"test.ts\").OnCPU(0)" << std::endl;
+    out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
     out << "src.KFMDeint(mode=0, ucf=true, nr=true, cuda=true, show=true)" << std::endl;
 
     out.close();
@@ -100,7 +102,7 @@ TEST_F(MiscTest, GenericScriptTest)
 {
   PEnv env;
   try {
-    env = PEnv(CreateScriptEnvironment2());
+    env = PEnv(avsLoader.CreateScriptEnvironment2());;
 
     std::string scriptpath = workDirPath / "script.avs";
 

@@ -947,8 +947,8 @@ void KFMTest::DeblockTest(TEST_FRAMES tf, int quality, bool is_soft)
     std::ofstream out(scriptpath);
 
     out << "src = FFmpegSource2(\"test.ts\").OnCPU(0)" << std::endl;
-    out << "ref = src.KDeblock(quality=" << quality << ",force_qp=10,is_soft=" << (is_soft ? "true" : "false") << ")" << std::endl;
-    out << "cuda = src.KDeblock(quality=" << quality << ",force_qp=10,is_soft=" << (is_soft ? "true" : "false") << ")" O_C(0) << std::endl;
+    out << "ref = src.KDeblock(quality=" << quality << ",qp=10,sharp=" << (is_soft ? "true" : "false") << ",qpclip=src.QPClip())" << std::endl;
+    out << "cuda = src.KDeblock(quality=" << quality << ",qp=10,sharp=" << (is_soft ? "true" : "false") << ",qpclip=src.QPClip())" O_C(0) << std::endl;
 
     out << "ImageCompare(ref, cuda, 1)" << std::endl;
 
